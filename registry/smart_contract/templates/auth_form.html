@@ -1,0 +1,47 @@
+{% load static %}
+<!DOCTYPE HTML>
+<html lang="ru">
+    <head>
+      {% block title %}  <title>Вход </title>{% endblock %}
+        <meta charset="utf-8" />
+        <!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-1.8.3.js"></script>
+        <link rel="stylesheet" href="{% static "assets/css/auth.css" %}" />
+        <!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
+        <!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]--></head>
+
+<body class="login login-action-login wp-core-ui  locale-ru-ru">
+    <div id="login">
+        
+        {% block content %}<h1>Вход в личный кабинет</h1>
+        <form name="loginform" id="loginform" method="post">
+            {% csrf_token %}
+           <p><label for="user_login">Login<br />{{ form.username }}</label>
+            </p>
+
+            <p><label for="user_pass">Пароль <br />
+                {{ form.password }} {{ form.non_field_errors }}</label>
+            </p>
+     <br />
+        <p class="submit">
+                <button type="submit" class="button button-primary button-large">Войти</button>
+            </p>
+        </form>
+        
+            
+               
+        
+
+
+        <p id="backtoblog"><a href="base">&larr; Назад к сайту </a></p>
+        {% endblock %}
+
+    </div>
+
+
+    <div class="clear"></div>
+</body>
+
+</html>
