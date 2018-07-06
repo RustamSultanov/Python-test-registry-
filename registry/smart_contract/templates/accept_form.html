@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+			<!-- Main Wrapper -->
+				<div id="main-wrapper">
+					<div class="wrapper style3">
+						<div class="inner">
+							<div class="container">
+								<div class="row">
+									<div class="12u(mobile)">
+                                        <div id="content">
+                                            <article>
+													<header class="major">
+														<h1>Форма подтверждения отзывов</h1>
+													</header>
+											
+				                            <div class="col-xl-9 col-sm-auto  ">
+				                                <h3>Автор отзыва:</h3>
+				                                <h5>{{ comment.user }}</h5>
+				                                <h3>Содержание отзыва:</h3>
+				                                <h5>{{ comment.comment_text }}</h5>
+				                            </div>
+				                        
+
+				                        <br>
+                                                <!-- Form section -->
+                                                <form name="buyForm" enctype="multipart/form-data" action="" method="post">
+													{% csrf_token %}
+                                                    <label> Подтвердить {{ form.accept }}</label> <br>
+													
+
+
+                                                   
+                                                    <input type="submit" value="Отправить"><br><br>
+                                                </form>
+				                         	
+                                            </article>
+                                        </div>
+								      </div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+{% endblock %}

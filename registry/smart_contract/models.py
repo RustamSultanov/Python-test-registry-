@@ -3,8 +3,8 @@ from django.conf import settings
 # Create your models here.
 class Comment(models.Model):
 
-	user = models.ForeignKey(on_delete=models.CASCADE,to=settings.AUTH_USER_MODEL)
-	recipient_user = models.ForeignKey(on_delete=models.CASCADE,to=settings.AUTH_USER_MODEL)
+	user = models.ForeignKey(on_delete=models.CASCADE,to=settings.AUTH_USER_MODEL,related_name='user')
+	recipient_user = models.ForeignKey(related_name='recipient_user',on_delete=models.CASCADE,to=settings.AUTH_USER_MODEL)
 	comment_text = models.TextField()
 	date = models.DateTimeField(auto_now_add=True)
 	accept=models.BooleanField(blank=True,default=False)

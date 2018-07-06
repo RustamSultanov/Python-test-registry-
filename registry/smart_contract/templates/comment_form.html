@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+			<!-- Main Wrapper -->
+				<div id="main-wrapper">
+					<div class="wrapper style3">
+						<div class="inner">
+							<div class="container">
+								<div class="row">
+									<div class="12u(mobile)">
+                                        <div id="content">
+                                            <article>
+													<header class="major">
+														<h1>Форма добавления отзыва</h1>
+													</header>
+                                                <!-- Form section -->
+                                                <form name="buyForm" enctype="multipart/form-data" action="" method="post">
+													{% csrf_token %}
+                                                    <label> Содержание отзыва {{ form.comment_text }}</label> <br>
+													 <label> Компания\сотрудник{{ form.recipient_user }}</label> <br>
+
+
+                                                   
+                                                    <input type="submit" value="Отправить"><br><br>
+                                                </form>
+                                            </article>
+                                        </div>
+								      </div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+{% endblock %}
