@@ -1,73 +1,69 @@
-# Learn Blockchains by Building One
+# pynaivechain
+Python implementation of [naivechain](https://github.com/lhartikk/naivechain) project
 
-[![Build Status](https://travis-ci.org/dvf/blockchain.svg?branch=master)](https://travis-ci.org/dvf/blockchain)
+[![Build Status](https://travis-ci.org/koshikraj/pynaivechain.svg?branch=master)](https://travis-ci.org/koshikraj/pynaivechain)
 
-This is the source code for my post on [Building a Blockchain](https://medium.com/p/117428612f46). 
+# Naivechain - a blockchain implementation in 200 lines of code
 
-## Installation
+### Motivation
+All the current implementations of blockchains are tightly coupled with the larger context and problems they (e.g. Bitcoin or Ethereum) are trying to solve. This makes understanding blockchains a necessarily harder task, than it must be. Especially source-code-wisely. This project is an attempt to provide as concise and simple implementation of a blockchain as possible.
 
-1. Make sure [Python 3.6+](https://www.python.org/downloads/) is installed. 
-2. Install [pipenv](https://github.com/kennethreitz/pipenv). 
 
+
+### Key concepts of Naivechain
+Check also [this blog post](https://medium.com/@lhartikk/a-blockchain-in-200-lines-of-code-963cc1cc0e54#.dttbm9afr5) for a more detailed overview of the key concepts
+* HTTP interface to control the node
+* Use Websockets to communicate with other nodes (P2P)
+* Super simple "protocols" in P2P communication
+* Data is not persisted in nodes
+* No proof-of-work or proof-of-stake: a block can be added to the blockchain without competition
+
+
+![alt tag](naivechain_blockchain.png)
+
+![alt tag](naivechain_components.png)
+
+
+### Naivecoin
+For a more extensive tutorial about blockchains, you can check the project [Naivecoin](https://lhartikk.github.io/). It is based on Naivechain and implements for instance Proof-of-work, transactions and wallets.
+
+### Quick start
+(set up two connected nodes)
 ```
-$ pip install pipenv 
+install python version >= 3.6
+
+pipenv install 
+PORT=3001 python nod.py
+PORT=3002 PEERS=ws://localhost:3001 python nod.py
+cd registry
+python manage.py runserver
+curl http://localhost:3001/blocks
 ```
 
-3. Create a _virtual environment_ and specify the Python version to use. 
-
+### Quick start with Docker
+(set up three connected nodes and mine a block)
+###
+```sh
+docker-compose up
+curl -H "Content-type:application/json" --data '{"data" : "Some data to the first block"}' http://localhost:3001/mineBlock
 ```
-$ pipenv --python=python3.6
-```
 
-4. Install requirements.  
-
+### HTTP API
+##### Get blockchain
 ```
-$ pipenv install 
+curl http://localhost:3001/blocks
+```
+##### Create block
+```
+curl -H "Content-type:application/json" --data '{"data" : "Some data to the first block"}' http://localhost:3001/mineBlock
 ``` 
-
-5. Run the server:
-    * `$ pipenv run python blockchain.py` 
-    * `$ pipenv run python blockchain.py -p 5001`
-    * `$ pipenv run python blockchain.py --port 5002`
-    
-## Docker
-
-Another option for running this blockchain program is to use Docker.  Follow the instructions below to create a local Docker container:
-
-1. Clone this repository
-2. Build the docker container
-
+##### Add peer
 ```
-$ docker build -t blockchain .
+curl -H "Content-type:application/json" --data '{"peer" : "ws://localhost:6001"}' http://localhost:3001/addPeer
+```
+#### Query connected peers
+```
+curl http://localhost:3001/peers
 ```
 
-3. Run the container
-
-```
-$ docker run --rm -p 80:5000 blockchain
-```
-
-4. To add more instances, vary the public port number before the colon:
-
-```
-$ docker run --rm -p 81:5000 blockchain
-$ docker run --rm -p 82:5000 blockchain
-$ docker run --rm -p 83:5000 blockchain
-```
-
-## Installation (C# Implementation)
-
-1. Install a free copy of Visual Studio IDE (Community Edition):
-https://www.visualstudio.com/vs/
-
-2. Once installed, open the solution file (BlockChain.sln) using the File > Open > Project/Solution menu options within Visual Studio.
-
-3. From within the "Solution Explorer", right click the BlockChain.Console project and select the "Set As Startup Project" option.
-
-4. Click the "Start" button, or hit F5 to run. The program executes in a console window, and is controlled via HTTP with the same commands as the Python version.
-
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
 
