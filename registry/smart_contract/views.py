@@ -6,9 +6,11 @@ from .forms import CommentEditForm,AcceptForm
 from django.urls import reverse
 from django.http import HttpResponseRedirect
 from django.forms.models import model_to_dict
+from .blockchain_new import Blockchain
+import os
 
 
-
+BLOCKCHAIN = Blockchain()
 
 
 
@@ -72,6 +74,10 @@ def accept_comment(request, comment_id):
         new_accept = form.save(commit=False)
         accept = form.cleaned_data['accept']
         new_accept.accept = accept
+        data_comment=f'''"user - {comment.user}, recipient_user - {comment.recipient_user}, comment - {comment.comment_text}"'''
+        command=r'''curl -H "Content-type:application/json" --data '{"data":'''+data_comment+r'''}' http://localhost:3001/mineBlock'''
+        print(data_comment,command)
+        os.system(command)
         new_accept.save()
         return HttpResponseRedirect(reverse('lichniy-kabinet'))
     return render(request, 'accept_form.html', {'form': form,'comment':comment})
