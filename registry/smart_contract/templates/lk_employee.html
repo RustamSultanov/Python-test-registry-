@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+<table border="0" cellpadding="0" cellspacing="0" id="sheet0" class="bordered" style="margin-top: 90px">
+    <col class="col0">
+    <col class="col1">
+    <col class="col2">
+    <col class="col3">
+    <col class="col4">
+    <col class="col5">
+    <thead>
+        <tr class="row1">
+            <th class="column0 style1 s ">ID</th>
+            <th class="column1 style1 s d-none d-md-table-cell">ФИО сотрудника</th>
+            <th class="column1 style1 s d-none d-md-table-cell">Почта</th>
+            <th class="column2 style1 s">Дата добавления</th>
+           
+        
+
+        </tr>
+    </thead>
+    <tbody>
+    {% csrf_token %}
+        {% for employee in employee_list %}
+        <tr class="row0">
+           <td>{{ employee.user.id }}</td>
+           <td><a href="{% url 'employee_info' employee.user.id %}">{{ employee.user.last_name }} {{ employee.user.first_name }}</a></td>
+           <td><a href="{% url 'employee_info' employee.user.id %}">{{ employee.user.email }}</a></td>
+           <td><a href="{% url 'employee_info' employee.user.id %}">{{ employee.user.date_joined }}</a></td>
+            
+      </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+{% endblock %}

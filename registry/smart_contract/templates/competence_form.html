@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+													<header class="major">
+														<h1>Форма добавления компетенции</h1>
+													</header>
+													<div class="col-xl-9 col-sm-auto  ">
+				                                <h3>Комптенции/области:</h3>
+				                                <h5>{% for competence in competence_list %}
+													 {{ competence }}<br> 
+													{% endfor %}</h5>
+												
+				                            </div>
+                                                <!-- Form section -->
+                                                <form name="buyForm" enctype="multipart/form-data" action="" method="post">
+													{% csrf_token %}
+													<label> Компетенция {{ form.competence_name }}</label> <br>
+
+
+                                                   
+                                                    <input type="submit" value="Отправить"><br><br>
+                                                </form>{% endblock %}

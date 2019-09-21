@@ -1,45 +1,67 @@
 
-        <div id="page-wrapper">
+<div id="app">
+    <div class="row">
+      <aside class="panel col-3 col-xl-2">
+  <div class="panel__inner">
+    
 
-            <!-- Header -->
-                <div id="header-wrapper">
-                    <div class="container">
+<section class="panel__reviews">
+  <header>
+    <h6 class="m-0 mb-2 text-gray">Отзывы</h6>
+  </header>
+  <ul class="panel__reviews-list list-unstyled">
+    
+      <li class="panel__reviews-item">
+        <a href="{% url 'lichniy-kabinet' %}" class="panel__reviews-link">Все отзывы</a>
+        
+          <span class="panel__reviews-count">{{ comment_count }}</span>
+        
+      </li>
+    
+      <li class="panel__reviews-item">
+        <a href="{% url 'lk_accept' %}" class="panel__reviews-link">Верифицировать отзыв</a>
+        
+          <span class="panel__reviews-count">{{ accept_count }}</span>
+        
+      </li>
+    
+      <li class="panel__reviews-item">
+        <a href="{% url 'add_comment' %}" class="panel__reviews-link">Добавить отзыв</a>
+        
+      </li>
+    
+  </ul>
+</section>
 
-                        <!-- Header -->
-                            <header id="header">
-                                <div class="inner">
 
-                                    <!-- Logo -->
-                                        <h1><a href="{% url 'base' %}" id="logo">Registry</a></h1>
 
-                                    <!-- Nav -->
-                                        <nav id="nav">
-                                            <ul>
-                                                <li><a href="{% url 'base' %}">Главная</a></li>
-                                                
-                                                    
-                                                
-                                    
-                                              {% if request.user.is_authenticated %} <li><a id="bluehref" href=""><i class="fa fa-user" aria-hidden="true"></i> Личный кабинет</a>
-                                                    <ul>
-														<li><a href="{% url 'lichniy-kabinet' %}">Мой кабинет</a></li>
-														<!-- <li><a href="">Настройки</a></li> -->
-                                                        <li><a href="{% url 'logout' %}">Выход</a></li>
-													</ul>
-                                                </li> 
-                                                {% else %}<li><a id="bluehref" href="{% url 'login' %}"><i class="fa fa-user" aria-hidden="true"></i> Тест</a>
-                                                    <ul>
-                                                        <li><a href="{% url 'login' %}">Войти</a></li>
-                                                        
-                                                    </ul>
-                                                </li>
-                                                {% endif %}
-                                            </ul>
-                                        </nav>
 
-                                </div>
-                            </header><!-- Banner -->
-                    {% block banner %}{% endblock %}   
-                            
-                    </div>
-                </div>
+
+
+
+<section class="panel__common mt-5">
+  <ul class="panel__common-list list-unstyled">
+    
+      <li class="panel__common-item">
+        <a href="{% url 'employee_list' %}" class="panel__common-link">Сотрудники</a>
+      </li>
+    
+      <li class="panel__common-item">
+        <a href="#" class="panel__common-link">Компания</a>
+      </li>
+    
+      <li class="panel__common-item">
+        <a href="{% url 'competence_list' %}" class="panel__common-link">Справочник компетенций</a>
+      </li>
+    
+      <li class="panel__common-item">
+        <a href="#" class="panel__common-link">Настройки</a>
+      </li>
+    
+  </ul>
+</section>
+
+  </div>
+</aside>
+
+ <main class="col-9 col-xl-10">

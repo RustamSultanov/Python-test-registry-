@@ -15,10 +15,15 @@
                                 </header>
                                 <nav id="nav_v">
                                     <ul>
-                                       {% if request.user %} <li  class="current_page_item"><a href="{% url 'lichniy-kabinet' %}">Мои отзывы</a></li>
+                                       {% if request.user %} <li  class="current_page_item"><a href="{% url 'lichniy-kabinet' %}">Все отзывы({{ comment_count }})</a></li>
                                        {% else %} <li ><a href="{% url 'lichniy-kabinet' %}">Мои отзывы</a></li> {% endif %}
                                         <li><a href="{% url 'add_comment' %}">Добавить отзыв</a></li>
-                                      {% if request.user %}  <li><a href="{% url 'lk_accept' %}">Принять отзывы</a></li>{% else %}<li class="current_page_item"><a href="#">Принять отзывы</a></li>{% endif %}
+                                      {% if request.user %}  <li><a href="{% url 'lk_accept' %}">Верифицировать отзывы({{ accept_count }})</a></li>{% else %}<li class="current_page_item"><a href="#">Принять отзывы</a></li>{% endif %}
+                                      <li></li>
+                                      <li><a href="{% url 'regist_employee' %}">Добавить сотрудника</a></li>
+                                      <li><a href="{% url 'employee_list' %}">Компания</a></li>
+                                      <li><a href="{% url 'competence_list' %}">Справочник компетенций</a></li>
+                                      <li><a href="#">Настройки</a></li>
                                     </ul>
                                 </nav>
                             </section>

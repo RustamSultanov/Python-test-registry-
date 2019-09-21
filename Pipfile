@@ -9,7 +9,9 @@ name = "pypi"
 python_version = "3.6"
 
 [packages]
-
-flask = "==0.12.2"
-requests = "==2.18.4"
-
+django = "*"
+django-debug-toolbar = "*"
+"psycopg2-binary" = "*"
+sanic = "*"
+pycryptodome = "*"
+django-mptt = "*"

@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="s-user p-4">
+  <header>
+    <h5>
+      Пользователь
+    </h5>
+  </header>
+  <div class="s-user__card card p-4 mt-5">
+  <header>
+  <h6 class="m-0 mb-2">{{ user.last_name }} {{ user.first_name }}</h6>
+  <small class="s-user__added-to-system text-gray">Добавление в систему: {{ user.date_joined }}</small>
+  <br>
+  <small class="text-gray">
+    Статус пользователя:
+    <span class="s-user__is-verify">Верифицирован</span>
+  </small>
+</header>
+
+  <div class="s-user__aside-block">
+  <div class="s-user__radial-rating">
+    <div id="indicatorContainer" data-rating="70"></div>
+  </div>
+  <div class="s-user__photo">
+    <img width="80" height="80" src="https://images.duckduckgo.com/iu/?u=http%3A%2F%2Fclassroomclipart.com%2Fimages%2Fgallery%2FClipart%2FFaces%2FTN_face-of-bald-headed-man-with-mustache.jpg&amp;f=1" alt="Фотография пользователя">
+  </div>
+</div>
+
+
+
+  
+
+<div class="s-user__info mt-3">
+  
+    <div class="s-user__info-line mb-2">
+      <span class="s-user__info-name">Компания:</span>
+      <a href="#">{{ user.useraccept.company }}</a>
+    </div>
+  
+    <div class="s-user__info-line mb-2">
+      <span class="s-user__info-name">Должность:</span>
+      <a href="#">{{ user.useraccept.position }}</a>
+    </div>
+  
+    <div class="s-user__info-line mb-2">
+      <span class="s-user__info-name">Опыт:</span>
+      <a href="#">Более 666 лет</a>
+    </div>
+  
+</div>
+
+  
+
+<div class="s-user__links mt-4">
+  <ul class="s-user__links-list">
+    
+      <li class="d-flex w-50 mb-2 pr-5">
+        
+          <span class="s-user__link-name">E-mail:</span>
+          <span class="text-gray">{{ user.email }}</span>
+        
+      </li>
+    
+      <li class="d-flex w-50 mb-2 pr-5">
+        
+          <span class="s-user__link-name">Телефон:</span>
+          <span class="text-gray">Пользователь решил скрыть данные</span>
+        
+      </li>
+    
+      <li class="d-flex w-50 mb-2 pr-5">
+        
+          <span class="s-user__link-name">Сайт:</span>
+          <span class="text-gray">Пользователь решил скрыть данные</span>
+        
+      </li>
+    
+      <li class="d-flex w-50 mb-2 pr-5">
+        
+          <span class="s-user__link-name">Facebook:</span>
+          <span class="text-gray">Пользователь решил скрыть данные</span>
+        
+      </li>
+    
+      <li class="d-flex w-50 mb-2 pr-5">
+        
+          <span class="s-user__link-name">Linkedin:</span>
+          <span class="text-gray">Пользователь решил скрыть данные</span>
+        
+      </li>
+    
+      <li class="d-flex w-50 mb-2 pr-5">
+        
+          <span class="s-user__link-name">МойКруг:</span>
+          <span class="text-gray">Пользователь решил скрыть данные</span>
+        
+      </li>
+    
+      <li class="d-flex w-50 mb-2 pr-5">
+        
+          <span class="s-user__link-name">Skype:</span>
+          <span class="text-gray">Пользователь решил скрыть данные</span>
+        
+      </li>
+    
+  </ul>
+</div>
+
+</div>
+
+
+  <div class=".s-user__tabs row mt-5">
+  <div class="col-12">
+    <ul class="tabs">
+      <li class="tab col s3">
+        <a href="#experience">Опыт и компетенции</a>
+      </li>
+      <li class="tab col s3">
+        <a href="#work-location">Места работы</a>
+      </li>
+    </ul>
+  </div>
+  <div id="experience" class="w-50 mt-5">
+    <div class="s-user__rating">
+      <span>Общий рейтинг сотрудника по компетенциям</span>
+      <div class="custom-progress custom-progress_primary mt-2" data-progress="70%">
+        <div class="custom-progress-line"></div>
+      </div>
+      <small>Всего верификаций: <span>{{ verify_count }}</span></small>
+    </div>
+    <div class="s-user__specific mt-4">
+      <span>#12312 Автоматизация бизнес-процессов в розничной торговле</span>
+      <div class="custom-progress custom-progress_secondary mt-2" data-progress="40%">
+        <div class="custom-progress-line"></div>
+      </div>
+      <small>Рубрикатор компании {{ user.useraccept.company }}</small>
+      <br>
+      <small>Всего верификаций: <span>4</span></small>
+    </div>
+  </div>
+  <div id="work-location" class="col s12">
+      work-location
+  </div>
+</div>
+
+</div>
+
+  </main>
+
+     {% endblock %}
