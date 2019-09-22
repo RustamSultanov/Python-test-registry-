@@ -306,10 +306,10 @@
     </span>
   </header>
   <p>
-    <a href="{{ comment.files.url }}">
+   {% if comment.files %}  <a href="{{ comment.files.url }}">
       {{ comment.files }}
     </a>
-   {% if comment.files %} <span class="text-gray">(1,8Mb)</span>{% endif %} 
+    <span class="text-gray">({{ comment.files.size|filesizeformat }})</span>{% endif %}
   </p>
   
 </section>
