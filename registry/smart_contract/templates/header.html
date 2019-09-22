@@ -12,14 +12,14 @@
   <ul class="panel__reviews-list list-unstyled">
     
       <li class="panel__reviews-item">
-        <a href="{% url 'lichniy-kabinet' %}" class="panel__reviews-link">Все отзывы</a>
+        <a href="{% url 'comment_list' %}" class="panel__reviews-link">Все отзывы</a>
         
           <span class="panel__reviews-count">{{ comment_count }}</span>
         
       </li>
     
       <li class="panel__reviews-item">
-        <a href="{% url 'lk_accept' %}" class="panel__reviews-link">Верифицировать отзыв</a>
+        <a href="{% url 'accept_list' %}" class="panel__reviews-link">Верифицировать отзыв</a>
         
           <span class="panel__reviews-count">{{ accept_count }}</span>
         

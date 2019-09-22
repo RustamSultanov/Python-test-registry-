@@ -23,9 +23,9 @@
         {% for comment in comment_list %}
         <tr class="row0">
            {% if comment.hide == True %} {% else %} 
-           {% if comment.failure_text %}<td class="column5 style4 s" onclick="window.location.href='{% url 'lk_failure' comment.id %}'; return false">{{ comment.id }}</td>
-           <td class="column2 style4 s" onclick="window.location.href='{% url 'lk_failure' comment.id %}'; return false"><a href="{% url 'lk_failure' comment.id %}">{{ comment.user }}</a></td>
-            <td class="column1 style1 s" onclick="window.location.href='{% url 'lk_failure' comment.id %}'; return false"><a href="{% url 'lk_failure' comment.id %}">{{ comment.date_create }}</a></td>
+           {% if comment.failure_text %}<td class="column5 style4 s" onclick="window.location.href='{% url 'failure_comment' comment.id %}'; return false">{{ comment.id }}</td>
+           <td class="column2 style4 s" onclick="window.location.href='{% url 'failure_comment' comment.id %}'; return false"><a href="{% url 'failure_comment' comment.id %}">{{ comment.user }}</a></td>
+            <td class="column1 style1 s" onclick="window.location.href='{% url 'failure_comment' comment.id %}'; return false"><a href="{% url 'failure_comment' comment.id %}">{{ comment.date_create }}</a></td>
          {% else %}  <td class="column5 style4 s" onclick="window.location.href='{% url 'accept_comment' comment.id %}'; return false">{{ forloop.counter }}</td>
            <td class="column2 style4 s" onclick="window.location.href='{% url 'accept_comment' comment.id %}'; return false"><a href="{% url 'accept_comment' comment.id %}">{{ comment.user }}</a></td>
             <td class="column1 style1 s" onclick="window.location.href='{% url 'accept_comment' comment.id %}'; return false"><a href="{% url 'accept_comment' comment.id %}">{{ comment.date_create }}</a></td>

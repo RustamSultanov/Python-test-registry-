@@ -40,66 +40,47 @@ def comment_counter(user):
 def base(request):
     return render(request, 'index.html', )
 
-'''
-Аутентифицированные админы регистрируют пользователей сети
-'''
+'''Аутентифицированные админы регистрируют пользователей сети'''
 @login_required
 def registration_view(request):
+    user = request.user
     form = RegistrationEmployeeForm(request.POST or None, auto_id=False)
     if form.is_valid():
         new_user = form.save(commit=False)
-        username = form.cleaned_data['username']
-        password = form.cleaned_data['password']
-        first_name = form.cleaned_data['first_name']
-        last_name = form.cleaned_data['last_name']
-        user = request.user
-        email = form.cleaned_data['username']
-        new_user.email = email
-        new_user.username = username
-        new_user.set_password(password)
-        new_user.first_name = first_name
-        new_user.last_name = last_name
+        new_user.set_password(form.cleaned_data['password'])
         new_user.save()
         user_company = UserAccept(user=User.objects.get(id=new_user.id), company=user.useraccept.company)
         user_company.save()
-        return HttpResponseRedirect(reverse('lichniy-kabinet'))
+        return HttpResponseRedirect(reverse('comment_list'))
     context = {
         'form': form
     }
     return render(request, 'register_form.html', context)
 
-
+'''Список коллег'''
 @login_required
 def employee_list(request):
     user = request.user
-    comment_count = comment_counter(user=user)
-    accept_count = Comment.objects.filter(recipient_user=user.id, accept=False, failure=False).count()
     employee_list = UserAccept.objects.select_related('user').filter(company=user.useraccept.company)
-    return render(request, 'lk_employee.html',
-                  {'employee_list': employee_list, 'comment_count': comment_count, 'accept_count': accept_count})
+    return render(request, 'employee_list.html',
+                  {'employee_list': employee_list})
 
-
+'''Список моих отзывов'''
 @login_required
-def lichniy_kabinet(request):
+def comment_list(request):
     user = request.user
-    comment_list_in = Comment.objects.prefetch_related('user', 'competence').filter(user=user.id)
-    comment_count = comment_counter(user=user)
-    accept_count = Comment.objects.filter(recipient_user=user.id, accept=False, failure=False).count()
+    comment_list_in = Comment.objects.prefetch_related('user', 'competence').filter(user=user.id)  
     comment_list_out = Comment.objects.prefetch_related('user', 'competence').filter(recipient_user=user.id)
     context = {
         'comment_list_in': comment_list_in,
-        'comment_list_out': comment_list_out,
-        'comment_count': comment_count,
-        'accept_count': accept_count
+        'comment_list_out': comment_list_out
     }
-    return render(request, 'lk_comment_list.html', context)
+    return render(request, 'comment_list.html', context)
 
-
+'''Справочник всех компетенций'''
 @login_required
 def competence_list(request):
     user = request.user
-    comment_count = comment_counter(user=user)
-    accept_count = Comment.objects.filter(recipient_user=user.id, accept=False, failure=False).count()
     competence_list = Competence.objects.all()
     form = CompetenceForm(request.POST or None)
     if form.is_valid():
@@ -110,22 +91,19 @@ def competence_list(request):
         new_competence.save()
         return HttpResponseRedirect(reverse('competence_list'))
     return render(request, 'competence_form.html',
-                  {'form': form, 'competence_list': competence_list, 'comment_count': comment_count,
-                   'accept_count': accept_count})
+                  {'form': form, 'competence_list': competence_list})
 
 
 @login_required
 def delete_comment(request, comment_id):
     author_id = request.user
     Comment.objects.get(user=author_id, id=comment_id, accept=False).delete()
-    return HttpResponseRedirect(reverse('lichniy-kabinet'))
+    return HttpResponseRedirect(reverse('comment_list'))
 
-
+'''Редактирование комментария'''
 @login_required
-def lk_comment(request, comment_id):
+def eddit_comment(request, comment_id):
     user = request.user
-    comment_count = comment_counter(user=user)
-    accept_count = Comment.objects.filter(recipient_user=user.id, accept=False, failure=False).count()
     comment = Comment.objects.get(user=user.id, id=comment_id)
     form = CommentEditForm(request.POST or None, request.FILES or None, initial=model_to_dict(comment),
                            instance=comment)
@@ -150,7 +128,7 @@ def lk_comment(request, comment_id):
                               init_user=init_user, adition_user=adition_user,
                               employee=employee, competence=competence, another_employee=another_employee)
             form.save_m2m()
-            return HttpResponseRedirect(reverse('lichniy-kabinet'))
+            return HttpResponseRedirect(reverse('comment_list'))
         if customer_flag == True:
             new_comment.implementer = implementer
             new_comment.customer = init_user
@@ -159,18 +137,17 @@ def lk_comment(request, comment_id):
                               init_user=init_user, adition_user=adition_user,
                               employee=employee, competence=competence, another_employee=another_employee)
             form.save_m2m()
-            return HttpResponseRedirect(reverse('lichniy-kabinet'))
+            return HttpResponseRedirect(reverse('comment_list'))
         return render(request, 'add-reviews.html',
-                      {'form': form, 'comment_count': comment_count, 'accept_count': accept_count})
+                      {'form': form})
     return render(request, 'add-reviews.html',
-                  {'form': form, 'comment_count': comment_count, 'accept_count': accept_count})
+                  {'form': form})
 
 
+'''Добавление комментария'''
 @login_required
 def add_comment(request):
     user = request.user
-    comment_count = comment_counter(user=user)
-    accept_count = Comment.objects.filter(recipient_user=user.id, accept=False, failure=False).count()
     form = CommentEditForm(request.POST or None, request.FILES or None, auto_id=False)
     if form.is_valid():
         new_comment = form.save(commit=False)
@@ -193,7 +170,7 @@ def add_comment(request):
                               init_user=init_user, adition_user=adition_user,
                               employee=employee, competence=competence, another_employee=another_employee)
             form.save_m2m()
-            return HttpResponseRedirect(reverse('lichniy-kabinet'))
+            return HttpResponseRedirect(reverse('comment_list'))
         if customer_flag == True:
             new_comment.implementer = implementer
             new_comment.customer = init_user
@@ -202,28 +179,24 @@ def add_comment(request):
                               init_user=init_user, adition_user=adition_user,
                               employee=employee, competence=competence, another_employee=another_employee)
             form.save_m2m()
-            return HttpResponseRedirect(reverse('lichniy-kabinet'))
+            return HttpResponseRedirect(reverse('comment_list'))
         return render(request, 'add-reviews.html',
-                      {'form': form, 'comment_count': comment_count, 'accept_count': accept_count})
+                      {'form': form})
     return render(request, 'add-reviews.html',
-                  {'form': form, 'comment_count': comment_count, 'accept_count': accept_count})
+                  {'form': form})
 
-
+'''Список ожидающих верификации комментариев'''
 @login_required
-def lk_accept(request):
+def accept_list(request):
     user = request.user
     comment_list = Comment.objects.filter(recipient_user=user.id, accept=False, failure=False).select_related('user')
-    comment_count = comment_counter(user=user)
-    accept_count = Comment.objects.filter(recipient_user=request.user.id, accept=False, failure=False).count()
-    return render(request, 'lk_accept.html',
-                  {'comment_list': comment_list, 'comment_count': comment_count, 'accept_count': accept_count})
+    return render(request, 'accept_list.html',
+                  {'comment_list': comment_list})
 
-
+'''Верификация комментария'''
 @login_required
 def accept_comment(request, comment_id):
     user = request.user
-    comment_count = comment_counter(user=user)
-    accept_count = Comment.objects.filter(recipient_user=request.user.id, accept=False, failure=False).count()
     comment = Comment.objects.get(recipient_user=request.user.id, id=comment_id, accept=False)
     disputs = Disputs.objects.filter(comment=comment_id)
     form1 = DisputForm(request.POST or None)
@@ -234,14 +207,14 @@ def accept_comment(request, comment_id):
         new_disput.user = user
         new_disput.comment = comment
         new_disput.save()
-        return HttpResponseRedirect(f'../lk-accept/accept-{comment_id}-comment#comments')
+        return HttpResponseRedirect(f'../accept/accept-{comment_id}-comment#comments')
     form = AcceptForm(request.POST or None, instance=comment)
     if form.is_valid():
         new_accept = form.save(commit=False)
         accept = form.cleaned_data['accept']
         failure = form.cleaned_data['failure']
         if failure == True:
-            return HttpResponseRedirect(f'../lk-failure/failure-{comment_id}-comment')
+            return HttpResponseRedirect(f'../failure/failure-{comment_id}-comment')
         if accept == True:
             user = User.objects.get(id=request.user.id)
             user.useraccept.accept = True
@@ -266,19 +239,16 @@ def accept_comment(request, comment_id):
                 print(data_comment, command)
                 os.system(command)
                 new_accept.save()
-                return HttpResponseRedirect(reverse('lichniy-kabinet'))
-            return HttpResponseRedirect(reverse('lichniy-kabinet'))
-        return HttpResponseRedirect(reverse('lichniy-kabinet'))
+                return HttpResponseRedirect(reverse('comment_list'))
+            return HttpResponseRedirect(reverse('comment_list'))
+        return HttpResponseRedirect(reverse('comment_list'))
     return render(request, 'accept_form.html',
-                  {'form': form, 'form1': form1, 'disputs': disputs, 'comment': comment, 'comment_count': comment_count,
-                   'accept_count': accept_count})
+                  {'form': form, 'form1': form1, 'disputs': disputs, 'comment': comment})
 
-
+'''Отклоняет отзыв с указанием причины'''
 @login_required
-def lk_failure(request, comment_id):
+def failure_comment(request, comment_id):
     user = request.user
-    comment_count = comment_counter(user=user)
-    accept_count = Comment.objects.filter(recipient_user=user.id, accept=False, failure=False).count()
     comment = Comment.objects.get(recipient_user=user.id, id=comment_id, failure=False)
     form = AcceptForm(request.POST or None, initial=model_to_dict(comment), instance=comment)
     if form.is_valid():
@@ -307,17 +277,15 @@ def lk_failure(request, comment_id):
             command = r'''curl -H "Content-type:application/json" --data '{"data":''' + data_comment + r'''}' http://localhost:3001/mineBlock'''
             os.system(command)
             new_failure.save()
-            return HttpResponseRedirect(reverse('lichniy-kabinet'))
-        return HttpResponseRedirect(reverse('lichniy-kabinet'))
+            return HttpResponseRedirect(reverse('comment_list'))
+        return HttpResponseRedirect(reverse('comment_list'))
     return render(request, 'failure_form.html',
-                  {'form': form, 'comment': comment, 'comment_count': comment_count, 'accept_count': accept_count})
+                  {'form': form, 'comment': comment})
 
-
+'''Информация о озыве с возможностью обсуждения отзыва'''
 @login_required
 def comment_info(request, comment_id):
     user = request.user
-    comment_count = comment_counter(user=user)
-    accept_count = Comment.objects.filter(recipient_user=user.id, accept=False, failure=False).count()
     disputs = Disputs.objects.filter(comment=comment_id)
     comment = Comment.objects.get(id=comment_id)
     form = DisputForm(request.POST or None)
@@ -328,20 +296,17 @@ def comment_info(request, comment_id):
         new_disput.user = user
         new_disput.comment = comment
         new_disput.save()
-        return HttpResponseRedirect(f'../lk-accepted-list/info-{comment_id}-comment#comments')
+        return HttpResponseRedirect(f'../accepted-list/info-{comment_id}-comment#comments')
     return render(request, 'comment_info.html',
-                  {'form': form, 'disputs': disputs, 'comment': comment, 'comment_count': comment_count,
-                   'accept_count': accept_count})
+                  {'form': form, 'disputs': disputs, 'comment': comment})
 
 
 @login_required
 def employee_info(request, user_id):
     user = User.objects.get(id=user_id)
-    comment_count = comment_counter(user=user)
-    accept_count = Comment.objects.filter(recipient_user=user.id, accept=False, failure=False).count()
     verify_count = Comment.objects.filter(recipient_user=user.id, accept=True).count() + Comment.objects.filter(
         user=user.id, accept=True).count()
-    return render(request, 'user.html', {'user': user, 'comment_count': comment_count, 'accept_count': accept_count,
+    return render(request, 'user.html', {'user': user,
                                          'verify_count': verify_count})
 
 
