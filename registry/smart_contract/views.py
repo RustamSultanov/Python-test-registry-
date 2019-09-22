@@ -31,11 +31,9 @@ def base(request):
     return render(request, 'index.html', )
 
 
-'''Аутентифицированные админы регистрируют пользователей сети'''
-
-
 @login_required
 def registration_view(request):
+    """Аутентифицированные админы регистрируют пользователей сети"""
     user = request.user
     form = RegistrationEmployeeForm(request.POST or None, auto_id=False)
     if form.is_valid():
@@ -51,22 +49,18 @@ def registration_view(request):
     return render(request, 'register_form.html', context)
 
 
-'''Список коллег'''
-
-
 @login_required
 def employee_list(request):
+    """Список коллег"""
     user = request.user
     employee_list = UserAccept.objects.select_related('user').filter(company=user.useraccept.company)
     return render(request, 'employee_list.html',
                   {'employee_list': employee_list})
 
 
-'''Список моих отзывов'''
-
-
 @login_required
 def comment_list(request):
+    """Список моих отзывов"""
     user = request.user
     comment_list_in = Comment.objects.prefetch_related('user', 'competence').filter(user=user.id)
     comment_list_out = Comment.objects.prefetch_related('user', 'competence').filter(recipient_user=user.id)
@@ -77,11 +71,9 @@ def comment_list(request):
     return render(request, 'comment_list.html', context)
 
 
-'''Справочник всех компетенций'''
-
-
 @login_required
 def competence_list(request):
+    """Справочник всех компетенций"""
     competence_list_ = Competence.objects.all()
     form = CompetenceForm(request.POST or None)
     if form.is_valid():
@@ -100,11 +92,9 @@ def delete_comment(request, comment_id):
     return HttpResponseRedirect(reverse_lazy('comment_list'))
 
 
-'''Редактирование комментария'''
-
-
 @login_required
 def edit_comment(request, comment_id):
+    """Редактирование отзывов"""
     user = request.user
     comment = Comment.objects.get(user=user.id, id=comment_id)
     form = CommentEditForm(request.POST or None, request.FILES or None, initial=model_to_dict(comment),
@@ -137,11 +127,9 @@ def edit_comment(request, comment_id):
                   {'form': form})
 
 
-'''Добавление комментария'''
-
-
 @login_required
 def add_comment(request):
+    """Добавление комментария"""
     form = CommentEditForm(request.POST or None, request.FILES or None, auto_id=False)
     if form.is_valid():
         new_comment = form.save(commit=False)
@@ -171,22 +159,18 @@ def add_comment(request):
                   {'form': form})
 
 
-'''Список ожидающих верификации комментариев'''
-
-
 @login_required
 def accept_list(request):
+    """Список ожидающих верификации комментариев"""
     user = request.user
     comment_list_ = Comment.objects.select_related('user').filter(recipient_user=user.id, accept=False, failure=False)
     return render(request, 'accept_list.html',
                   {'comment_list': comment_list_})
 
 
-'''Верификация комментария'''
-
-
 @login_required
 def accept_comment(request, comment_id):
+    """Верификация комментария"""
     user = request.user
     comment = Comment.objects.get(recipient_user=request.user.id, id=comment_id, accept=False)
     disputs = Disputs.objects.select_related('user', 'comment').filter(comment=comment_id)
@@ -235,17 +219,14 @@ def accept_comment(request, comment_id):
                   {'form': form, 'form1': form1, 'disputs': disputs, 'comment': comment})
 
 
-'''Отклоняет отзыв с указанием причины'''
-
-
 @login_required
 def failure_comment(request, comment_id):
+    """Отклоняет отзыв с указанием причины"""
     user = request.user
     comment = Comment.objects.get(recipient_user=user.id, id=comment_id, failure=False)
     form = AcceptForm(request.POST or None, initial=model_to_dict(comment), instance=comment)
     if form.is_valid():
-        new_failure = form.save(commit=False)
-        new_failure.save()
+        new_failure = form.save()
         user = User.objects.get(id=request.user.id)
         user.useraccept.failure = True
         user.useraccept.save()
@@ -273,11 +254,9 @@ def failure_comment(request, comment_id):
                   {'form': form, 'comment': comment})
 
 
-'''Информация о озыве с возможностью обсуждения отзыва'''
-
-
 @login_required
 def comment_info(request, comment_id):
+    '''Информация о отзыве с возможностью обсуждения отзыва'''
     user = request.user
     disputs = Disputs.objects.select_related('user', 'comment').filter(comment=comment_id)
     comment = Comment.objects.get(id=comment_id)
