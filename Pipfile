@@ -4,6 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [dev-packages]
+v = {editable = true,version = "*"}
 
 [requires]
 python_version = "3.7"

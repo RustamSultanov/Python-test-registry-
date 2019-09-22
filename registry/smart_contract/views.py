@@ -40,7 +40,9 @@ def comment_counter(user):
 def base(request):
     return render(request, 'index.html', )
 
-
+'''
+Аутентифицированные админы регистрируют пользователей сети
+'''
 @login_required
 def registration_view(request):
     form = RegistrationEmployeeForm(request.POST or None, auto_id=False)
