@@ -324,7 +324,7 @@
     {{ comment.failure_text }}
   </p>
 </section>{% endif %} 
-  <section class="files mt-5">
+  {% if comment.files %}<section class="files mt-5">
   <header class="mb-3">
     <span>
       <b>Файлы</b>
@@ -334,7 +334,7 @@
     <a href="{{ comment.files.url }}">
       {{ comment.files }}
     </a>
-   {% if comment.files %} <span class="text-gray">(1,8Mb)</span>{% endif %} 
+    <span class="text-gray">({{ comment.files.size|filesizeformat }})</span>{% endif %}
   </p>
   
 </section>
