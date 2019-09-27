@@ -5,6 +5,7 @@ name = "pypi"
 
 [dev-packages]
 v = {editable = true,version = "*"}
+pylint = "*"
 
 [requires]
 python_version = "3.7"
@@ -16,3 +17,4 @@ django-debug-toolbar = "*"
 sanic = "*"
 pycryptodome = "*"
 django-mptt = "*"
+gunicorn = "*"

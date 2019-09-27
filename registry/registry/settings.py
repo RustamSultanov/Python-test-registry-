@@ -81,7 +81,7 @@ WSGI_APPLICATION = 'registry.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-'NAME': 'blockchain',
+'NAME': 'reviews',
 'USER' : 'rustam',
 'PASSWORD' : 'EluTingol',
 'HOST' : '127.0.0.1',
