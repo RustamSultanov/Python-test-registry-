@@ -1,0 +1,144 @@
+@import url("https://fonts.googleapis.com/css?family=Roboto");
+
+
+
+
+
+
+
+
+body {
+	position: relative;
+width: 1440px;
+height: 1024px;
+
+background: #FFFFFF;
+}
+
+
+ 
+.rectangle1 {
+position: absolute;
+width: 64.98px;
+height: 64.98px;
+left: 711.1px;
+top: 222.95px;
+
+background: #94E5EA;
+opacity: 0.7;
+border-radius: 8px;
+transform: rotate(-45deg);
+}
+
+.rectangle2 {
+position: absolute;
+width: 64.98px;
+height: 64.98px;
+left: 674.55px;
+top: 222.95px;
+
+background: #5D9EC3;
+opacity: 0.6;
+border-radius: 8px;
+transform: rotate(-45deg);
+}
+
+.rectangle3 {
+position: absolute;
+width: 64.98px;
+height: 64.98px;
+left: 638px;
+top: 222.95px;
+
+background: #34A8E9;
+opacity: 0.7;
+border-radius: 8px;
+transform: rotate(-45deg);
+}
+
+.logo{
+position: absolute;
+width: 208px;
+height: 63px;
+left: 608px;
+top: 310.57px;
+
+font-family: Roboto;
+font-style: normal;
+font-weight: normal;
+line-height: normal;
+font-size: 44px;
+text-align: center;
+
+
+color: #183E54;
+}
+
+strong {
+	font-size: 20px;
+	top: 50px;
+	position: absolute;
+width: 208px;
+height: 63px;
+left: -5px;
+font-family: Roboto;
+font-style: normal;
+font-weight: normal;
+line-height: normal;
+text-align: center;
+}
+ 
+.header_title
+{
+/* Setting the standart for expertise & competency validation. */
+
+position: absolute;
+width: 960px;
+height: 63px;
+left: 240px;
+top: 390px;
+
+font-family: Roboto;
+font-style: normal;
+font-weight: 500;
+line-height: normal;
+font-size: 27px;
+text-align: center;
+
+color: #183E54;
+}
+.contact
+{
+position: absolute;
+width: 960px;
+height: 68px;
+left: 240px;
+top: 540px;
+
+font-family: Roboto;
+font-style: normal;
+font-weight: normal;
+line-height: 20px;
+font-size: 14px;
+text-align: center;
+
+color: #34AFF3;
+}
+
+.main_moto
+{
+position: absolute;
+width: 960px;
+height: 68px;
+left: 240px;
+top: 450px;
+
+font-family: Roboto;
+font-style: normal;
+font-weight: 300;
+line-height: 25px;
+font-size: 18px;
+text-align: center;
+
+color: #183E54;
+}
