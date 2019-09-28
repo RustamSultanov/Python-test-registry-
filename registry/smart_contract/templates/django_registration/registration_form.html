@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+<header class="major">
+	<h1>Регистрация сотрудника</h1>
+</header>
+<!-- Form section -->
+<form name="registerForm" action="" method="post">
+{% csrf_token %}
+{{ form.username|as_crispy_field }}<br>
+{{ form.email|as_crispy_field }}<br>
+{{ form.password1|as_crispy_field }}<br>
+{{ form.password2|as_crispy_field }}<br>
+
+{{ form.errors }}<br>
+
+<br>
+<input class="btn" type="submit" value="Зарегистрировать"><br><br>   
+</form>
+{% endblock %} 

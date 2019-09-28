@@ -42,9 +42,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'registry',
+    
+    'django_registration',
     'mptt',
-    'smart_contract'
+    'crispy_forms',
+    #custom apps
+    'registry',
+    'smart_contract',
 ]
 
 MIDDLEWARE = [
@@ -76,6 +80,16 @@ TEMPLATES = [
         },
     },
 ]
+
+EMAIL_HOST = 'smtp.yandex.ru'
+EMAIL_HOST_USER = 'sultanovelutingol@yandex.ru'
+EMAIL_HOST_PASSWORD = 'EluTingol'
+EMAIL_PORT = 465
+EMAIL_USE_SSL = True
+
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+ACCOUNT_ACTIVATION_DAYS = 7 # One-week activation window
 
 WSGI_APPLICATION = 'registry.wsgi.application'
 
