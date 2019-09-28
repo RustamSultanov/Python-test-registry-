@@ -137,10 +137,10 @@ def add_comment(request):
         employee = form.cleaned_data['employee']
         adition_user = form.cleaned_data['adition_user']
         another_employee = form.cleaned_data['another_employee']
+        new_comment.user = request.user
         if new_comment.implementer_flag:
             new_comment.implementer = request.user
             new_comment.customer = form.cleaned_data['implementer']
-            new_comment.user = request.user
             save_comment_form(new_comment=new_comment, adition_user=adition_user,
                               employee=employee, competence=competence, another_employee=another_employee)
             form.save_m2m()
@@ -148,7 +148,6 @@ def add_comment(request):
         if new_comment.customer_flag:
             new_comment.implementer = form.cleaned_data['implementer']
             new_comment.customer = request.user
-            new_comment.user = request.user
             save_comment_form(new_comment=new_comment, adition_user=adition_user,
                               employee=employee, competence=competence, another_employee=another_employee)
             form.save_m2m()
