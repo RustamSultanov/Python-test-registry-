@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<main class="auth-page">
+    <div class="dialog">
+<a href="/" class="mobile-navigate">
+    <svg width="16" height="16">
+      <use href="{% static "./images/fill.svg#arrow-left" %}"></use>
+    </svg>
+    <span class="mobile-navigate__text">Активация</span>
+  </a>
+  <div class="dialog__inner">
+    <header>
+      <h2 class="form__title">Активация</h2>
+    </header>
+    <p class="form__description">
+        Ваша учетная запись активирована.
+      </p>
+    <div class="form__button-wrapper mt-double">
+      <a href="{% url 'login' %}" class="waves-effect waves-light btn btn--primary">
+      Перейти на вход
+      </a>
+    </div>
+    <p class="form__description form__description--small">
+        Написать в <a href="/">Службу технической поддержки</a>
+      </p>
+  </div>
+</div>
+
+  </main>
+  {% endblock %} 

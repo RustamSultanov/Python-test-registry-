@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<main class="auth-page">
+    <div class="dialog">
+<a href="/" class="mobile-navigate">
+    <svg width="16" height="16">
+      <use href="{% static "./images/fill.svg#arrow-left" %}"></use>
+    </svg>
+    <span class="mobile-navigate__text">Регистрация</span>
+  </a>
+  <div class="dialog__inner">
+    <header>
+      <h2 class="form__title">Благодарим за регистрацию</h2>
+    </header>
+    <p class="form__description">
+        Для завершения регистрации необходимо
+        <b>подтвердить адрес вашей электронной почты</b>.
+      </p>
+      <p class="form__description">
+        Пожалуйста, проверьте ваш почтовый ящик. Мы уже выслали письмо.
+        Для подтверждения адреса вам необходимо перейти по ссылке,
+        размещенной в теле письма
+      </p>
+    <div class="form__button-wrapper mt-double">
+      <a href="/" class="waves-effect waves-light btn btn--primary">
+        Перейти на главную
+      </a>
+    </div>
+    <p class="form__description form__description--small">
+        Написать в <a href="/">Службу технической поддержки</a>
+      </p>
+  </div>
+</div>
+
+  </main>
+  {% endblock %} 
