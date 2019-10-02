@@ -5,18 +5,45 @@ from mptt.models import MPTTModel, TreeForeignKey
 
 
 # Create your models here.
-def get_custom_username(self):
-    return f"Компания: {self.useraccept.company}, сотрудник: {self.first_name} {self.last_name}"
+'''Автоматическое создание имени файла изображения'''
+def image_folder(instance, filename):
+	
+	filename = instance.slug + '.' + filename.split('.')[1]
+	return f"{instance.slug}/{filename}"
+
+class Company(models.Model):   
+    name = models.CharField(max_length=50, verbose_name='Название компании',
+                            blank=True, null=True)
+    legal_address = models.CharField(max_length=100, verbose_name='Юридический адресс',
+                            blank=True, null=True)
+    TIN = models.BigIntegerField(unique=True, verbose_name='ИНН', 
+                            help_text='10 целых чисел')
+    PSRN = models.BigIntegerField(unique=True, verbose_name='ОГРН', 
+                            help_text='13 целых чисел')
+    KPP = models.BigIntegerField(unique=True, verbose_name='КПП', 
+                            help_text='9 целых чисел')
+    CEO = models.CharField(max_length=50, blank=True, null=True)
+    logo = models.ImageField(upload_to=image_folder, 
+                            verbose_name='Логотип', blank=True, null=True)
+
+    def __str__(self):
+        return f"Компания: {self.name}"
+
+    class Meta:
+        verbose_name = 'Компания'
+        verbose_name_plural = 'Компании'
 
 
 # User.add_to_class("__str__", get_custom_username)
-
+def get_custom_username(self):
+    return f"Компания: {self.useraccept.company}, сотрудник: {self.first_name} {self.last_name}"
 
 class UserAccept(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     accept = models.BooleanField(blank=True, default=False)
     failure = models.BooleanField(blank=True, default=False)
     company = models.CharField(max_length=100)
+    company_test = models.ForeignKey(Company, models.SET_NULL, blank=True, null=True)
     position = models.CharField(max_length=100)
 
     def __str__(self):
@@ -34,6 +61,10 @@ class Competence(MPTTModel):
 
     def __str__(self):
         return f"#{self.id} {self.competence_name}; Создал: {self.owner.useraccept.company}"
+
+    class Meta:
+        verbose_name = 'Компетенция'
+        verbose_name_plural = 'Компетенции'
 
 
 class Comment(models.Model):

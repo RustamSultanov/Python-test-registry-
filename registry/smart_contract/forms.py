@@ -82,3 +82,12 @@ class RegistrationEmployeeForm(forms.ModelForm):
         if password_check!=password:
             raise forms.ValidationError('Пароль не совпадает!')
         
+class RegistrationCompanyForm(forms.Form):
+    
+    TIN_or_PSRN = forms.IntegerField(label='ИНН/ОГРН', help_text='ИНН содержит 10 чисел, ОГРН - 13 чисел')
+
+    def clean_TIN_or_PSRN(self):
+        TIN_or_PSRN = self.cleaned_data['TIN_or_PSRN']
+        l = len(str(TIN_or_PSRN))
+        if l != 10 and l != 13: #TODO: Костыль для проверки длины, нужно исправить
+            raise forms.ValidationError('Неверное количество чисел')

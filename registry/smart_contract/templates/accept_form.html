@@ -3,69 +3,71 @@
 {% block content %}
 				                          
 
-				                             <div class="s-review">
+<div class="s-review">
   <div class="s-review__inner">
     <header>
-  <h5 class="m-0 text-gray">Отзыв
-    <a href="#">#{{ comment.id }}</a>
-  </h5>
-</header>
+      <h5 class="m-0 text-gray">Отзыв
+        <a href="#">#{{ comment.id }}</a>
+      </h5>
+    </header>
 
     <div class="card p-4 mt-5">
-  <header>
-    <h5 class="text-gray">
-      Отзыв
-      <a href="#">{{ comment.id }}</a>
-      {% if comment.user == request.user %}от вашей компании
-      <a href="{% url 'employee_info' request.user.id %}">{{ request.user.useraccept.company }}</a>{% elif comment.customer_flag == True %}
-      от компании
-      <a href="{% url 'employee_info' comment.customer.id %}">{{ comment.customer.useraccept.company }}</a>{% else %}
-      от компании
-      <a href="{% url 'employee_info' comment.implementer.id %}">{{ comment.implementer.useraccept.company }}</a>{% endif %}
-    </h5>
-    <small class="text-gray">Создан:
-      <time>{{ comment.date_create }}</time>
-    </small>
-    <br>
-    <small class="text-gray">Роль:
-      <span>{% if comment.customer_flag == True %}Заказчик{% else %} Исполнитель {% endif %}</span>
-    </small>
-    <br>
-    <small class="text-gray">Статус:
-      <span> {% if comment.accept == True %}
-Отзыв верифицирован участниками и записан в блок
-{% elif comment.failure == True %}
-Отказ верифицирован участниками и записан в блок
-{% else %}
-{% if comment.failure_text %}
-Отзыв ожидает верификации отказа участниками
-{% else %}
-Отзыв ожидает верификации участниками
-{% endif %}
-{% endif %}</span>
-    </small>
-  </header>
-  <div class="mt-3">
-    <div class="mb-2">
-      <span>Инициатор:</span>
-      <a href="{% url 'employee_info' comment.init_user.id %}">{{ comment.init_user.first_name }} {{ comment.init_user.last_name }}</a>
-    </div>
-    <div class="mb-2">
-      <span>Компетенция:</span>
-       {% for competence in comment.competence.all %}
-													<a href="#">  {{ competence }}  </a> 
-													{% endfor %} 
-    </div>
-    <div>
-      <span>Компания:</span>
-      {% if comment.customer_flag == True %}
-     
-      <a href="{% url 'employee_info' comment.implementer.id %}">{{ comment.implementer.useraccept.company }}</a>{% else %}
-      
-      <a href="{% url 'employee_info' comment.customer.id %}">{{ comment.customer.useraccept.company }}</a>{% endif %}
-    </div>
+      <header>
+        <h5 class="text-gray">
+          Отзыв
+          <a href="#">{{ comment.id }}</a>
+          {% if comment.user == request.user %}от вашей компании
+          <a href="{% url 'employee_info' request.user.id %}">{{ request.user.useraccept.company }}</a>{% elif comment.customer_flag == True %}
+          от компании
+          <a href="{% url 'employee_info' comment.customer.id %}">{{ comment.customer.useraccept.company }}</a>{% else %}
+          от компании
+          <a href="{% url 'employee_info' comment.implementer.id %}">{{ comment.implementer.useraccept.company }}</a>{% endif %}
+        </h5>
+        <small class="text-gray">Создан:
+          <time>{{ comment.date_create }}</time>
+        </small>
+        <br>
+        <small class="text-gray">Роль:
+          <span>{% if comment.customer_flag == True %}Заказчик{% else %} Исполнитель {% endif %}</span>
+        </small>
+        <br>
+        <small class="text-gray">Статус:
+          <span>
+            {% if comment.accept == True %}
+              Отзыв верифицирован участниками и записан в блок
+            {% elif comment.failure == True %}
+              Отказ верифицирован участниками и записан в блок
+            {% else %}
+              {% if comment.failure_text %}
+                Отзыв ожидает верификации отказа участниками
+              {% else %}
+                Отзыв ожидает верификации участниками
+              {% endif %}
+            {% endif %}
+          </span>
+        </small>
+      </header>
+      <div class="mt-3">
+        <div class="mb-2">
+          <span>Инициатор:</span>
+          <a href="{% url 'employee_info' comment.init_user.id %}">{{ comment.init_user.first_name }} {{ comment.init_user.last_name }}</a>
+        </div>
+        <div class="mb-2">
+          <span>Компетенция:</span>
+          {% for competence in comment.competence.all %}
+              <a href="#">  {{ competence }}  </a> 
+            {% endfor %} 
+        </div>
+        <div>
+          <span>Компания:</span>
+            {% if comment.customer_flag == True %}
+              <a href="{% url 'employee_info' comment.implementer.id %}">{{ comment.implementer.useraccept.company }}</a>
+            {% else %}      
+              <a href="{% url 'employee_info' comment.customer.id %}">{{ comment.customer.useraccept.company }}</a>
+            {% endif %}
+        </div>
 
-<div class="mb-2">
+    <div class="mb-2">
       <span>Текст отзыва:</span>
       {{ comment.comment_text }} 
     </div>
@@ -73,605 +75,603 @@
 
 
 
-  </div>
+      </div>
  
- <form class="form form-add-reviews" action="" method="post">  {% csrf_token %}
-                                 <div class="io-block__controls d-flex mt-3">
-    <div class="io-block__control">
-      <label>
-        {{ form.accept }} 
-        <span>Подтвердить</span>
-      </label>
+      <form class="form form-add-reviews" action="" method="post">  {% csrf_token %}
+        <div class="io-block__controls d-flex mt-3">
+          <div class="io-block__control">
+            <label>
+              {{ form.accept }} 
+              <span>Подтвердить</span>
+            </label>
+          </div>
+          <div class="io-block__control ml-5">
+            <label>
+              {{ form.failure }}
+              <span>Отказать</span>
+            </label>
+          </div>
+        </div>                                                           
+        <p class="mt-5">                                                    
+          <input class="button status_waiting" type="submit" value="Отправить">
+        </p>
+      </form>
     </div>
-    <div class="io-block__control ml-5">
-      <label>
-        {{ form.failure }}
-        <span>Отказать</span>
-      </label>
-    </div>
-  </div>   
-                                                       
-                           <p class="mt-5">
-
-
-                                                   
-                                                    <input class="button status_waiting" type="submit" value="Отправить">
-  </p></form>
-</div>
 
     <div class="row mt-5">
- <div class="col-12">
-    <ul class="tabs">
-      <li class="tab col s3">
-        <a href="#review">Отзыв</a>
-      </li>
-      <li class="tab col s3"><a href="#comments">Комментарии</a></li>
-      <li class="tab col s3">
-        <a href="#reestr">Реестр</a>
-      </li>
-    </ul>
-  </div>
-
-<div id="review" class="col s12">
-    <div class="review-tab">
-  <section class="competention-section mt-5">
-    <header>
-  <span>
-    <b>Компетенция/область знаний</b>
-  </span>
-  <br>
-  <h5>
-    <a href="#">{% for competence in comment.competence.all %}
-                          {{ competence }} <br> 
-                          {% endfor %}</a>
-  </h5>
-</header>
-
-    <div class="mt-5">
-      <span>
-        <b>Сотрудники и заявленные компетенции</b>
-      </span>
-      <br>{% for employee in comment.employee.all %} 
- <div class="worker-card w-50 mt-3">
-  <div class="row">
-    <div class="col-2">
-      <span class="worker-card__img d-flex align-items-center justify-content-center">
-        <img src="https://images.duckduckgo.com/iu/?u=http%3A%2F%2Fclassroomclipart.com%2Fimages%2Fgallery%2FClipart%2FFaces%2FTN_face-of-bald-headed-man-with-mustache.jpg&f=1" width="60" alt="Фотография сотрудника">
-      </span>
-    </div>
-    <div class="col-10">
-      <span class="worker-card__name">
-        <b>{{ employee.first_name }} {{ employee.last_name }}
-</b>
-      </span>
-      <br>
-      <!-- <small class="text-gray">#2412 Интеграция лалала</small> -->
-      <br>
-      <small class="text-gray">
-        Ваша оценка:
-        <span class="worker-card__rate" data-worker-rate="100">
-          100% (отлично)
-        </span>
-      </small>
-    </div>
-  </div>
-</div>{% endfor %}
- 
- <!-- <button class="button button_add p-0">+ Добавить ещё одного сотрудника</button> -->
-
-    </div>
-  </section>
-  <section class="worker-section mt-5">
-    <div class="card p-4">
-      <div>
-        <span>
-          <b>{% if comment.customer_flag == True %}Исполнитель{% else %} Заказчик {% endif %}</b>
-        </span>
-        <br> <div class="worker-card w-50 mt-3">
-  <div class="row">
-    <div class="col-2">
-      <span class="worker-card__img d-flex align-items-center justify-content-center">
-        <img src="https://images.duckduckgo.com/iu/?u=http%3A%2F%2Fclassroomclipart.com%2Fimages%2Fgallery%2FClipart%2FFaces%2FTN_face-of-bald-headed-man-with-mustache.jpg&f=1" width="60" alt="Фотография сотрудника">
-      </span>
-    </div>
-    <div class="col-10">
-      <span class="worker-card__name">
-        <b>{% if comment.customer_flag == True %}
-      
-      {{ comment.customer.useraccept.company }} {% else %}
-      
-      {{ comment.implementer.useraccept.company }} {% endif %}</b>
-      </span>
-      <br>
-     <!--  <small class="text-gray">#2412 Интеграция лалала</small>
-      <br> -->
-      <small class="text-gray">
-        Ваша оценка:
-        <span class="worker-card__rate" data-worker-rate="100">
-          100% (отлично)
-        </span>
-      </small>
-    </div>
-  </div>
-</div>
-
+      <div class="col-12">
+        <ul class="tabs">
+          <li class="tab col s3">
+            <a href="#review">Отзыв</a>
+          </li>
+          <li class="tab col s3"><a href="#comments">Комментарии</a></li>
+          <li class="tab col s3">
+            <a href="#reestr">Реестр</a>
+          </li>
+        </ul>
       </div>
-      <div class="mt-5">
-        <span>
-          <b>Сотрудники исполнителя</b>
-        </span>
-       <br> {% for another_employee in comment.another_employee.all %} 
-                      
-                         <div class="worker-card w-50 mt-3">
-  <div class="row">
-    <div class="col-2">
-      <span class="worker-card__img d-flex align-items-center justify-content-center">
-        <img src="https://images.duckduckgo.com/iu/?u=http%3A%2F%2Fclassroomclipart.com%2Fimages%2Fgallery%2FClipart%2FFaces%2FTN_face-of-bald-headed-man-with-mustache.jpg&f=1" width="60" alt="Фотография сотрудника">
-      </span>
-    </div>
-    <div class="col-10">
-      <span class="worker-card__name">
-        <b>{{ another_employee.first_name }} {{ another_employee.last_name }}</b>
-      </span>
-      <br>
-     <!--  <small class="text-gray">#2412 Интеграция лалала</small>
-      <br> -->
-      <small class="text-gray">
-        Ваша оценка:
-        <span class="worker-card__rate" data-worker-rate="100">
-          100% (отлично)
-        </span>
-      </small>
-    </div>
-  </div>
-</div> {% endfor %}
- <!-- <button class="button button_add p-0">+ Добавить ещё одного сотрудника</button> -->
+      <div id="review" class="col s12">
+        <div class="review-tab">
+        <section class="competention-section mt-5">
+          <header>
+            <span>
+              <b>Компетенция/область знаний</b>
+            </span>
+            <br>
+            <h5>
+              <a href="#">
+                {% for competence in comment.competence.all %}
+                  {{ competence }} <br> 
+                {% endfor %}
+              </a>
+            </h5>
+          </header>
 
-      </div>
-    </div>
-  </section>
-  <section class="verify-section mt-5">
-    <div class="card p-4">
-      <span>
-        <b>Дополнительная верификация</b>
-      </span>
-   {% for adition_user in comment.adition_user.all %}   <br> <div class="worker-card w-50 mt-3">
-  <div class="row">
-    <div class="col-2">
-      <span class="worker-card__img d-flex align-items-center justify-content-center">
-        <img src="https://images.duckduckgo.com/iu/?u=http%3A%2F%2Fclassroomclipart.com%2Fimages%2Fgallery%2FClipart%2FFaces%2FTN_face-of-bald-headed-man-with-mustache.jpg&f=1" width="60" alt="Фотография сотрудника">
-      </span>
-    </div>
-    <div class="col-10">
-      <span class="worker-card__name">
-        <b>{{ adition_user.useraccept.company }} </b>
-      </span>
-      <br>
-     <!--  <small class="text-gray">#2412 Интеграция лалала</small>
-      <br> -->
-      <small class="text-gray">
-        Ваша оценка:
-        <span class="worker-card__rate" data-worker-rate="100">
-          100% (отлично)
-        </span>
-      </small>
-    </div>
-  </div>
-</div>{% endfor %}
- <!-- <button class="button button_add p-0">+ Добавить ещё одного сотрудника</button> -->
+          <div class="mt-5">
+            <span>
+              <b>Сотрудники и заявленные компетенции</b>
+            </span>
+            <br>
+            {% for employee in comment.employee.all %} 
+              <div class="worker-card w-50 mt-3">
+                <div class="row">
+                  <div class="col-2">
+                    <span class="worker-card__img d-flex align-items-center justify-content-center">
+                      <img src="https://images.duckduckgo.com/iu/?u=http%3A%2F%2Fclassroomclipart.com%2Fimages%2Fgallery%2FClipart%2FFaces%2FTN_face-of-bald-headed-man-with-mustache.jpg&f=1" width="60" alt="Фотография сотрудника">
+                    </span>
+                  </div>
+                  <div class="col-10">
+                    <span class="worker-card__name">
+                      <b>{{ employee.first_name }} {{ employee.last_name }}</b>
+                    </span>
+                    <br>
+                    <!-- <small class="text-gray">#2412 Интеграция лалала</small> -->
+                    <br>
+                    <small class="text-gray">
+                      Ваша оценка:
+                      <span class="worker-card__rate" data-worker-rate="100">
+                        100% (отлично)
+                      </span>
+                    </small>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
 
-    </div>
-  </section>
-  <section class="rate-section mt-5">
-    <header>
-      <span>
-        <b>Отзыв</b>
-      </span>
-    </header>
-    <div class="rating-list d-flex justify-content-between mt-3">
-      <div class="rating" data-rating="1">
-        <header class="mb-3">
-          <span>
-            <b>Общая оценка</b>
-          </span>
-        </header>
-        
-       {{ comment.rating }}
+        <!-- <button class="button button_add p-0">+ Добавить ещё одного сотрудника</button> -->
 
-        
-      </div>
-      <div class="rating" data-rating="2">
-        <header class="mb-3">
-          <span>
-            <b>Оценка компетенции</b>
-          </span>
-        </header>
-        
-        
-       {{ comment.rating_competence }}
-
-        
-      </div>
-      <div class="rating" data-rating="1">
-        <header class="mb-3">
-          <span>
-            <b>Оценка персонала</b>
-          </span>
-        </header>
-        
-        {{ comment.rating_employee }}
-        
-      </div>
-    </div>
-  </section>
-  <section class="comment mt-5">
-  <header class="mb-3">
-    <span>
-      <b>Комментарий</b>
-    </span>
-  </header>
-  <p class="comment__text text-gray">
-    {{ comment.comment_text }}
-  </p>
-</section>
-<section class="comment mt-5">
-  <header class="mb-3">
-   {% if comment.failure_text %} <span>
-      <b>Причина отказа</b>
-    </span>
-  </header>
-  <p class="comment__text text-gray">
-    {{ comment.failure_text }}
-  </p>
-</section>{% endif %} 
-  {% if comment.files %}<section class="files mt-5">
-  <header class="mb-3">
-    <span>
-      <b>Файлы</b>
-    </span>
-  </header>
-  <p>
-    <a href="{{ comment.files.url }}">
-      {{ comment.files }}
-    </a>
-    <span class="text-gray">({{ comment.files.size|filesizeformat }})</span>{% endif %}
-  </p>
-  
-</section>
-
-</div>
-
-  </div>
-<div id="comments" class="col s12">
-    <div class="tab-comment b-comment-wrapper mt-5">
-  <header class="mb-3">
-    <span><b>Комментарии</b></span>
-  </header>
-  {% for disput in disputs %}
-
-    <div class="b-comment">
-      <div class="b-comment__text">
-        <time class="mb-2 d-flex"><small>{{ disput.date_create }}</small></time>
-          <p>
-            {{ disput.text }}
-          </p>
-      </div>
-      <div class="w-50 mt-3">
-          <div class="row">
-            <div class="col-2">
-              <span class="d-flex align-items-center justify-content-center">
-                <img src="https://images.duckduckgo.com/iu/?u=http%3A%2F%2Fclassroomclipart.com%2Fimages%2Fgallery%2FClipart%2FFaces%2FTN_face-of-bald-headed-man-with-mustache.jpg&f=1" width="60" alt="Фотография сотрудника">
-              </span>
-            </div>
-            <div class="col-10">
+          </div>
+        </section>
+        <section class="worker-section mt-5">
+          <div class="card p-4">
+            <div>
               <span>
-                <b>{{ disput.user.last_name }} {{ disput.user.first_name }}</b>
+                <b>{% if comment.customer_flag == True %}Исполнитель{% else %} Заказчик {% endif %}</b>
               </span>
-              <br>
-              <!-- <small class="text-gray">#2412 Интеграция лалала</small> -->
-            </div>
+              <br> <div class="worker-card w-50 mt-3">
+        <div class="row">
+          <div class="col-2">
+            <span class="worker-card__img d-flex align-items-center justify-content-center">
+              <img src="https://images.duckduckgo.com/iu/?u=http%3A%2F%2Fclassroomclipart.com%2Fimages%2Fgallery%2FClipart%2FFaces%2FTN_face-of-bald-headed-man-with-mustache.jpg&f=1" width="60" alt="Фотография сотрудника">
+            </span>
+          </div>
+          <div class="col-10">
+            <span class="worker-card__name">
+              <b>{% if comment.customer_flag == True %}
+            
+            {{ comment.customer.useraccept.company }} {% else %}
+            
+            {{ comment.implementer.useraccept.company }} {% endif %}</b>
+            </span>
+            <br>
+            <!--  <small class="text-gray">#2412 Интеграция лалала</small>
+            <br> -->
+            <small class="text-gray">
+              Ваша оценка:
+              <span class="worker-card__rate" data-worker-rate="100">
+                100% (отлично)
+              </span>
+            </small>
           </div>
         </div>
-    </div>
-  {% endfor %} 
-   
+        </div>
 
-  <form action="" method="post">
-    {% csrf_token %} 
-    <header class="mt-5">
-      <span><b>Добавить комментарий</b></span>
-    </header>
-    <div class="input-field">
-      {{ form1.text }}
-      <label for="textarea1">Введите комментарий</label>
-    </div>
-    <div>
-      <input type="submit" value="Добавить" class="button button_primary">
-    </div>
-    </form></div>
-  
-</div>
+            </div>
+            <div class="mt-5">
+              <span>
+                <b>Сотрудники исполнителя</b>
+              </span>
+              <br> {% for another_employee in comment.another_employee.all %} 
+                            
+                                <div class="worker-card w-50 mt-3">
+        <div class="row">
+          <div class="col-2">
+            <span class="worker-card__img d-flex align-items-center justify-content-center">
+              <img src="https://images.duckduckgo.com/iu/?u=http%3A%2F%2Fclassroomclipart.com%2Fimages%2Fgallery%2FClipart%2FFaces%2FTN_face-of-bald-headed-man-with-mustache.jpg&f=1" width="60" alt="Фотография сотрудника">
+            </span>
+          </div>
+          <div class="col-10">
+            <span class="worker-card__name">
+              <b>{{ another_employee.first_name }} {{ another_employee.last_name }}</b>
+            </span>
+            <br>
+            <!--  <small class="text-gray">#2412 Интеграция лалала</small>
+            <br> -->
+            <small class="text-gray">
+              Ваша оценка:
+              <span class="worker-card__rate" data-worker-rate="100">
+                100% (отлично)
+              </span>
+            </small>
+          </div>
+        </div>
+        </div> {% endfor %}
+        <!-- <button class="button button_add p-0">+ Добавить ещё одного сотрудника</button> -->
 
-  </div>
-  
-  <div id="reestr" class="mw-60 mt-5">
-    <div class="review-tree__item review-tree_create">
-  <header>
-    <span>Создание отзыва
-      <a href="#">{{ comment.id }}</a>
-    </span>
-    <br>
-    <span>Компания:
-      {% if comment.user == request.user %}
-      <a href="{% url 'employee_info' request.user.id %}">{{ request.user.useraccept.company }}</a>{% elif comment.customer_flag == True %}
-      
-      <a href="{% url 'employee_info' comment.customer.id %}">{{ comment.customer.useraccept.company }}</a>{% else %}
-     
-      <a href="{% url 'employee_info' comment.implementer.id %}">{{ comment.implementer.useraccept.company }}</a>{% endif %}
-    </span>
-  </header>
-  <main class="review-tree-bg review-create__main p-4 mt-3">
-    <ul class="list-unstyled">
-      <li>
-        <span class="review-tree__field">Отзыв:
-          <a href="#">{{ comment.id }}</a>
-        </span>
-      </li>
-      <li>
-        <span class="review-tree__field">Создан:
-          <span>{{ comment.date_create }}</span>
-        </span>
-      </li>
-      <li>
-        <span class="review-tree__field">Компетенция:
-          {% for competence in comment.competence.all %}
-                        <a href="#">  {{ competence }}  </a>
-                          {% endfor %}
-        </span>
-      </li>
-      <li>
-        <span class="review-tree__field">Инициатор:
-          <a href="{% url 'employee_info' comment.init_user.id %}">{{ comment.init_user.first_name }} {{ comment.init_user.last_name }}</a>
-        </span>
-      </li>
-      <li>
-        <span class="review-tree__field">Руководитель инициатора:
-          <a href="{% url 'employee_info' comment.user.id %}">{{ comment.user.first_name }} {{ comment.user.last_name }}</a>
-        </span>
-      </li>
-      <li>
-        <span class="review-tree__field">Отзыв на компанию:
-          {% if comment.customer_flag == True %}
-     
-      <a href="{% url 'employee_info' comment.implementer.id %}">{{ comment.implementer.useraccept.company }}</a>{% else %}
-      
-      <a href="{% url 'employee_info' comment.customer.id %}">{{ comment.customer.useraccept.company }}</a>{% endif %}
-        </span>
-      </li>
-      <li>
-        <span class="review-tree__field">Сотрудники компании в отзыве:
-          {% for another_employee in comment.another_employee.all %}
-                      <a href="{% url 'employee_info' another_employee.id %}">    {{ another_employee.first_name }} {{ another_employee.first_name }}</a> <br> 
-                          {% endfor %}
-        </span>
-        
-      </li>
-    </ul>
-  </main>
-</div>
-{% if comment.date_update > comment.date_create %} 
-<div class="review-tree__item review-tree_refresh">
+            </div>
+          </div>
+        </section>
+        <section class="verify-section mt-5">
+          <div class="card p-4">
+            <span>
+              <b>Дополнительная верификация</b>
+            </span>
+          {% for adition_user in comment.adition_user.all %}   <br> <div class="worker-card w-50 mt-3">
+        <div class="row">
+          <div class="col-2">
+            <span class="worker-card__img d-flex align-items-center justify-content-center">
+              <img src="https://images.duckduckgo.com/iu/?u=http%3A%2F%2Fclassroomclipart.com%2Fimages%2Fgallery%2FClipart%2FFaces%2FTN_face-of-bald-headed-man-with-mustache.jpg&f=1" width="60" alt="Фотография сотрудника">
+            </span>
+          </div>
+          <div class="col-10">
+            <span class="worker-card__name">
+              <b>{{ adition_user.useraccept.company }} </b>
+            </span>
+            <br>
+            <!--  <small class="text-gray">#2412 Интеграция лалала</small>
+            <br> -->
+            <small class="text-gray">
+              Ваша оценка:
+              <span class="worker-card__rate" data-worker-rate="100">
+                100% (отлично)
+              </span>
+            </small>
+          </div>
+        </div>
+        </div>{% endfor %}
+        <!-- <button class="button button_add p-0">+ Добавить ещё одного сотрудника</button> -->
 
-  <header>
-    <span>Обновление отзыва
-      <a href="#">{{ comment.id }}</a>
-    </span>
-    <br>
-    <span>Компания:
-      {% if comment.user == request.user %}
-      <a href="{% url 'employee_info' request.user.id %}">{{ request.user.useraccept.company }}</a>{% elif comment.customer_flag == True %}
-      
-      <a href="{% url 'employee_info' comment.customer.id %}">{{ comment.customer.useraccept.company }}</a>{% else %}
-     
-      <a href="{% url 'employee_info' comment.implementer.id %}">{{ comment.implementer.useraccept.company }}</a>{% endif %}
-    </span>
-  </header>
-  <main class="review-tree-bg p-4 mt-3">
-    <ul class="list-unstyled">
-      <li>
-        <span class="review-tree__field">Отзыв:
-          <a href="#">{{ comment.id }}</a>
-        </span>
-      </li>
-      <li>
-        <span class="review-tree__field">Создан:
-          <span>{{ comment.date_create }}</span>
-        </span>
-      </li>
-      <li>
-        <span class="review-tree__field">Компетенция:
-          {% for competence in comment.competence.all %}
-                        <a href="#">  {{ competence }}  </a>
-                          {% endfor %}
-        </span>
-      </li>
-      <li>
-        <span class="review-tree__field">Инициатор:
-          <a href="{% url 'employee_info' comment.init_user.id %}">{{ comment.init_user.first_name }} {{ comment.init_user.last_name }}</a>
-        </span>
-      </li>
-      <li>
-    </ul>
+          </div>
+        </section>
+        <section class="rate-section mt-5">
+        <header>
+          <span>
+            <b>Отзыв</b>
+          </span>
+        </header>
+        <div class="rating-list d-flex justify-content-between mt-3">
+          <div class="rating" data-rating="1">
+            <header class="mb-3">
+              <span>
+                <b>Общая оценка</b>
+              </span>
+            </header>
+            
+            {{ comment.rating }}
 
-    <span class="mt-3 d-flex mb-2">
-      <b>Обновлено:
-      	<br>{{ comment.date_update }}</b>
-    </span>
-    <ul>
-     {% for adition_user in comment.adition_user.all %}
- <li class="mb-2">
-        +Добавлен дополнительный верификатор в отзыве:
-        <a href="#">{{ adition_user.useraccept.company }} </a>
-      </li>{% endfor %}
-    </ul>
-  </main>
-</div>{% endif %}
+            
+          </div>
+          <div class="rating" data-rating="2">
+            <header class="mb-3">
+              <span>
+                <b>Оценка компетенции</b>
+              </span>
+            </header>
+            
+            
+            {{ comment.rating_competence }}
 
-{% if comment.accept == True %}
-<div class="review-tree__item review-tree_verify_done">
-
-
-  <header>
-    <span>Верификация отзыва
-       <a href="#">{{ comment.id }}</a>
-    </span>
-    <br>
-    <span>Компания:
-      {% if comment.user == request.user %}
-      <a href="{% url 'employee_info' request.user.id %}">{{ request.user.useraccept.company }}</a>{% elif comment.customer_flag == True %}
-      
-      <a href="{% url 'employee_info' comment.customer.id %}">{{ comment.customer.useraccept.company }}</a>{% else %}
-     
-      <a href="{% url 'employee_info' comment.implementer.id %}">{{ comment.implementer.useraccept.company }}</a>{% endif %}
-    </span>
-  </header>
-  <main class="review-tree-bg p-4 mt-3">
-    <ul class="list-unstyled">
-      <li>
-        <span class="review-tree__field">Отзыв:
-          <a href="#">{{ comment.id }}</a>
+            
+          </div>
+          <div class="rating" data-rating="1">
+            <header class="mb-3">
+              <span>
+                <b>Оценка персонала</b>
+              </span>
+            </header>
+            
+            {{ comment.rating_employee }}
+            
+          </div>
+        </div>
+        </section>
+        <section class="comment mt-5">
+        <header class="mb-3">
+          <span>
+            <b>Комментарий</b>
+          </span>
+        </header>
+        <p class="comment__text text-gray">
+          {{ comment.comment_text }}
+        </p>
+        </section>
+        <section class="comment mt-5">
+        <header class="mb-3">
+          {% if comment.failure_text %} <span>
+            <b>Причина отказа</b>
+          </span>
+        </header>
+        <p class="comment__text text-gray">
+          {{ comment.failure_text }}
+        </p>
+        </section>
+        {% endif %} 
+      {% if comment.files %}<section class="files mt-5">
+      <header class="mb-3">
+        <span>
+          <b>Файлы</b>
         </span>
-      </li>
-      <li>
-        <span class="review-tree__field">Создан:
-          <span>{{ comment.date_create }}</span>
-        </span>
-      </li>
-    
-     <li>
-        <span class="review-tree__field">Обновление:
-          <span>{{ comment.date_update }}</span>
-        </span>
-      </li>
-      <li>
-        <span class="review-tree__field">Верификация:
-          <span>{{ comment.date_update }}</span>
-        </span>
-      </li>
-      <li>
-        <span class="review-tree__field">Отзыв верифицирован:
-          {% for recipient_user in comment.recipient_user.all %}
- <a href="{% url 'employee_info' comment.recipient_user.id %}">{{ recipient_user.useraccept.ccompany }} {{ recipient_user.first_name }} {{ recipient_user.last_name }}</a> <br>
-{% endfor %}
-        </span>
-      </li>
-      <li>
-        <span class="review-tree__field"><b> Статус</b>
-          <span>Отзыв #{{ comment.id }} верифицирован и записан в блокчейн</span>
-        </span>
-      </li>
-    </ul>
-  </main>
-</div>{% endif %}
-
-{% if comment.failure_text %}    <div class="review-tree__item review-tree_verify_fail">
-
-  <header>
-    <span>Отказ верификации отзыва 
-     <a href="#">{{ comment.id }}</a>
-    </span>
-    <br>
-    <span>Компания:
-      {% if comment.user == request.user %}
-      <a href="{% url 'employee_info' request.user.id %}">{{ request.user.useraccept.company }}</a>{% elif comment.customer_flag == True %}
-      
-      <a href="{% url 'employee_info' comment.customer.id %}">{{ comment.customer.useraccept.company }}</a>{% else %}
-     
-      <a href="{% url 'employee_info' comment.implementer.id %}">{{ comment.implementer.useraccept.company }}</a>{% endif %}
-    </span>
-  </header>
-  <main class="review-tree-bg p-4 mt-3">
-    <ul class="list-unstyled">
-      <li>
-        <span class="review-tree__field">Отзыв:
-          <a href="#">{{ comment.id }}</a>
-        </span>
-      </li>
-      <li>
-        <span class="review-tree__field">Создан:
-          <span>{{ comment.date_create }}</span>
-        </span>
-      </li>
-    
-     <li>
-        <span class="review-tree__field">Обновление:
-          <span>{{ comment.date_update }}</span>
-        </span>
-      </li>
-
-      <span class="mt-3 mb-2 d-flex"><b>Причина:</b></span>
+      </header>
       <p>
-        <em>
-{{ comment.failure_text }}</em>
+        <a href="{{ comment.files.url }}">
+          {{ comment.files }}
+        </a>
+        <span class="text-gray">({{ comment.files.size|filesizeformat }})</span>{% endif %}
       </p>
-    </ul>
-  </main>
-</div>{% endif %}
 
- {% if comment.failure == True %}   <div class="review-tree__item review-tree_verify_ok">
+      </section>
 
-  <header>
-   <span>Отказ верификации отзыва 
-     <a href="#">{{ comment.id }}</a>
-    </span>
-    <br>
-    <span>Компания:
-      {% if comment.user == request.user %}
-      <a href="{% url 'employee_info' request.user.id %}">{{ request.user.useraccept.company }}</a>{% elif comment.customer_flag == True %}
+        </div>
+      </div>
+      <div id="comments" class="col s12">
+        <div class="tab-comment b-comment-wrapper mt-5">
+      <header class="mb-3">
+        <span><b>Комментарии</b></span>
+      </header>
+      {% for disput in disputs %}
+
+        <div class="b-comment">
+          <div class="b-comment__text">
+            <time class="mb-2 d-flex"><small>{{ disput.date_create }}</small></time>
+              <p>
+                {{ disput.text }}
+              </p>
+          </div>
+          <div class="w-50 mt-3">
+              <div class="row">
+                <div class="col-2">
+                  <span class="d-flex align-items-center justify-content-center">
+                    <img src="https://images.duckduckgo.com/iu/?u=http%3A%2F%2Fclassroomclipart.com%2Fimages%2Fgallery%2FClipart%2FFaces%2FTN_face-of-bald-headed-man-with-mustache.jpg&f=1" width="60" alt="Фотография сотрудника">
+                  </span>
+                </div>
+                <div class="col-10">
+                  <span>
+                    <b>{{ disput.user.last_name }} {{ disput.user.first_name }}</b>
+                  </span>
+                  <br>
+                  <!-- <small class="text-gray">#2412 Интеграция лалала</small> -->
+                </div>
+              </div>
+            </div>
+        </div>
+      {% endfor %} 
+        
+
+      <form action="" method="post">
+        {% csrf_token %} 
+        <header class="mt-5">
+          <span><b>Добавить комментарий</b></span>
+        </header>
+        <div class="input-field">
+          {{ disput_form.text }}
+          <label for="textarea1">Введите комментарий</label>
+        </div>
+        <div>
+          <input type="submit" value="Добавить" class="button button_primary">
+        </div>
+        </form>
+        </div>
+      </div>
+    </div>
+  
+    <div id="reestr" class="mw-60 mt-5">
+      <div class="review-tree__item review-tree_create">
+    <header>
+      <span>Создание отзыва
+        <a href="#">{{ comment.id }}</a>
+      </span>
+      <br>
+      <span>Компания:
+        {% if comment.user == request.user %}
+        <a href="{% url 'employee_info' request.user.id %}">{{ request.user.useraccept.company }}</a>{% elif comment.customer_flag == True %}
+        
+        <a href="{% url 'employee_info' comment.customer.id %}">{{ comment.customer.useraccept.company }}</a>{% else %}
       
-      <a href="{% url 'employee_info' comment.customer.id %}">{{ comment.customer.useraccept.company }}</a>{% else %}
-     
-      <a href="{% url 'employee_info' comment.implementer.id %}">{{ comment.implementer.useraccept.company }}</a>{% endif %}
-    </span>
-  </header>
-  <main class="review-tree-bg p-4 mt-3">
-    <ul class="list-unstyled">
+        <a href="{% url 'employee_info' comment.implementer.id %}">{{ comment.implementer.useraccept.company }}</a>{% endif %}
+      </span>
+    </header>
+    <main class="review-tree-bg review-create__main p-4 mt-3">
+      <ul class="list-unstyled">
+        <li>
+          <span class="review-tree__field">Отзыв:
+            <a href="#">{{ comment.id }}</a>
+          </span>
+        </li>
+        <li>
+          <span class="review-tree__field">Создан:
+            <span>{{ comment.date_create }}</span>
+          </span>
+        </li>
+        <li>
+          <span class="review-tree__field">Компетенция:
+            {% for competence in comment.competence.all %}
+                          <a href="#">  {{ competence }}  </a>
+                            {% endfor %}
+          </span>
+        </li>
+        <li>
+          <span class="review-tree__field">Инициатор:
+            <a href="{% url 'employee_info' comment.init_user.id %}">{{ comment.init_user.first_name }} {{ comment.init_user.last_name }}</a>
+          </span>
+        </li>
+        <li>
+          <span class="review-tree__field">Руководитель инициатора:
+            <a href="{% url 'employee_info' comment.user.id %}">{{ comment.user.first_name }} {{ comment.user.last_name }}</a>
+          </span>
+        </li>
+        <li>
+          <span class="review-tree__field">Отзыв на компанию:
+            {% if comment.customer_flag == True %}
+      
+        <a href="{% url 'employee_info' comment.implementer.id %}">{{ comment.implementer.useraccept.company }}</a>{% else %}
+        
+        <a href="{% url 'employee_info' comment.customer.id %}">{{ comment.customer.useraccept.company }}</a>{% endif %}
+          </span>
+        </li>
+        <li>
+          <span class="review-tree__field">Сотрудники компании в отзыве:
+            {% for another_employee in comment.another_employee.all %}
+                        <a href="{% url 'employee_info' another_employee.id %}">    {{ another_employee.first_name }} {{ another_employee.first_name }}</a> <br> 
+                            {% endfor %}
+          </span>
+          
+        </li>
+      </ul>
+    </main>
+  </div>
+  {% if comment.date_update > comment.date_create %} 
+  <div class="review-tree__item review-tree_refresh">
+
+    <header>
+      <span>Обновление отзыва
+        <a href="#">{{ comment.id }}</a>
+      </span>
+      <br>
+      <span>Компания:
+        {% if comment.user == request.user %}
+        <a href="{% url 'employee_info' request.user.id %}">{{ request.user.useraccept.company }}</a>{% elif comment.customer_flag == True %}
+        
+        <a href="{% url 'employee_info' comment.customer.id %}">{{ comment.customer.useraccept.company }}</a>{% else %}
+      
+        <a href="{% url 'employee_info' comment.implementer.id %}">{{ comment.implementer.useraccept.company }}</a>{% endif %}
+      </span>
+    </header>
+    <main class="review-tree-bg p-4 mt-3">
+      <ul class="list-unstyled">
+        <li>
+          <span class="review-tree__field">Отзыв:
+            <a href="#">{{ comment.id }}</a>
+          </span>
+        </li>
+        <li>
+          <span class="review-tree__field">Создан:
+            <span>{{ comment.date_create }}</span>
+          </span>
+        </li>
+        <li>
+          <span class="review-tree__field">Компетенция:
+            {% for competence in comment.competence.all %}
+                          <a href="#">  {{ competence }}  </a>
+                            {% endfor %}
+          </span>
+        </li>
+        <li>
+          <span class="review-tree__field">Инициатор:
+            <a href="{% url 'employee_info' comment.init_user.id %}">{{ comment.init_user.first_name }} {{ comment.init_user.last_name }}</a>
+          </span>
+        </li>
+        <li>
+      </ul>
+
+      <span class="mt-3 d-flex mb-2">
+        <b>Обновлено:
+          <br>{{ comment.date_update }}</b>
+      </span>
+      <ul>
+      {% for adition_user in comment.adition_user.all %}
+  <li class="mb-2">
+          +Добавлен дополнительный верификатор в отзыве:
+          <a href="#">{{ adition_user.useraccept.company }} </a>
+        </li>{% endfor %}
+      </ul>
+    </main>
+  </div>{% endif %}
+
+  {% if comment.accept == True %}
+  <div class="review-tree__item review-tree_verify_done">
+
+
+    <header>
+      <span>Верификация отзыва
+        <a href="#">{{ comment.id }}</a>
+      </span>
+      <br>
+      <span>Компания:
+        {% if comment.user == request.user %}
+        <a href="{% url 'employee_info' request.user.id %}">{{ request.user.useraccept.company }}</a>{% elif comment.customer_flag == True %}
+        
+        <a href="{% url 'employee_info' comment.customer.id %}">{{ comment.customer.useraccept.company }}</a>{% else %}
+      
+        <a href="{% url 'employee_info' comment.implementer.id %}">{{ comment.implementer.useraccept.company }}</a>{% endif %}
+      </span>
+    </header>
+    <main class="review-tree-bg p-4 mt-3">
+      <ul class="list-unstyled">
+        <li>
+          <span class="review-tree__field">Отзыв:
+            <a href="#">{{ comment.id }}</a>
+          </span>
+        </li>
+        <li>
+          <span class="review-tree__field">Создан:
+            <span>{{ comment.date_create }}</span>
+          </span>
+        </li>
+      
       <li>
-        <span class="review-tree__field">Отзыв:
-          <a href="#">{{ comment.id }}</a>
-        </span>
-      </li>
+          <span class="review-tree__field">Обновление:
+            <span>{{ comment.date_update }}</span>
+          </span>
+        </li>
+        <li>
+          <span class="review-tree__field">Верификация:
+            <span>{{ comment.date_update }}</span>
+          </span>
+        </li>
+        <li>
+          <span class="review-tree__field">Отзыв верифицирован:
+            {% for recipient_user in comment.recipient_user.all %}
+  <a href="{% url 'employee_info' comment.recipient_user.id %}">{{ recipient_user.useraccept.ccompany }} {{ recipient_user.first_name }} {{ recipient_user.last_name }}</a> <br>
+  {% endfor %}
+          </span>
+        </li>
+        <li>
+          <span class="review-tree__field"><b> Статус</b>
+            <span>Отзыв #{{ comment.id }} верифицирован и записан в блокчейн</span>
+          </span>
+        </li>
+      </ul>
+    </main>
+  </div>{% endif %}
+
+  {% if comment.failure_text %}    <div class="review-tree__item review-tree_verify_fail">
+
+    <header>
+      <span>Отказ верификации отзыва 
+      <a href="#">{{ comment.id }}</a>
+      </span>
+      <br>
+      <span>Компания:
+        {% if comment.user == request.user %}
+        <a href="{% url 'employee_info' request.user.id %}">{{ request.user.useraccept.company }}</a>{% elif comment.customer_flag == True %}
+        
+        <a href="{% url 'employee_info' comment.customer.id %}">{{ comment.customer.useraccept.company }}</a>{% else %}
+      
+        <a href="{% url 'employee_info' comment.implementer.id %}">{{ comment.implementer.useraccept.company }}</a>{% endif %}
+      </span>
+    </header>
+    <main class="review-tree-bg p-4 mt-3">
+      <ul class="list-unstyled">
+        <li>
+          <span class="review-tree__field">Отзыв:
+            <a href="#">{{ comment.id }}</a>
+          </span>
+        </li>
+        <li>
+          <span class="review-tree__field">Создан:
+            <span>{{ comment.date_create }}</span>
+          </span>
+        </li>
+      
       <li>
-        <span class="review-tree__field">Создан:
-          <span>{{ comment.date_create }}</span>
-        </span>
-      </li>
-    
-     <li>
-        <span class="review-tree__field">Обновление:
-          <span>{{ comment.date_update }}</span>
-        </span>
-      </li>
+          <span class="review-tree__field">Обновление:
+            <span>{{ comment.date_update }}</span>
+          </span>
+        </li>
+
+        <span class="mt-3 mb-2 d-flex"><b>Причина:</b></span>
+        <p>
+          <em>
+  {{ comment.failure_text }}</em>
+        </p>
+      </ul>
+    </main>
+  </div>{% endif %}
+
+  {% if comment.failure == True %}   <div class="review-tree__item review-tree_verify_ok">
+
+    <header>
+    <span>Отказ верификации отзыва 
+      <a href="#">{{ comment.id }}</a>
+      </span>
+      <br>
+      <span>Компания:
+        {% if comment.user == request.user %}
+        <a href="{% url 'employee_info' request.user.id %}">{{ request.user.useraccept.company }}</a>{% elif comment.customer_flag == True %}
+        
+        <a href="{% url 'employee_info' comment.customer.id %}">{{ comment.customer.useraccept.company }}</a>{% else %}
+      
+        <a href="{% url 'employee_info' comment.implementer.id %}">{{ comment.implementer.useraccept.company }}</a>{% endif %}
+      </span>
+    </header>
+    <main class="review-tree-bg p-4 mt-3">
+      <ul class="list-unstyled">
+        <li>
+          <span class="review-tree__field">Отзыв:
+            <a href="#">{{ comment.id }}</a>
+          </span>
+        </li>
+        <li>
+          <span class="review-tree__field">Создан:
+            <span>{{ comment.date_create }}</span>
+          </span>
+        </li>
+      
       <li>
-        <span class="review-tree__field">Отказ верификации компанией:
-          <span>{{ comment.date_update }}</span>
-        </span>
-      </li>
+          <span class="review-tree__field">Обновление:
+            <span>{{ comment.date_update }}</span>
+          </span>
+        </li>
+        <li>
+          <span class="review-tree__field">Отказ верификации компанией:
+            <span>{{ comment.date_update }}</span>
+          </span>
+        </li>
+        <li>
+          <span class="review-tree__field">Отказ верифицирован:
+          {% for recipient_user in comment.recipient_user.all %}
+  <a href="{% url 'employee_info' comment.recipient_user.id %}">{{ recipient_user.useraccept.ccompany }} {{ recipient_user.first_name }} {{ recipient_user.last_name }}</a> <br>
+  {% endfor %}
+          </span>
+        </li>
       <li>
-        <span class="review-tree__field">Отказ верифицирован:
-         {% for recipient_user in comment.recipient_user.all %}
- <a href="{% url 'employee_info' comment.recipient_user.id %}">{{ recipient_user.useraccept.ccompany }} {{ recipient_user.first_name }} {{ recipient_user.last_name }}</a> <br>
-{% endfor %}
-        </span>
-      </li>
-     <li>
-        <span class="review-tree__field"><b> Статус</b>
-          <span>Отзыв #{{ comment.id }} верифицирован и записан в блокчейн</span>
-        </span>
-      </li>
-    </ul>
-  </main>
-</div>{% endif %}
+          <span class="review-tree__field"><b> Статус</b>
+            <span>Отзыв #{{ comment.id }} верифицирован и записан в блокчейн</span>
+          </span>
+        </li>
+      </ul>
+    </main>
+  </div>{% endif %}
 
     </div>
   </div>
@@ -689,4 +689,4 @@
   </div>
   
 </div>
-				                        {% endblock %}
+{% endblock %}

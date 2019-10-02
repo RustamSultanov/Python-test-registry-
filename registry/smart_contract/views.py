@@ -1,11 +1,15 @@
+import os
+
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from .models import *
-from .forms import CommentEditForm, AcceptForm, CompetenceForm, RegistrationEmployeeForm, DisputForm
+from django.views.generic import View, ListView
 from django.urls import reverse, reverse_lazy
 from django.http import HttpResponseRedirect
 from django.forms.models import model_to_dict
-import os
+import requests
+from django_registration.backends.activation.views import RegistrationView
+from .models import *
+from .forms import CommentEditForm, AcceptForm, CompetenceForm, RegistrationEmployeeForm, DisputForm, RegistrationCompanyForm
 
 
 def save_comment_form(new_comment, adition_user, employee, competence,
@@ -27,8 +31,68 @@ def save_comment_form(new_comment, adition_user, employee, competence,
 
 # Create your views here.
 
-def base(request):
-    return render(request, 'index.html', )
+
+
+class RegistrationCompany(View):
+    '''Делает запрос в API DaData.ru, если данные из формы верные, создаёт Компанию и отправляет её данные в шаблон'''
+    form_class = RegistrationCompanyForm
+    template_name = 'registration_company.html'
+
+    def get(self, request, *args, **kwargs):
+        form = self.form_class()
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            TIN_or_PSRN = request.POST['TIN_or_PSRN']
+            json_response = self._request_to_API(TIN_or_PSRN)
+            if json_response['suggestions'] != []:  #Если ответ не пустой
+                company, created = self._get_or_create_from_json(json_file=json_response)
+                #чтобы позже прикрепить к зарегистрированному пользователю
+                request.session['company_id'] = company.id
+                return render(request, 'company_info.html', {'company': company}) 
+            else:
+                return render(request, self.template_name, {'form': form, 'error': 'Такая компания не зарегистрирована, пожалуйста проверьте ИНН/ОГРН'})            
+        return render(request, self.template_name, {'form': form})
+
+    def _request_to_API(self, TIN_or_PSRN):
+        '''More info about used API https://dadata.ru/api/find-party'''
+        TIN_or_PSRN = str(TIN_or_PSRN)       
+        url = 'https://suggestions.dadata.ru/suggestions/api/4_1/rs/findById/party'
+        headers = {'Content-Type': 'application/json', 
+                'Accept': 'application/json', 
+                'Authorization': 'Token 77e78f4862b3d616275575a90de5689862fac8d8'}
+        data = '{"query": "value"}'.replace("value", TIN_or_PSRN)
+        response = requests.post(url, headers=headers, data=data)
+        return response.json()
+
+    def _get_or_create_from_json(self, json_file):
+        name = json_file['suggestions'][0]['value']
+        legal_address = json_file['suggestions'][0]['data']['address']["unrestricted_value"]
+        TIN = json_file['suggestions'][0]['data']['inn']
+        PSRN = json_file['suggestions'][0]['data']['ogrn']
+        KPP = json_file['suggestions'][0]['data']['kpp']
+        CEO = json_file['suggestions'][0]['data']['management']['name']
+        new_company, created = Company.objects.get_or_create(
+            name = name,
+            legal_address = legal_address,
+            TIN = TIN,
+            PSRN = PSRN,
+            KPP = KPP,
+            CEO = CEO           
+            )      
+        return new_company, created
+
+
+class TestRegistration(RegistrationView):
+
+    def register(self, form):
+        new_user = super(RegistrationView, self).register(form)
+        comany_id = request.session['company_id']
+        company = Company.objects.get(id=company_id)
+        new_user.company_test_set.add(company)
+        return new_user 
 
 
 @login_required
@@ -51,7 +115,7 @@ def registration_view(request):
 
 @login_required
 def employee_list(request):
-    """Список коллег"""
+    """Список сотрудников"""
     user = request.user
     employee_list = UserAccept.objects.select_related('user').filter(company=user.useraccept.company)
     return render(request, 'employee_list.html',
@@ -68,6 +132,8 @@ def comment_list(request):
         'comment_list_in': comment_list_in,
         'comment_list_out': comment_list_out
     }
+    for comment in comment_list_in:
+        print(comment.rating)
     return render(request, 'comment_list.html', context)
 
 
@@ -173,9 +239,9 @@ def accept_comment(request, comment_id):
     user = request.user
     comment = Comment.objects.get(recipient_user=request.user.id, id=comment_id, accept=False)
     disputs = Disputs.objects.select_related('user', 'comment').filter(comment=comment_id)
-    form1 = DisputForm(request.POST or None)
-    if form1.is_valid():
-        new_disput = form1.save(commit=False)
+    disput_form = DisputForm(request.POST or None)
+    if disput_form.is_valid():
+        new_disput = disput_form.save(commit=False)
         new_disput.user = user
         new_disput.comment = comment
         new_disput.save()
@@ -215,7 +281,7 @@ def accept_comment(request, comment_id):
             return HttpResponseRedirect(reverse_lazy('comment_list'))
         return HttpResponseRedirect(reverse_lazy('comment_list'))
     return render(request, 'accept_form.html',
-                  {'form': form, 'form1': form1, 'disputs': disputs, 'comment': comment})
+                  {'form': form, 'disput_form': disput_form, 'disputs': disputs, 'comment': comment})
 
 
 @login_required
@@ -275,7 +341,7 @@ def employee_info(request, user_id):
     user = User.objects.get(id=user_id)
     verify_count = Comment.objects.filter(recipient_user=user.id, accept=True).count() + Comment.objects.filter(
         user=user.id, accept=True).count()
-    return render(request, 'user.html', {'user': user,
+    return render(request, 'employee_info.html', {'user': user,
                                          'verify_count': verify_count})
 
 

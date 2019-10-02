@@ -3,7 +3,7 @@
 <div class="s-reviews">
   <div class="s-reviews__inner">
     <header class="mb-5">
-      <h5 class="m-0">Все отзывы</h5>
+      <h5 class="m-0">Отзывы</h5>
     </header>
   <!--   <div class="row justify-content-end">
   
@@ -46,10 +46,12 @@
       <thead>
         <tr>
           <th>ID</th>
+          <th>Инициатор</th>
           <th>Тип участника</th>
           <th>Компания</th>
-          <th>Инициатор</th>
+          <th>Должность</th>          
           <th>Компетенция/область</th>
+          <th>Оценка</th>
           <th>Дата создания</th>
           <th>Статус</th>
           <th class="column6 style1 s">Действия</th>
@@ -58,48 +60,226 @@
       <tbody>
         {% csrf_token %}
         {% for comment in comment_list_in %}
-        <tr {% if comment.accept == True %} data-status="record" {% else %} {% endif %}>
-{% if comment.hide == True %} {% else %}{% if comment.accept == True or comment.failure == True %} <td class="column5 style4 s" onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false">{{ comment.id }}</td>
-           <td>{% if comment.customer_flag == True %}Заказчик{% else %} Исполнитель {% endif %} </td>
-           <td class="column2 style4 s" onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false"><a href="{% url 'comment_info' comment.id %}">{{ comment.user.useraccept.company }}</a></td>
-            <td class="column2 style4 s" onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false"><a href="{% url 'comment_info' comment.id %}">{{ comment.user.first_name }} {{ comment.user.last_name }}</a></td>
-             <td class="column2 style4 s" onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false"><a href="{% url 'comment_info' comment.id %}">{% for competence in comment.competence.all %}
-                          #{{ competence.id }} {{ competence.competence_name }}<br> 
-                          {% endfor %}</a></td>
-            <td class="column1 style1 s" onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false"><a href="{% url 'comment_info' comment.id %}">Создан: {{ comment.date_create }} {% if comment.date_update > comment.date_create %}{% if comment.accept == True  or comment.failure == True %}<br> Записан в блок: {{ comment.date_update }} {% else %}<br>Обновлено: {{ comment.date_update }}{% endif %}{% endif %}</a></td>
-             <td class="column3 style4 null" onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false"><a href="{% url 'edit_comment' comment.id %}">{% if comment.accept == True %}<span class="status status_record">Записан в блокчейн</span>{% elif comment.failure == True %}<span class="status status_changed">Отказ записан в блокчейн</span>{% else %}<span class="status status_waiting">Ожидает верификации от других участников</span>{% endif %}</a></td>
-             <td onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false"></td>
-{% else %} <td class="column5 style4 s" onclick="window.location.href='{% url 'edit_comment' comment.id %}'; return false">{{ comment.id }}</td>
-           <td onclick="window.location.href='{% url 'edit_comment' comment.id %}'; return false">{% if comment.customer_flag == True %}Заказчик{% else %} Исполнитель {% endif %}</td>
-           <td class="column2 style4 s" onclick="window.location.href='{% url 'edit_comment' comment.id %}'; return false"><a href="{% url 'edit_comment' comment.id %}">{{ comment.user.useraccept.company }}</a></td>
-           <td class="column2 style4 s" onclick="window.location.href='{% url 'edit_comment' comment.id %}'; return false"><a href="{% url 'edit_comment' comment.id %}">{{ comment.user.first_name }} {{ comment.user.last_name }}</a></td>
-           <td class="column2 style4 s" onclick="window.location.href='{% url 'edit_comment' comment.id %}'; return false"><a href="{% url 'edit_comment' comment.id %}">{% for competence in comment.competence.all %}
-                          #{{ competence.id }} {{ competence.competence_name }}<br> 
-                          {% endfor %}</a></td>
-            <td class="column1 style1 s" onclick="window.location.href='{% url 'edit_comment' comment.id %}'; return false"><a href="{% url 'edit_comment' comment.id %}">Создан: {{ comment.date_create }} {% if comment.date_update > comment.date_create %}{% if comment.accept == True or comment.failure == True %}<br> Записан в блок: {{ comment.date_update }} {% else %}<br>Обновлено: {{ comment.date_update }}{% endif %}{% endif %}</a></td>
-            <td class="column3 style4 null" onclick="window.location.href='{% url 'edit_comment' comment.id %}'; return false"><a href="{% url 'edit_comment' comment.id %}">{% if comment.accept == True %}<span class="status status_record">Записан в блокчейн</span>{% elif comment.failure == True %}<span class="status status_changed">Отказ записан в блокчейн</span>{% else %}<span class="status status_waiting">Ожидает верификации от других участников</span>{% endif %}</a></td>
-            <td>{% if comment.accept == True %}{% elif comment.failure == True %}
-                                            {% else %} <a href="{% url 'edit_comment' comment.id %}"><i class="fa fa-pencil"></i></a>&nbsp;
-            <a class="delete" href="{% url 'delete_comment' comment.id %}"><i class="fa fa-times"></i></a> {% endif %}</td>
-       {% endif %}{% endif %} </tr>
+          <tr {% if comment.accept == True %} data-status="record" {% else %} {% endif %}>
+            {% if comment.hide == True %}
+            {% else %}
+              {% if comment.accept == True or comment.failure == True %} 
+                <td class="column5 style4 s" onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false">
+                  {{ comment.id }}
+                </td>
+                <td class="column2 style4 s" onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false">
+                    <a href="{% url 'comment_info' comment.id %}">
+                      <img width="20" height="20" src="https://images.duckduckgo.com/iu/?u=http%3A%2F%2Fclassroomclipart.com%2Fimages%2Fgallery%2FClipart%2FFaces%2FTN_face-of-bald-headed-man-with-mustache.jpg&amp;f=1" alt="Фотография пользователя">
+                      {{ comment.user.first_name }} {{ comment.user.last_name }}
+                    </a>
+                </td>
+                <td class="column2 style4 s" onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false">
+                  {% if comment.customer_flag == True %}
+                    Заказчик
+                  {% else %} 
+                    Исполнитель 
+                  {% endif %} 
+                </td>
+                <td class="column2 style4 s" onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false">
+                  <a href="{% url 'comment_info' comment.id %}">
+                    {% if comment.user.useraccept.company.logo %}
+                      <img width="20" height="20" src="{{ comment.user.useraccept.company.logo.url }}" alt="Логотип">
+                    {% endif %}
+                    {{ comment.user.useraccept.company }}
+                  </a>
+                </td>
+                <td class="column2 style4 s" onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false">
+                  <a href="{% url 'comment_info' comment.id %}">
+                      {{ comment.user.useraccept.position }}
+                  </a>
+                </td>                
+                <td class="column2 style4 s" onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false">
+                  <a href="{% url 'comment_info' comment.id %}">
+                    {% for competence in comment.competence.all %}
+                      #{{ competence.id }} {{ competence.competence_name }}<br> 
+                    {% endfor %}
+                  </a>
+                </td>
+                <td class="column2 style4 s" onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false">
+                  {{ comment.rating }}
+                </td>
+                <td class="column1 style1 s" onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false">
+                  <a href="{% url 'comment_info' comment.id %}">
+                    Создан: {{ comment.date_create }} 
+                    {% if comment.date_update > comment.date_create %}
+                      {% if comment.accept == True  or comment.failure == True %}<br> 
+                        Записан в блок: {{ comment.date_update }} 
+                      {% else %}<br>
+                        Обновлено: {{ comment.date_update }}
+                      {% endif %}
+                    {% endif %}
+                  </a>
+                </td>
+                <td class="column3 style4 null" onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false">
+                  <a href="{% url 'edit_comment' comment.id %}">
+                    {% if comment.accept == True %}
+                      <span class="status status_record">Записан в блокчейн</span>
+                    {% elif comment.failure == True %}
+                      <span class="status status_changed">Отказ записан в блокчейн</span>
+                    {% else %}
+                      <span class="status status_waiting">Ожидает верификации от других участников</span>
+                    {% endif %}
+                  </a>
+                </td>
+                <td onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false">
+                </td>
+              {% else %} 
+                <td class="column5 style4 s" onclick="window.location.href='{% url 'edit_comment' comment.id %}'; return false">
+                  {{ comment.id }}
+                </td>
+                <td class="column2 style4 s" onclick="window.location.href='{% url 'edit_comment' comment.id %}'; return false">
+                    <a href="{% url 'edit_comment' comment.id %}">
+                      <img width="20" height="20" src="https://images.duckduckgo.com/iu/?u=http%3A%2F%2Fclassroomclipart.com%2Fimages%2Fgallery%2FClipart%2FFaces%2FTN_face-of-bald-headed-man-with-mustache.jpg&amp;f=1" alt="Фотография пользователя">
+                      {{ comment.user.first_name }} {{ comment.user.last_name }}
+                    </a>
+                </td>
+                <td onclick="window.location.href='{% url 'edit_comment' comment.id %}'; return false">
+                  {% if comment.customer_flag == True %}
+                    Заказчик
+                  {% else %} 
+                    Исполнитель 
+                  {% endif %}
+                </td>
+                <td class="column2 style4 s" onclick="window.location.href='{% url 'edit_comment' comment.id %}'; return false">
+                  <a href="{% url 'edit_comment' comment.id %}">
+                    {% if comment.user.useraccept.company.logo %}
+                      <img width="20" height="20" src="{{ comment.user.useraccept.company.logo.url }}" alt="Логотип">
+                    {% endif %}
+                    {{ comment.user.useraccept.company }}
+                  </a>
+                </td>
+                <td class="column2 style4 s" onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false">
+                  <a href="{% url 'comment_info' comment.id %}">
+                      {{ comment.user.useraccept.position }}
+                  </a>
+                </td>                
+                <td class="column2 style4 s" onclick="window.location.href='{% url 'edit_comment' comment.id %}'; return false">
+                  <a href="{% url 'edit_comment' comment.id %}">
+                    {% for competence in comment.competence.all %}
+                      #{{ competence.id }} {{ competence.competence_name }}<br> 
+                    {% endfor %}
+                  </a>
+                </td>
+                <td class="column2 style4 s" onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false">
+                    {{ comment.rating }}
+                </td>
+                <td class="column1 style1 s" onclick="window.location.href='{% url 'edit_comment' comment.id %}'; return false">
+                  <a href="{% url 'edit_comment' comment.id %}">
+                    Создан: {{ comment.date_create }} 
+                    {% if comment.date_update > comment.date_create %}
+                      {% if comment.accept == True or comment.failure == True %}<br> 
+                        Записан в блок: {{ comment.date_update }} {% else %}<br>
+                        Обновлено: {{ comment.date_update }}
+                      {% endif %}
+                    {% endif %}
+                  </a>
+                </td>
+                <td class="column3 style4 null" onclick="window.location.href='{% url 'edit_comment' comment.id %}'; return false">
+                  <a href="{% url 'edit_comment' comment.id %}">
+                    {% if comment.accept == True %}
+                      <span class="status status_record">Записан в блокчейн</span>
+                    {% elif comment.failure == True %}
+                      <span class="status status_changed">Отказ записан в блокчейн</span>
+                    {% else %}
+                      <span class="status status_waiting">Ожидает верификации от других участников</span>
+                    {% endif %}
+                  </a>
+                </td>
+                <td>
+                  {% if comment.accept == True %}
+                  {% elif comment.failure == True %}
+                  {% else %} 
+                    <a href="{% url 'edit_comment' comment.id %}">
+                      <i class="fa fa-pencil"></i>
+                    </a>&nbsp;
+                    <a class="delete" href="{% url 'delete_comment' comment.id %}">
+                      <i class="fa fa-times"></i>
+                    </a> 
+                  {% endif %}
+                </td>
+              {% endif %}
+              {% endif %} 
+          </tr>
         {% endfor %}
         {% for comment in comment_list_out %}
-        <tr {% if comment.accept == True %} data-status="record" {% else %} {% endif %}>
-           {% if comment.hide == True %} {% else %} <td class="column5 style4 s" onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false">{{ comment.id }}</td>
-           <td>{% if comment.customer_flag == True %}Заказчик{% else %} Исполнитель {% endif %}</td>
-           <td class="column2 style4 s" onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false"><a href="{% url 'comment_info' comment.id %}">{{ comment.user.useraccept.company }}</a></td>
-            <td class="column2 style4 s" onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false"><a href="{% url 'comment_info' comment.id %}">{{ comment.user.first_name }} {{ comment.user.last_name }}</a></td>
-             <td class="column2 style4 s" onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false"><a href="{% url 'comment_info' comment.id %}">{% for competence in comment.competence.all %}
-                          #{{ competence.id }} {{ competence.competence_name }}<br> 
-                          {% endfor %}</a></td>
-            <td class="column1 style1 s" onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false"><a href="{% url 'comment_info' comment.id %}">Создан: {{ comment.date_create }} {% if comment.date_update > comment.date_create %}{% if comment.accept == True  or comment.failure == True %}<br> Записан в блок: {{ comment.date_update }} {% else %}<br>Обновлено: {{ comment.date_update }}{% endif %}{% endif %}</a></td>
-             <td class="column3 style4 null" onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false"><a href="{% url 'edit_comment' comment.id %}">{% if comment.accept == True %}<span class="status status_record">Записан в блокчейн </span>{% elif comment.failure == True %}<span class="status status_changed">Отказ записан в блокчейн </span> {% else %}<span class="status status_waiting">
-Ожидает верификации от других участников{% endif %}</span> </a></td>
-             <td onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false"></td>
-             {% endif %} </tr>
+          <tr {% if comment.accept == True %} data-status="record" {% else %} {% endif %}>
+            {% if comment.hide == True %}
+            {% else %} 
+              <td class="column5 style4 s" onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false">
+                {{ comment.id }}
+              </td>
+              <td class="column2 style4 s" onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false">               
+                  <a href="{% url 'comment_info' comment.id %}">
+                    <img width="20" height="20" src="https://images.duckduckgo.com/iu/?u=http%3A%2F%2Fclassroomclipart.com%2Fimages%2Fgallery%2FClipart%2FFaces%2FTN_face-of-bald-headed-man-with-mustache.jpg&amp;f=1" alt="Фотография пользователя">
+                    {{ comment.user.first_name }} {{ comment.user.last_name }}
+                  </a>
+              </td>
+              <td>
+                {% if comment.customer_flag == True %}
+                  Заказчик
+                {% else %} 
+                  Исполнитель 
+                {% endif %}
+              </td>
+              <td class="column2 style4 s" onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false">
+                <a href="{% url 'comment_info' comment.id %}">
+                  {% if comment.user.useraccept.company.logo %}
+                    <img width="20" height="20" src="{{ comment.user.useraccept.company.logo.url }}" alt="Логотип">
+                  {% endif %}
+                  {{ comment.user.useraccept.company }}
+                </a>
+              </td>
+              <td class="column2 style4 s" onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false">
+                <a href="{% url 'comment_info' comment.id %}">
+                    {{ comment.user.useraccept.position }}
+                </a>
+              </td>               
+              <td class="column2 style4 s" onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false">
+                <a href="{% url 'comment_info' comment.id %}">
+                  {% for competence in comment.competence.all %}
+                    #{{ competence.id }} {{ competence.competence_name }}<br> 
+                  {% endfor %}
+                </a>
+              </td>
+              <td class="column2 style4 s" onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false">
+                  {{ comment.rating }}
+              </td>
+              <td class="column1 style1 s" onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false">
+                <a href="{% url 'comment_info' comment.id %}">
+                  Создан: {{ comment.date_create }} 
+                  {% if comment.date_update > comment.date_create %}
+                    {% if comment.accept == True  or comment.failure == True %}
+                      <br> 
+                      Записан в блок: {{ comment.date_update }} 
+                    {% else %}
+                      <br>
+                      Обновлено: {{ comment.date_update }}
+                    {% endif %}
+                  {% endif %}
+                </a>
+              </td>
+              <td class="column3 style4 null" onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false">
+                <a href="{% url 'edit_comment' comment.id %}">
+                  {% if comment.accept == True %}
+                    <span class="status status_record">Записан в блокчейн </span>
+                  {% elif comment.failure == True %}
+                    <span class="status status_changed">Отказ записан в блокчейн </span> 
+                  {% else %}
+                    <span class="status status_waiting">Ожидает верификации от других участников{% endif %}</span> 
+                </a>
+              </td>
+              <td onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false">
+              </td>
+            {% endif %} 
+          </tr>
         {% endfor %}
-    </tbody>
-</table>
+      </tbody>
+    </table>
 <script>
 $( document ).ready(function() {
     $( ".delete" ).click(function() {
