@@ -69,7 +69,8 @@ class RegistrationUser(BaseRegistrationView):
 
         return new_user
 
-    def get_activation_key(self, user):
+    @staticmethod
+    def get_activation_key(user):
         """
         Generate the activation key which will be emailed to the user.
 
