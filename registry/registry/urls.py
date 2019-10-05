@@ -21,8 +21,8 @@ from django.conf import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('smart_contract.urls')),
-    url(r'^accounts/', include('django_registration.backends.activation.urls')),
-    url(r'^accounts/', include('django.contrib.auth.urls')),
+    path('accounts/', include('django_registration.backends.activation.urls')),
+    path('accounts/', include('django.contrib.auth.urls')),
 ]
 if settings.DEBUG:
     import debug_toolbar
