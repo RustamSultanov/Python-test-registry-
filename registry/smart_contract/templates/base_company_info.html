@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+    {{ company.id }}
+    {{ company.name }}
+    {{ company.legal_address }}
+    {{ company.TIN }}
+    {{ company.PSRN }}
+    {{ company.KPP }}
+    {{ company.CEO }}
+    {% block actions %}
+    {% endblock %}
+    
+{% endblock %}

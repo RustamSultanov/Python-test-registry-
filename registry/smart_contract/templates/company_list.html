@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>Список зарегистрированных компаний</h2>
+    <ul>
+        {% for company in object_list %}
+            <li>{{ company.id }}</li>
+            
+            <li><a href="{% url 'company_info' company.id %}">{{ company.name }}</a></li>
+        {% endfor %}
+    </ul>
+{% endblock %}

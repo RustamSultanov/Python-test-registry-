@@ -2,20 +2,28 @@ import os
 
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from django.views.generic import View, ListView
+from django.contrib.sites.shortcuts import get_current_site
+from django.template.loader import render_to_string
+from django.core.mail import send_mail
+from django.core import signing
+from django.views.generic import View, ListView, DetailView
+from django.views.generic.edit import FormView
 from django.urls import reverse, reverse_lazy
 from django.http import HttpResponseRedirect
 from django.forms.models import model_to_dict
+from django.conf import settings as django_settings
 import requests
-from django_registration.backends.activation.views import RegistrationView
+from django_registration import signals
+from django_registration.views import RegistrationView as BaseRegistrationView
+from registry import settings
 from .models import *
-from .forms import CommentEditForm, AcceptForm, CompetenceForm, RegistrationEmployeeForm, DisputForm, RegistrationCompanyForm
+from .forms import CommentEditForm, AcceptForm, CompetenceForm, RegistrationEmployeeForm, DisputForm, CheckCompanyForm, InvitationCompanyForm, EditCompanyForm
 
 
-def save_comment_form(new_comment, adition_user, employee, competence,
+def save_comment_form(new_comment, verifier, employee, competence,
                       another_employee):
     new_comment.save()
-    for user in adition_user:
+    for user in verifier:
         new_comment.recipient_user.add(user)
     for user in employee:
         new_comment.employee.add(user)
@@ -30,33 +38,101 @@ def save_comment_form(new_comment, adition_user, employee, competence,
 
 
 # Create your views here.
+REGISTRATION_SALT = getattr(django_settings, 'REGISTRATION_SALT', 'registration')
 
+class RegistrationUser(BaseRegistrationView):
 
+    email_body_template = 'django_registration/activation_email_body.txt'
+    email_subject_template = 'django_registration/activation_email_subject.txt'
+    success_url = reverse_lazy('registration_company')
 
-class RegistrationCompany(View):
+    def register(self, form):
+        new_user = self.create_inactive_user(form)
+        signals.user_registered.send(
+            sender=self.__class__,
+            user=new_user,
+            request=self.request
+        )
+        return new_user
+
+    def create_inactive_user(self, form):
+        """
+        Create the inactive user account and send an email containing
+        activation instructions.
+
+        """
+        new_user = form.save(commit=False)
+        new_user.is_active = False
+        new_user.save()
+
+        self.send_activation_email(new_user)
+
+        return new_user
+
+    def get_activation_key(self, user):
+        """
+        Generate the activation key which will be emailed to the user.
+
+        """
+        return signing.dumps(
+            obj=user.get_username(),
+            salt=REGISTRATION_SALT
+        )
+
+    def get_email_context(self, activation_key):
+        """
+        Build the template context used for the activation email.
+
+        """
+        protocol = 'https' if self.request.is_secure() else 'http'
+        return {
+            'protocol': protocol,
+            'activation_key': activation_key,
+            'expiration_days': settings.ACCOUNT_ACTIVATION_DAYS,
+            'site': get_current_site(self.request)
+        }
+
+    def send_activation_email(self, user):
+        """
+        Send the activation email. The activation key is the username,
+        signed using TimestampSigner.
+
+        """
+        activation_key = self.get_activation_key(user)
+        context = self.get_email_context(activation_key)
+        context['user'] = user
+        subject = render_to_string(
+            template_name=self.email_subject_template,
+            context=context,
+            request=self.request
+        )
+        # Force subject to a single line to avoid header-injection
+        # issues.
+        subject = ''.join(subject.splitlines())
+        message = render_to_string(
+            template_name=self.email_body_template,
+            context=context,
+            request=self.request
+        )
+        user.email_user(subject, message, settings.DEFAULT_FROM_EMAIL)
+
+class RegistrationCompany(FormView):
     '''Делает запрос в API DaData.ru, если данные из формы верные, создаёт Компанию и отправляет её данные в шаблон'''
-    form_class = RegistrationCompanyForm
-    template_name = 'registration_company.html'
+    form_class = CheckCompanyForm
+    template_name = 'check_company_form.html'
 
-    def get(self, request, *args, **kwargs):
-        form = self.form_class()
-        return render(request, self.template_name, {'form': form})
+    def form_valid(self, form):
+        TIN_or_PSRN = self.request.POST['TIN_or_PSRN']
+        json_response = self.request_to_API(TIN_or_PSRN)
+        if json_response['suggestions'] != []:  #Если ответ не пустой
+            company, created = self.get_or_create_from_json(json_file=json_response)
+            #чтобы позже прикрепить к зарегистрированному пользователю
+            self.request.session['company_id'] = company.id
+            return render(self.request, 'company_registration_info.html', {'company': company}) 
+        else:
+            return render(self.request, self.template_name, {'form': form, 'error': 'Такая компания не зарегистрирована, пожалуйста проверьте ИНН/ОГРН'})
 
-    def post(self, request, *args, **kwargs):
-        form = self.form_class(request.POST)
-        if form.is_valid():
-            TIN_or_PSRN = request.POST['TIN_or_PSRN']
-            json_response = self._request_to_API(TIN_or_PSRN)
-            if json_response['suggestions'] != []:  #Если ответ не пустой
-                company, created = self._get_or_create_from_json(json_file=json_response)
-                #чтобы позже прикрепить к зарегистрированному пользователю
-                request.session['company_id'] = company.id
-                return render(request, 'company_info.html', {'company': company}) 
-            else:
-                return render(request, self.template_name, {'form': form, 'error': 'Такая компания не зарегистрирована, пожалуйста проверьте ИНН/ОГРН'})            
-        return render(request, self.template_name, {'form': form})
-
-    def _request_to_API(self, TIN_or_PSRN):
+    def request_to_API(self, TIN_or_PSRN):
         '''More info about used API https://dadata.ru/api/find-party'''
         TIN_or_PSRN = str(TIN_or_PSRN)       
         url = 'https://suggestions.dadata.ru/suggestions/api/4_1/rs/findById/party'
@@ -67,7 +143,7 @@ class RegistrationCompany(View):
         response = requests.post(url, headers=headers, data=data)
         return response.json()
 
-    def _get_or_create_from_json(self, json_file):
+    def get_or_create_from_json(self, json_file):
         name = json_file['suggestions'][0]['value']
         legal_address = json_file['suggestions'][0]['data']['address']["unrestricted_value"]
         TIN = json_file['suggestions'][0]['data']['inn']
@@ -82,17 +158,96 @@ class RegistrationCompany(View):
             KPP = KPP,
             CEO = CEO           
             )      
-        return new_company, created
+        return new_company, created            
 
 
-class TestRegistration(RegistrationView):
+class RegistrationAcceptUser(FormView):
 
-    def register(self, form):
-        new_user = super(RegistrationView, self).register(form)
-        comany_id = request.session['company_id']
-        company = Company.objects.get(id=company_id)
-        new_user.company_test_set.add(company)
-        return new_user 
+    template_name = 'django_registration/registration_acceptuser_form.html'
+    #form_class = Form
+    #success_url = reverse_lazy('successe_registration')
+    def form_valid(self, form):
+        return super(InvitationCompany, self).form_valid(form)
+
+
+class EditCompany(FormView):
+       
+    template_name = 'company_edit_form.html'
+    form_class = EditCompanyForm
+    success_url = reverse_lazy('edit_company')
+
+    def form_valid(self, form):
+        return super(InvitationCompany, self).form_valid(form)
+
+
+class CheckCompanyBeforeComment(FormView):
+    '''Проверяет зарегистрирована ли компания в приложении по ИНН или ОГРН'''
+    template_name = 'check_company_form.html'
+    form_class = CheckCompanyForm
+
+    def form_valid(self, form):
+        TIN_or_PSRN = self.request.POST['TIN_or_PSRN']
+        length_number = len(str(TIN_or_PSRN))
+        if length_number == 10:
+            TIN = TIN_or_PSRN               
+            try:
+                company = Company.objects.get(TIN=TIN)
+                return HttpResponseRedirect(reverse_lazy('add_comment'))
+            except Company.DoesNotExist:
+                return HttpResponseRedirect(reverse_lazy('invitation_company'))
+        elif length_number == 13:
+            PSRN = TIN_or_PSRN
+            try:
+                company = Company.objects.get(PSRN=PSRN)
+                return HttpResponseRedirect(reverse_lazy('add_comment'))
+            except Company.DoesNotExist:
+                return HttpResponseRedirect(reverse_lazy('invitation_company'))
+
+
+class InvitationCompany(FormView):
+    '''Отправляет письмо преставителю компании с приглашением зарегистрироваться в приложении'''
+    template_name = 'invitation_company_form.html'
+    email_subject_template = 'invitation_mail/invitation_email_subject.txt'
+    email_body_template = 'invitation_mail/invitation_email_body.txt'
+    form_class = InvitationCompanyForm
+    success_url = reverse_lazy('success_send_invitation')
+
+    def form_valid(self, form):        
+        send_to = form.cleaned_data['email']
+        user = self.request.user
+        protocol = 'https' if self.request.is_secure() else 'http'
+        context = {
+            'protocol': protocol,
+            'site': get_current_site(self.request),
+            'user': user
+        }
+        subject = render_to_string(
+            template_name=self.email_subject_template,
+            context=context,
+            request=self.request
+        )
+        subject = ''.join(subject.splitlines())
+        message = render_to_string(
+            template_name=self.email_body_template,
+            context=context,
+            request=self.request
+        )
+        send_mail(subject, message,
+                    settings.EMAIL_HOST_USER, [send_to], fail_silently=False)
+        return super(InvitationCompany, self).form_valid(form)
+
+
+class CompanyDetail(DetailView):
+
+    model = Company
+    template_name = 'company_info.html'
+    context_object_name = 'company'
+
+
+class CompanyList(ListView):
+
+    model = Company
+    template_name = 'company_list.html'   
 
 
 @login_required
@@ -169,13 +324,13 @@ def edit_comment(request, comment_id):
         new_comment = form.save(commit=False)
         competence = form.cleaned_data['competence']
         employee = form.cleaned_data['employee']
-        adition_user = form.cleaned_data['adition_user']
+        verifier = form.cleaned_data['verifier']
         another_employee = form.cleaned_data['another_employee']
         if new_comment.implementer_flag:
             new_comment.implementer = request.user
             new_comment.customer = form.cleaned_data['implementer']
             new_comment.user = request.user
-            save_comment_form(new_comment=new_comment, adition_user=adition_user,
+            save_comment_form(new_comment=new_comment, verifier=verifier,
                               employee=employee, competence=competence, another_employee=another_employee)
             form.save_m2m()
             return HttpResponseRedirect(reverse_lazy('comment_list'))
@@ -183,7 +338,7 @@ def edit_comment(request, comment_id):
             new_comment.implementer = form.cleaned_data['implementer']
             new_comment.customer = request.user
             new_comment.user = request.user
-            save_comment_form(new_comment=new_comment, adition_user=adition_user,
+            save_comment_form(new_comment=new_comment, verifier=verifier,
                               employee=employee, competence=competence, another_employee=another_employee)
             form.save_m2m()
             return HttpResponseRedirect(reverse_lazy('comment_list'))
@@ -201,20 +356,20 @@ def add_comment(request):
         new_comment = form.save(commit=False)
         competence = form.cleaned_data['competence']
         employee = form.cleaned_data['employee']
-        adition_user = form.cleaned_data['adition_user']
+        verifier = form.cleaned_data['verifier']
         another_employee = form.cleaned_data['another_employee']
         new_comment.user = request.user
         if new_comment.implementer_flag:
             new_comment.implementer = request.user
             new_comment.customer = form.cleaned_data['implementer']
-            save_comment_form(new_comment=new_comment, adition_user=adition_user,
+            save_comment_form(new_comment=new_comment, verifier=verifier,
                               employee=employee, competence=competence, another_employee=another_employee)
             form.save_m2m()
             return HttpResponseRedirect(reverse_lazy('comment_list'))
         if new_comment.customer_flag:
             new_comment.implementer = form.cleaned_data['implementer']
             new_comment.customer = request.user
-            save_comment_form(new_comment=new_comment, adition_user=adition_user,
+            save_comment_form(new_comment=new_comment, verifier=verifier,
                               employee=employee, competence=competence, another_employee=another_employee)
             form.save_m2m()
             return HttpResponseRedirect(reverse_lazy('comment_list'))
@@ -272,7 +427,7 @@ def accept_comment(request, comment_id):
                     user.useraccept.save()
                 data_comment = f'''"
                     Status - accepted, user - {comment.user}, recipient_users - {recipient_users}, 
-                    comment - {comment.comment_text}"'''
+                    comment - {comment.comment_for_rating}"'''
                 command = r'''curl -H "Content-type:application/json" --data '{"data":''' + data_comment + r'''}' http://localhost:3001/mineBlock'''
                 print(data_comment, command)
                 os.system(command)
@@ -308,7 +463,7 @@ def failure_comment(request, comment_id):
                 user.useraccept.failure = False
                 user.useraccept.save()
             data_comment = f'''"
-                Status - failure, user - {comment.user}, recipient_users - {recipient_users}, comment - {comment.comment_text}, 
+                Status - failure, user - {comment.user}, recipient_users - {recipient_users}, comment - {comment.comment_for_rating}, 
                 reason - {new_failure.failure_text}"'''
             command = r'''curl -H "Content-type:application/json" --data '{"data":''' + data_comment + r'''}' http://localhost:3001/mineBlock'''
             os.system(command)

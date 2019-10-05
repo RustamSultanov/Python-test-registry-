@@ -5,6 +5,23 @@ from mptt.models import MPTTModel, TreeForeignKey
 
 
 # Create your models here.
+class Competence(MPTTModel):
+    competence_name = models.CharField(max_length=256)
+    name = models.CharField(max_length=256, unique=True, )
+    owner = models.ForeignKey(on_delete=models.CASCADE, to=settings.AUTH_USER_MODEL)
+    parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
+
+    class MPTTMeta:
+        order_insertion_by = ['name']
+
+    def __str__(self):
+        return f"#{self.id} {self.competence_name}; Создал: {self.owner.useraccept.company}"
+
+    class Meta:
+        verbose_name = 'Компетенция'
+        verbose_name_plural = 'Компетенции'
+
+
 '''Автоматическое создание имени файла изображения'''
 def image_folder(instance, filename):
 	
@@ -25,6 +42,7 @@ class Company(models.Model):
     CEO = models.CharField(max_length=50, blank=True, null=True)
     logo = models.ImageField(upload_to=image_folder, 
                             verbose_name='Логотип', blank=True, null=True)
+    #competence = models.ManyToManyField(Competence, blank=True)
 
     def __str__(self):
         return f"Компания: {self.name}"
@@ -50,23 +68,6 @@ class UserAccept(models.Model):
         return f"Компания: {self.company}, сотрудник: {self.user.first_name} {self.user.last_name}"
 
 
-class Competence(MPTTModel):
-    competence_name = models.CharField(max_length=256)
-    name = models.CharField(max_length=256, unique=True, )
-    owner = models.ForeignKey(on_delete=models.CASCADE, to=settings.AUTH_USER_MODEL)
-    parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
-
-    class MPTTMeta:
-        order_insertion_by = ['name']
-
-    def __str__(self):
-        return f"#{self.id} {self.competence_name}; Создал: {self.owner.useraccept.company}"
-
-    class Meta:
-        verbose_name = 'Компетенция'
-        verbose_name_plural = 'Компетенции'
-
-
 class Comment(models.Model):
     user = models.ForeignKey(on_delete=models.CASCADE, to=settings.AUTH_USER_MODEL, related_name='user')
     competence = models.ManyToManyField(Competence)
@@ -78,10 +79,9 @@ class Comment(models.Model):
     implementer_flag = models.BooleanField(blank=True, default=False)
     customer_flag = models.BooleanField(blank=True, default=False)
     recipient_user = models.ManyToManyField(User)
-    adition_user = models.ManyToManyField(User, related_name='adition_user', blank=True, )
+    verifier = models.ManyToManyField(User, related_name='verifier', blank=True)
     employee = models.ManyToManyField(User, related_name='employee_list', blank=True)
-    another_employee = models.ManyToManyField(User, related_name='another_employee', blank=True)
-    comment_text = models.TextField()
+    another_employee = models.ManyToManyField(User, related_name='another_employee', blank=True)    
     date_update = models.DateTimeField(auto_now=True, blank=True, null=True)
     date_create = models.DateTimeField(auto_now_add=True)
     accept = models.BooleanField(blank=True, default=False)
@@ -96,8 +96,11 @@ class Comment(models.Model):
         (5, "Отлично"),
     )
     rating = models.IntegerField(choices=RATING_CHOICE, default=4)
+    comment_for_rating = models.TextField(verbose_name='Пояснение к общей оценке', blank=True)
     rating_competence = models.IntegerField(choices=RATING_CHOICE, default=4)
+    comment_for_rating_competence = models.TextField(verbose_name='Пояснение к оценке компетенции', blank=True)
     rating_employee = models.IntegerField(choices=RATING_CHOICE, default=4)
+    comment_for_rating_employee = models.TextField(verbose_name='Пояснение к оценке сотрудника', blank=True)
     files = models.FileField(upload_to='prod_doc', blank=True)
 
     def __str__(self):

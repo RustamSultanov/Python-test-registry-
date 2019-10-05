@@ -1,26 +1,26 @@
 {% extends "accept_form.html" %}
 {% block info %}
-													<header class="major">
-														<h1>Форма добавления отзыва</h1>
-													</header>
-                                                <!-- Form section -->
-                                                <form name="buyForm" enctype="multipart/form-data" action="" method="post">
-													{% csrf_token %}
-													<label> Ваша роль: заказчик\исполнитель {{ form.customer_flag }}{{ form.implementer_flag }}</label> <br>
-													
-													<label> Компетенция {{ form.competence }}</label> <br>
-													<label> Заказчик или исполнитель {{ form.implementer }}</label><br>
-													<label> Сотрудники этой компании {{ form.employee }}</label> <br>
-													<label> Сотрудники исполнителя или заказчика {{ form.another_employee }}</label> <br>
-													<label> Дополнительные верификаторы {{ form.recipient_user }}</label> <br>
-													<label> Оценка {{ form.rating }}</label> <br>
-                                                    <label> Содержание отзыва {{ form.comment_text }}</label> <br>
-                                                    <label> Загрузка файлов {{ form.files }}</label> <br>
-													 
+<header class="major">
+	<h1>Форма добавления отзыва</h1>
+</header>
+<!-- Form section -->
+<form name="buyForm" enctype="multipart/form-data" action="" method="post">
+	{% csrf_token %}
+	<label> Ваша роль: заказчик\исполнитель {{ form.customer_flag }}{{ form.implementer_flag }}</label> <br>
+	
+	<label> Компетенция {{ form.competence }}</label> <br>
+	<label> Заказчик или исполнитель {{ form.implementer }}</label><br>
+	<label> Сотрудники этой компании {{ form.employee }}</label> <br>
+	<label> Сотрудники исполнителя или заказчика {{ form.another_employee }}</label> <br>
+	<label> Дополнительные верификаторы {{ form.recipient_user }}</label> <br>
+	<label> Оценка {{ form.rating }}</label> <br>
+	<label> Содержание отзыва {{ form.comment_text }}</label> <br>
+	<label> Загрузка файлов {{ form.files }}</label> <br>
+		
 
 
-                                                   
-                                                    <input type="submit" value="Отправить"><br><br>
-                                                </form>
-                                        {% endblock %}
+	
+	<input type="submit" value="Отправить"><br><br>
+</form>
+{% endblock %}
                                      

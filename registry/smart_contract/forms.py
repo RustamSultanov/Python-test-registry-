@@ -1,7 +1,8 @@
 from django import forms
 from django.contrib.auth.models import User
-from .models import Comment,Competence,UserAccept,Disputs
 from django.db import models
+
+from .models import Comment,Competence,UserAccept,Disputs,Company
 
 class CommentEditForm(forms.ModelForm):
 
@@ -15,11 +16,11 @@ class CommentEditForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = [
-                'adition_user', 'comment_text','competence','customer_flag','implementer_flag',
+                'verifier', 'comment_for_rating', 'comment_for_rating_competence', 'comment_for_rating_employee', 'competence','customer_flag','implementer_flag',
                 'init_user','implementer','files','rating','employee','another_employee','rating_competence','rating_employee'
                  ]
         widgets = {
-                'comment_text': forms.Textarea(attrs={'rows' : '2'}),
+                'comment_for_rating': forms.Textarea(attrs={'rows' : '2'}),
                 'customer_flag': forms.CheckboxInput(attrs={"class":"filled-in",}),
                 'implementer_flag': forms.CheckboxInput(attrs={"class":"filled-in", }),
                 # 'init_user': forms.Select(attrs={'disabled':"disabled", 'selected':"selected"})
@@ -82,12 +83,31 @@ class RegistrationEmployeeForm(forms.ModelForm):
         if password_check!=password:
             raise forms.ValidationError('Пароль не совпадает!')
         
-class RegistrationCompanyForm(forms.Form):
+class CheckCompanyForm(forms.Form):
     
     TIN_or_PSRN = forms.IntegerField(label='ИНН/ОГРН', help_text='ИНН содержит 10 чисел, ОГРН - 13 чисел')
 
     def clean_TIN_or_PSRN(self):
         TIN_or_PSRN = self.cleaned_data['TIN_or_PSRN']
-        l = len(str(TIN_or_PSRN))
-        if l != 10 and l != 13: #TODO: Костыль для проверки длины, нужно исправить
+        length_number = len(str(TIN_or_PSRN))
+        print(length_number)
+        if length_number != 10 and length_number != 13:
+            print('Ошибка')
             raise forms.ValidationError('Неверное количество чисел')
+
+class InvitationCompanyForm(forms.Form):
+
+    email = forms.EmailField(label='E-mail представителя компании')
+
+class EditCompanyForm(forms.ModelForm):
+
+    class Meta:
+        model = Company
+        fields = ['logo']
+
+'''
+class RegistrationAceptUserForm(forms.ModelForm):
+
+    class Meta:
+        model = UserAccept
+'''

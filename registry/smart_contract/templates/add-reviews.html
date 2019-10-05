@@ -162,13 +162,13 @@
 
       <div class="verificator mt-5">
   <header>
-    <h5>6. Дополнительный верификатор.</h5>
+    <h5>6. Верификатор.</h5>
     <small class="text-gray">
       <!-- Далеко-далеко за, словесными горами в стране гласных и согласных живут рыбные тексты. -->
     </small>
   </header>
   <p class="mt-3">
-    {{ form.adition_user }}<!-- <button class="button button_outline">
+    {{ form.verifier }}<!-- <button class="button button_outline">
       + Добавить ещё одного верификатора
     </button> -->
   </p>
@@ -201,8 +201,12 @@
   <div class="io-block__controls d-flex mt-3">
     <div class="io-block__control w-50 mr-5">
       <div class="rating">
-        <h6>Общая оценка {{ form.rating }} Оценка компетенции {{ form.rating_competence }} Оценка персонала {{ form.rating_employee }}</h6><br>
-        <h6> Содержание отзыва {{ form.comment_text }}</h6> <br>
+        <h6>Общая оценка {{ form.rating }}</h6><br> 
+        <h6>Пояснение к оценке {{ form.comment_for_rating }}</h6><br> 
+        <h6>Оценка компетенции {{ form.rating_competence }}</h6><br> 
+        <h6>Пояснение к оценке {{ form.comment_for_rating_competence }}</h6><br>
+        <h6>Оценка сотрудника {{ form.rating_employee }}</h6><br> 
+        <h6>Пояснение к оценке {{ form.comment_for_rating_employee }}</h6><br>
         <h6>Загрузка файлов {{ form.files }}</h6><br>
         
         <svg class="star" width="32" height="32" data-id="1">
