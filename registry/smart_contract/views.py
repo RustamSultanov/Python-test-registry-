@@ -44,7 +44,7 @@ REGISTRATION_SALT = getattr(django_settings, 'REGISTRATION_SALT', 'registration'
 class RegistrationUser(BaseRegistrationView):
     email_body_template = 'django_registration/activation_email_body.txt'
     email_subject_template = 'django_registration/activation_email_subject.txt'
-    success_url = reverse_lazy('registration_company')
+    success_url = reverse_lazy('django_registration_complete')
 
     def register(self, form):
         new_user = self.create_inactive_user(form)
