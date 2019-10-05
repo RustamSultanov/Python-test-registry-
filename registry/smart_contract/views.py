@@ -17,31 +17,31 @@ from django_registration import signals
 from django_registration.views import RegistrationView as BaseRegistrationView
 from registry import settings
 from .models import *
-from .forms import CommentEditForm, AcceptForm, CompetenceForm, RegistrationEmployeeForm, DisputForm, CheckCompanyForm, InvitationCompanyForm, EditCompanyForm
+from .forms import CommentEditForm, AcceptForm, CompetenceForm, RegistrationEmployeeForm, DisputForm, CheckCompanyForm, \
+    InvitationCompanyForm, EditCompanyForm
 
 
-def save_comment_form(new_comment, verifier, employee, competence,
-                      another_employee):
+def save_comment_form(new_comment):
     new_comment.save()
-    for user in verifier:
+    for user in new_comment.verifier:
         new_comment.recipient_user.add(user)
-    for user in employee:
+    for user in new_comment.employee:
         new_comment.employee.add(user)
-    for user in competence:
+    for user in new_comment.competence:
         new_comment.competence.add(user)
-    for user in another_employee:
+    for user in new_comment.another_employee:
         new_comment.another_employee.add(user)
-    for user in another_employee:
+    for user in new_comment.another_employee:
         new_comment.recipient_user.add(user)
-    for user in employee:
+    for user in new_comment.employee:
         new_comment.recipient_user.add(user)
 
 
 # Create your views here.
 REGISTRATION_SALT = getattr(django_settings, 'REGISTRATION_SALT', 'registration')
 
-class RegistrationUser(BaseRegistrationView):
 
+class RegistrationUser(BaseRegistrationView):
     email_body_template = 'django_registration/activation_email_body.txt'
     email_subject_template = 'django_registration/activation_email_subject.txt'
     success_url = reverse_lazy('registration_company')
@@ -116,62 +116,57 @@ class RegistrationUser(BaseRegistrationView):
         )
         user.email_user(subject, message, settings.DEFAULT_FROM_EMAIL)
 
+
 class RegistrationCompany(FormView):
     '''Делает запрос в API DaData.ru, если данные из формы верные, создаёт Компанию и отправляет её данные в шаблон'''
     form_class = CheckCompanyForm
     template_name = 'check_company_form.html'
 
     def form_valid(self, form):
-        TIN_or_PSRN = self.request.POST['TIN_or_PSRN']
-        json_response = self.request_to_API(TIN_or_PSRN)
-        if json_response['suggestions'] != []:  #Если ответ не пустой
+        json_response = self.request_to_API(self.request.POST['TIN_or_PSRN'])
+        if json_response['suggestions']:  # Если ответ не пустой
             company, created = self.get_or_create_from_json(json_file=json_response)
-            #чтобы позже прикрепить к зарегистрированному пользователю
+            # чтобы позже прикрепить к зарегистрированному пользователю
             self.request.session['company_id'] = company.id
-            return render(self.request, 'company_registration_info.html', {'company': company}) 
+            return render(self.request, 'company_registration_info.html', {'company': company})
         else:
-            return render(self.request, self.template_name, {'form': form, 'error': 'Такая компания не зарегистрирована, пожалуйста проверьте ИНН/ОГРН'})
+            return render(self.request, self.template_name,
+                          {'form': form, 'error': 'Такая компания не зарегистрирована, пожалуйста проверьте ИНН/ОГРН'})
 
-    def request_to_API(self, TIN_or_PSRN):
+    @staticmethod
+    def request_to_API(TIN_or_PSRN):
         '''More info about used API https://dadata.ru/api/find-party'''
-        TIN_or_PSRN = str(TIN_or_PSRN)       
         url = 'https://suggestions.dadata.ru/suggestions/api/4_1/rs/findById/party'
-        headers = {'Content-Type': 'application/json', 
-                'Accept': 'application/json', 
-                'Authorization': 'Token 77e78f4862b3d616275575a90de5689862fac8d8'}
-        data = '{"query": "value"}'.replace("value", TIN_or_PSRN)
+        headers = {'Content-Type': 'application/json',
+                   'Accept': 'application/json',
+                   'Authorization': 'Token 77e78f4862b3d616275575a90de5689862fac8d8'}
+        data = '{"query": "value"}'.replace("value", str(TIN_or_PSRN))
         response = requests.post(url, headers=headers, data=data)
         return response.json()
 
-    def get_or_create_from_json(self, json_file):
-        name = json_file['suggestions'][0]['value']
-        legal_address = json_file['suggestions'][0]['data']['address']["unrestricted_value"]
-        TIN = json_file['suggestions'][0]['data']['inn']
-        PSRN = json_file['suggestions'][0]['data']['ogrn']
-        KPP = json_file['suggestions'][0]['data']['kpp']
-        CEO = json_file['suggestions'][0]['data']['management']['name']
+    @staticmethod
+    def get_or_create_from_json(json_file):
         new_company, created = Company.objects.get_or_create(
-            name = name,
-            legal_address = legal_address,
-            TIN = TIN,
-            PSRN = PSRN,
-            KPP = KPP,
-            CEO = CEO           
-            )      
-        return new_company, created            
+            name=json_file['suggestions'][0]['value'],
+            legal_address=json_file['suggestions'][0]['data']['address']["unrestricted_value"],
+            TIN=json_file['suggestions'][0]['data']['inn'],
+            PSRN=json_file['suggestions'][0]['data']['ogrn'],
+            KPP=json_file['suggestions'][0]['data']['kpp'],
+            CEO=json_file['suggestions'][0]['data']['management']['name']
+        )
+        return new_company, created
 
 
 class RegistrationAcceptUser(FormView):
-
     template_name = 'django_registration/registration_acceptuser_form.html'
-    #form_class = Form
-    #success_url = reverse_lazy('successe_registration')
+
+    # form_class = Form
+    # success_url = reverse_lazy('successe_registration')
     def form_valid(self, form):
         return super(InvitationCompany, self).form_valid(form)
 
 
 class EditCompany(FormView):
-       
     template_name = 'company_edit_form.html'
     form_class = EditCompanyForm
     success_url = reverse_lazy('edit_company')
@@ -186,19 +181,16 @@ class CheckCompanyBeforeComment(FormView):
     form_class = CheckCompanyForm
 
     def form_valid(self, form):
-        TIN_or_PSRN = self.request.POST['TIN_or_PSRN']
-        length_number = len(str(TIN_or_PSRN))
+        length_number = len(str(self.request.POST['TIN_or_PSRN']))
         if length_number == 10:
-            TIN = TIN_or_PSRN               
             try:
-                company = Company.objects.get(TIN=TIN)
+                company = Company.objects.get(TIN=self.request.POST['TIN_or_PSRN'])
                 return HttpResponseRedirect(reverse_lazy('add_comment'))
             except Company.DoesNotExist:
                 return HttpResponseRedirect(reverse_lazy('invitation_company'))
         elif length_number == 13:
-            PSRN = TIN_or_PSRN
             try:
-                company = Company.objects.get(PSRN=PSRN)
+                company = Company.objects.get(PSRN=self.request.POST['TIN_or_PSRN'])
                 return HttpResponseRedirect(reverse_lazy('add_comment'))
             except Company.DoesNotExist:
                 return HttpResponseRedirect(reverse_lazy('invitation_company'))
@@ -212,7 +204,7 @@ class InvitationCompany(FormView):
     form_class = InvitationCompanyForm
     success_url = reverse_lazy('success_send_invitation')
 
-    def form_valid(self, form):        
+    def form_valid(self, form):
         send_to = form.cleaned_data['email']
         user = self.request.user
         protocol = 'https' if self.request.is_secure() else 'http'
@@ -233,21 +225,19 @@ class InvitationCompany(FormView):
             request=self.request
         )
         send_mail(subject, message,
-                    settings.EMAIL_HOST_USER, [send_to], fail_silently=False)
+                  settings.EMAIL_HOST_USER, [send_to], fail_silently=False)
         return super(InvitationCompany, self).form_valid(form)
 
 
 class CompanyDetail(DetailView):
-
     model = Company
     template_name = 'company_info.html'
     context_object_name = 'company'
 
 
 class CompanyList(ListView):
-
     model = Company
-    template_name = 'company_list.html'   
+    template_name = 'company_list.html'
 
 
 @login_required
@@ -322,24 +312,18 @@ def edit_comment(request, comment_id):
                            instance=comment)
     if form.is_valid():
         new_comment = form.save(commit=False)
-        competence = form.cleaned_data['competence']
-        employee = form.cleaned_data['employee']
-        verifier = form.cleaned_data['verifier']
-        another_employee = form.cleaned_data['another_employee']
         if new_comment.implementer_flag:
             new_comment.implementer = request.user
             new_comment.customer = form.cleaned_data['implementer']
             new_comment.user = request.user
-            save_comment_form(new_comment=new_comment, verifier=verifier,
-                              employee=employee, competence=competence, another_employee=another_employee)
+            save_comment_form(new_comment=new_comment)
             form.save_m2m()
             return HttpResponseRedirect(reverse_lazy('comment_list'))
         if new_comment.customer_flag:
             new_comment.implementer = form.cleaned_data['implementer']
             new_comment.customer = request.user
             new_comment.user = request.user
-            save_comment_form(new_comment=new_comment, verifier=verifier,
-                              employee=employee, competence=competence, another_employee=another_employee)
+            save_comment_form(new_comment=new_comment)
             form.save_m2m()
             return HttpResponseRedirect(reverse_lazy('comment_list'))
         return render(request, 'add-reviews.html',
@@ -354,23 +338,17 @@ def add_comment(request):
     form = CommentEditForm(request.POST or None, request.FILES or None, auto_id=False)
     if form.is_valid():
         new_comment = form.save(commit=False)
-        competence = form.cleaned_data['competence']
-        employee = form.cleaned_data['employee']
-        verifier = form.cleaned_data['verifier']
-        another_employee = form.cleaned_data['another_employee']
         new_comment.user = request.user
         if new_comment.implementer_flag:
             new_comment.implementer = request.user
             new_comment.customer = form.cleaned_data['implementer']
-            save_comment_form(new_comment=new_comment, verifier=verifier,
-                              employee=employee, competence=competence, another_employee=another_employee)
+            save_comment_form(new_comment=new_comment)
             form.save_m2m()
             return HttpResponseRedirect(reverse_lazy('comment_list'))
         if new_comment.customer_flag:
             new_comment.implementer = form.cleaned_data['implementer']
             new_comment.customer = request.user
-            save_comment_form(new_comment=new_comment, verifier=verifier,
-                              employee=employee, competence=competence, another_employee=another_employee)
+            save_comment_form(new_comment=new_comment)
             form.save_m2m()
             return HttpResponseRedirect(reverse_lazy('comment_list'))
         return render(request, 'add-reviews.html',
@@ -386,6 +364,16 @@ def accept_list(request):
     comment_list_ = Comment.objects.select_related('user').filter(recipient_user=user.id, accept=False, failure=False)
     return render(request, 'accept_list.html',
                   {'comment_list': comment_list_})
+
+
+def construct_message(comment):
+    recipient_users = ''
+    for user in comment.recipient_user.all():
+        recipient_users += (user.last_name + user.first_name + user.useraccept.company + ',')
+        user = User.objects.get(id=user.id)
+        user.useraccept.accept = False
+        user.useraccept.save()
+    return recipient_users
 
 
 @login_required
@@ -404,11 +392,9 @@ def accept_comment(request, comment_id):
     form = AcceptForm(request.POST or None, instance=comment)
     if form.is_valid():
         new_accept = form.save(commit=False)
-        accept = form.cleaned_data['accept']
-        failure = form.cleaned_data['failure']
-        if failure:
+        if new_accept.failure:
             return HttpResponseRedirect(reverse('failure_comment', args=[comment_id]))
-        if accept:
+        if new_accept.accept:
             user = User.objects.get(id=request.user.id)
             user.useraccept.accept = True
             user.useraccept.save()
@@ -418,13 +404,7 @@ def accept_comment(request, comment_id):
                     print("Fail!")
                     break
             else:
-                new_accept.accept = accept
-                recipient_users = ''
-                for user in comment.recipient_user.all():
-                    recipient_users += (user.last_name + user.first_name + user.useraccept.company + ',')
-                    user = User.objects.get(id=user.id)
-                    user.useraccept.accept = False
-                    user.useraccept.save()
+                recipient_users = construct_message(comment)
                 data_comment = f'''"
                     Status - accepted, user - {comment.user}, recipient_users - {recipient_users}, 
                     comment - {comment.comment_for_rating}"'''
@@ -456,12 +436,7 @@ def failure_comment(request, comment_id):
                 break
         else:
             new_failure.failure = True
-            recipient_users = ''
-            for user in comment.recipient_user.all():
-                recipient_users += (user.last_name + user.first_name + user.useraccept.company + ',')
-                user = User.objects.get(id=user.id)
-                user.useraccept.failure = False
-                user.useraccept.save()
+            recipient_users = construct_message(comment)
             data_comment = f'''"
                 Status - failure, user - {comment.user}, recipient_users - {recipient_users}, comment - {comment.comment_for_rating}, 
                 reason - {new_failure.failure_text}"'''
@@ -497,8 +472,4 @@ def employee_info(request, user_id):
     verify_count = Comment.objects.filter(recipient_user=user.id, accept=True).count() + Comment.objects.filter(
         user=user.id, accept=True).count()
     return render(request, 'employee_info.html', {'user': user,
-                                         'verify_count': verify_count})
-
-
-def show_genres(request):
-    return render(request, "genre.html", {'genres': Competence.objects.all()})
+                                                  'verify_count': verify_count})

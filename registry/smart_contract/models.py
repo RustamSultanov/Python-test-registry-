@@ -23,26 +23,29 @@ class Competence(MPTTModel):
 
 
 '''Автоматическое создание имени файла изображения'''
-def image_folder(instance, filename):
-	
-	filename = instance.slug + '.' + filename.split('.')[1]
-	return f"{instance.slug}/{filename}"
 
-class Company(models.Model):   
+
+def image_folder(instance, filename):
+    filename = instance.slug + '.' + filename.split('.')[1]
+    return f"{instance.slug}/{filename}"
+
+
+class Company(models.Model):
     name = models.CharField(max_length=50, verbose_name='Название компании',
                             blank=True, null=True)
     legal_address = models.CharField(max_length=100, verbose_name='Юридический адресс',
-                            blank=True, null=True)
-    TIN = models.BigIntegerField(unique=True, verbose_name='ИНН', 
-                            help_text='10 целых чисел')
-    PSRN = models.BigIntegerField(unique=True, verbose_name='ОГРН', 
-                            help_text='13 целых чисел')
-    KPP = models.BigIntegerField(unique=True, verbose_name='КПП', 
-                            help_text='9 целых чисел')
+                                     blank=True, null=True)
+    TIN = models.BigIntegerField(unique=True, verbose_name='ИНН',
+                                 help_text='10 целых чисел')
+    PSRN = models.BigIntegerField(unique=True, verbose_name='ОГРН',
+                                  help_text='13 целых чисел')
+    KPP = models.BigIntegerField(unique=True, verbose_name='КПП',
+                                 help_text='9 целых чисел')
     CEO = models.CharField(max_length=50, blank=True, null=True)
-    logo = models.ImageField(upload_to=image_folder, 
-                            verbose_name='Логотип', blank=True, null=True)
-    #competence = models.ManyToManyField(Competence, blank=True)
+    logo = models.ImageField(upload_to=image_folder,
+                             verbose_name='Логотип', blank=True, null=True)
+
+    # competence = models.ManyToManyField(Competence, blank=True)
 
     def __str__(self):
         return f"Компания: {self.name}"
@@ -55,6 +58,7 @@ class Company(models.Model):
 # User.add_to_class("__str__", get_custom_username)
 def get_custom_username(self):
     return f"Компания: {self.useraccept.company}, сотрудник: {self.first_name} {self.last_name}"
+
 
 class UserAccept(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -81,7 +85,7 @@ class Comment(models.Model):
     recipient_user = models.ManyToManyField(User)
     verifier = models.ManyToManyField(User, related_name='verifier', blank=True)
     employee = models.ManyToManyField(User, related_name='employee_list', blank=True)
-    another_employee = models.ManyToManyField(User, related_name='another_employee', blank=True)    
+    another_employee = models.ManyToManyField(User, related_name='another_employee', blank=True)
     date_update = models.DateTimeField(auto_now=True, blank=True, null=True)
     date_create = models.DateTimeField(auto_now_add=True)
     accept = models.BooleanField(blank=True, default=False)
