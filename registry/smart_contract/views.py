@@ -47,7 +47,87 @@ class RegistrationUser(BaseRegistrationView):
     success_url = reverse_lazy('django_registration_complete')   
     
     def register(self, form):
+        new_user = self._create_inactive_user(form)        
+        signals.user_registered.send(
+            sender=self.__class__,
+            user=new_user,
+            request=self.request
+        )
+        return new_user
+
+    def _create_inactive_user(self, form):
+        """
+        Create the inactive user account and send an email containing
+        activation instructions.
+
+        """
+        new_user = form.save(commit=False)
+        new_user.username = form.cleaned_data['email'] #Email служит логином при входе, но само поле username в форме не заполняется
+        new_user.is_active = False
+        new_user.is_staff = True
+        new_user.save()
+
+        self._send_activation_email(new_user)
+
+        return new_user
+
+    @staticmethod
+    def _get_activation_key(user):
+        """
+        Generate the activation key which will be emailed to the user.
+
+        """
+        return signing.dumps(
+            obj=user.get_username(),
+            salt=REGISTRATION_SALT
+        )
+
+    def _get_email_context(self, activation_key):
+        """
+        Build the template context used for the activation email.
+
+        """
+        protocol = 'https' if self.request.is_secure() else 'http'
+        return {
+            'protocol': protocol,
+            'activation_key': activation_key,
+            'expiration_days': settings.ACCOUNT_ACTIVATION_DAYS,
+            'site': get_current_site(self.request)
+        }
+
+    def _send_activation_email(self, user):
+        """
+        Send the activation email. The activation key is the username,
+        signed using TimestampSigner.
+
+        """
+        activation_key = self._get_activation_key(user)
+        context = self._get_email_context(activation_key)
+        context['user'] = user
+        subject = render_to_string(
+            template_name=self.email_subject_template,
+            context=context,
+            request=self.request
+        )
+        # Force subject to a single line to avoid header-injection
+        # issues.
+        subject = ''.join(subject.splitlines())
+        message = render_to_string(
+            template_name=self.email_body_template,
+            context=context,
+            request=self.request
+        )
+        user.email_user(subject, message, settings.DEFAULT_FROM_EMAIL)
+
+
+class RegistrationEmployee(BaseRegistrationView):
+    email_body_template = 'django_registration/activation_email_body.txt'
+    email_subject_template = 'django_registration/activation_email_subject.txt'
+    success_url = reverse_lazy('django_registration_complete')
+    
+    def register(self, form):
         new_user = self._create_inactive_user(form)
+        
         signals.user_registered.send(
             sender=self.__class__,
             user=new_user,
@@ -117,7 +197,6 @@ class RegistrationUser(BaseRegistrationView):
             request=self.request
         )
         user.email_user(subject, message, settings.DEFAULT_FROM_EMAIL)
-
 
 class RegistrationCompany(FormView):
     '''Делает запрос в API DaData.ru, если данные из формы верные, создаёт Компанию и отправляет её данные в шаблон'''

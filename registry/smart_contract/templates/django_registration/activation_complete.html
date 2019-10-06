@@ -11,9 +11,16 @@
         Ваша учетная запись активирована.
       </p>
     <div class="form__button-wrapper mt-double">
+      {% if request.user.is_staff %}
       <a href="{% url 'registration_company' %}" class="waves-effect waves-light btn btn--primary">
-      Продолжить регистрацию
+          Продолжить регистрацию компании
       </a>
+      {% else %}
+      <a href="{% url 'registration_finaly' %}" class="waves-effect waves-light btn btn--primary">
+          Продолжить регистрацию сотрудника
+      </a>
+      
+      {% endif %}
     </div>
     <p class="form__description form__description--small">
         Написать в <a href="/">Службу технической поддержки</a>

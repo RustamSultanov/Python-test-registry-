@@ -12,10 +12,7 @@
             <th class="column0 style1 s ">ID</th>
             <th class="column1 style1 s d-none d-md-table-cell">ФИО сотрудника</th>
             <th class="column1 style1 s d-none d-md-table-cell">Почта</th>
-            <th class="column2 style1 s">Дата добавления</th>
-           
-        
-
+            <th class="column2 style1 s">Дата добавления</th>                 
         </tr>
     </thead>
     <tbody>
@@ -30,8 +27,8 @@
       </tr>
         {% endfor %}
     </tbody>
-    <a class='btn' href="{% url 'invitation_employee' %}">Добавить сотрудника</a>
+    
 </table>
-
+<a class='btn' href="{% url 'invitation_employee' %}">Добавить сотрудника</a>
 
 {% endblock %}
