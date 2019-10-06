@@ -125,9 +125,12 @@ class RegistrationEmployee(BaseRegistrationView):
     email_subject_template = 'django_registration/activation_email_subject.txt'
     success_url = reverse_lazy('django_registration_complete')
     
-    def register(self, form):
+    def post(self, request, *args, **kwargs):
+        request.session['company_id'] = kwargs['company_id']
+        return super(RegistrationEmployee, self).post(self, request, *args, **kwargs)
+
+    def register(self, form, **kwargs):
         new_user = self._create_inactive_user(form)
-        
         signals.user_registered.send(
             sender=self.__class__,
             user=new_user,
@@ -365,6 +368,7 @@ class InvitationEmployee(FormView):
         context = {
             'protocol': protocol,
             'site': get_current_site(self.request),
+            'company_id': user.useraccept.company_test.id,
             'user': user
         }
         subject = render_to_string(

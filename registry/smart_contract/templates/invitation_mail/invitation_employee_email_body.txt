@@ -1,5 +1,5 @@
 Приглашаем зарегистрироваться на сайте.
 {{ user }} приглашает вас зарегистрироваться на платформе
 Ссылка на регистрацию:
-{{ protocol }}://{{ site }}/registration-employee
+{{ protocol }}://{{ site }}/registration-employee/{{ company_id }}
 Спасибо!
