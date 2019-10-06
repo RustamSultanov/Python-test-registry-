@@ -42,7 +42,8 @@ class Company(models.Model):
     CEO = models.CharField(max_length=50, blank=True, null=True)
     logo = models.ImageField(upload_to=image_folder, 
                             verbose_name='Логотип', blank=True, null=True)
-    #competence = models.ManyToManyField(Competence, blank=True)
+    competence = models.ManyToManyField(Competence, verbose_name='Компетенции компании', blank=True)
+    description = models.TextField(verbose_name='О компании', blank=True)
 
     def __str__(self):
         return f"Компания: {self.name}"

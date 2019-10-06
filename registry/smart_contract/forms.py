@@ -99,15 +99,15 @@ class CheckCompanyForm(forms.Form):
             print('Ошибка')
             raise forms.ValidationError('Неверное количество чисел')
 
-class InvitationCompanyForm(forms.Form):
+class InvitationForm(forms.Form):
 
-    email = forms.EmailField(label='E-mail представителя компании')
+    email = forms.EmailField(label='E-mail Получателя приглашения')
 
 class EditCompanyForm(forms.ModelForm):
 
     class Meta:
         model = Company
-        fields = ['logo']
+        fields = ['logo', 'competence', 'description']
 
 
 class RegistrationAceptUserForm(forms.ModelForm):

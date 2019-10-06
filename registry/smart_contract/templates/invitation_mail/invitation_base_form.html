@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+    {% block headerinvitation %}
+    {% endblock %}
+        <form action="{% url 'invitation_company' %}" method="POST">
+            {% csrf_token %}
+            {{form|crispy}}
+            <input class="btn" type="submit" value="Отправить"><br><br>
+        </form>         
+{% endblock %}

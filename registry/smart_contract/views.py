@@ -18,7 +18,7 @@ from django_registration.views import RegistrationView as BaseRegistrationView
 from registry import settings
 from .models import *
 from .forms import CommentEditForm, AcceptForm, CompetenceForm, RegistrationEmployeeForm, DisputForm, CheckCompanyForm, \
-    InvitationCompanyForm, EditCompanyForm, RegistrationAceptUserForm
+    InvitationForm, EditCompanyForm, RegistrationAceptUserForm
 
 
 def save_comment_form(new_comment):
@@ -123,6 +123,7 @@ class RegistrationCompany(FormView):
     '''Делает запрос в API DaData.ru, если данные из формы верные, создаёт Компанию и отправляет её данные в шаблон'''
     form_class = CheckCompanyForm
     template_name = 'check_company_form.html'
+    success_url = reverse_lazy('additional_registration_company')
 
     def form_valid(self, form):
         json_response = self._request_to_API(self.request.POST['TIN_or_PSRN'])
@@ -130,7 +131,8 @@ class RegistrationCompany(FormView):
             company, created = self._get_or_create_from_json(json_file=json_response)
             # чтобы позже прикрепить к зарегистрированному пользователю
             self.request.session['company_id'] = company.id
-            return render(self.request, 'company_registration_info.html', {'company': company})
+            return super(RegistrationCompany, self).form_valid(form)
+            #return render(self.request, 'company_registration_info.html', {'company': company})
         else:
             return render(self.request, self.template_name,
                           {'form': form, 'error': 'Такая компания не зарегистрирована, пожалуйста проверьте ИНН/ОГРН'})
@@ -154,14 +156,30 @@ class RegistrationCompany(FormView):
             TIN=json_file['suggestions'][0]['data']['inn'],
             PSRN=json_file['suggestions'][0]['data']['ogrn'],
             KPP=json_file['suggestions'][0]['data']['kpp'],
-            CEO=json_file['suggestions'][0]['data']['management']['name']
+            CEO=json_file['suggestions'][0]['data']['management']['name'],
         )
         return new_company, created
 
 
-class RegistrationAcceptUser(FormView):
-    template_name = 'django_registration/registration_acceptuser_form.html'
+class AdditionalRegistrationCompany(FormView):
+    '''Ввод дополнительнх данных при регистрации компании'''
+    form_class = EditCompanyForm
+    template_name = 'company_registration_info.html'
+    success_url = reverse_lazy('registration_finaly')
 
+    def get_context_data(self, **kwargs):
+        context = super(AdditionalRegistrationCompany, self).get_context_data(**kwargs)
+        context['company'] = Company.objects.get(id=self.request.session['company_id'])
+        return context
+
+    def form_valid(self, form):
+        #competence
+        return super(AdditionalRegistrationCompany, self).form_valid(form)
+
+
+class RegistrationAcceptUser(FormView):
+    
+    template_name = 'django_registration/registration_acceptuser_form.html'
     form_class = RegistrationAceptUserForm
     success_url = reverse_lazy('successe_registration')
 
@@ -211,10 +229,10 @@ class CheckCompanyBeforeComment(FormView):
 
 class InvitationCompany(FormView):
     '''Отправляет письмо преставителю компании с приглашением зарегистрироваться в приложении'''
-    template_name = 'invitation_company_form.html'
+    template_name = 'invitation_mail/invitation_company_form.html'
     email_subject_template = 'invitation_mail/invitation_email_subject.txt'
-    email_body_template = 'invitation_mail/invitation_email_body.txt'
-    form_class = InvitationCompanyForm
+    email_body_template = 'invitation_mail/invitation_company_email_body.txt'
+    form_class = InvitationForm
     success_url = reverse_lazy('success_send_invitation')
 
     def form_valid(self, form):
@@ -252,6 +270,44 @@ class CompanyList(ListView):
     model = Company
     template_name = 'company_list.html'
 
+
+class InvitationEmployee(FormView):
+    '''Отправляет письмо преставителю компании с приглашением зарегистрироваться в приложении'''
+    template_name = 'invitation_mail/invitation_employee_form.html'
+    email_subject_template = 'invitation_mail/invitation_email_subject.txt'
+    email_body_template = 'invitation_mail/invitation_employee_email_body.txt'
+    form_class = InvitationForm
+    success_url = reverse_lazy('success_send_invitation')
+
+    def form_valid(self, form):
+        send_to = form.cleaned_data['email']
+        user = self.request.user
+        protocol = 'https' if self.request.is_secure() else 'http'
+        context = {
+            'protocol': protocol,
+            'site': get_current_site(self.request),
+            'user': user
+        }
+        subject = render_to_string(
+            template_name=self.email_subject_template,
+            context=context,
+            request=self.request
+        )
+        subject = ''.join(subject.splitlines())
+        message = render_to_string(
+            template_name=self.email_body_template,
+            context=context,
+            request=self.request
+        )
+        send_mail(subject, message,
+                  settings.EMAIL_HOST_USER, [send_to], fail_silently=False)
+        return super(InvitationEmployee, self).form_valid(form)
+
+'''
+class RegistrationEmployee(FormView):
+
+    form_class = InvitationForm
+'''
 
 @login_required
 def registration_view(request):

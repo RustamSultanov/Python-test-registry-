@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+<header>
+    <h4>Отправка приглашения сотруднику</h4>
+    <h5>Пожалуйста впишите email адресс сотрудника Вашей компании, которого Вы ходитите зарегистрировать в системе</h5>
+    <h5>Он получит письмо с сылкой на регистрацию</h5>
+</header>
+<form action="{% url 'invitation_employee' %}" method="POST">
+    {% csrf_token %}
+    {{form|crispy}}
+    <input class="btn" type="submit" value="Отправить"><br><br>
+</form>   
+{% endblock %}

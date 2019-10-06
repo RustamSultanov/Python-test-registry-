@@ -1,6 +1,7 @@
 from django.urls import path
 from django.contrib.auth import views as auth_view
 from django.views.generic import TemplateView
+from django.urls import reverse, reverse_lazy
 import django.urls
 
 from . import views
@@ -11,12 +12,13 @@ urlpatterns = [
  path('registration-user', views.RegistrationUser.as_view(form_class=forms.RegistrationEmployeeForm), name='registration_user'),
  path('', TemplateView.as_view(template_name="index.html"), name='base'),
  path('registration-company', views.RegistrationCompany.as_view(), name='registration_company'),
+ path('additional-registration-company', views.AdditionalRegistrationCompany.as_view(), name='additional_registration_company'),
  path('registration-finaly', views.RegistrationAcceptUser.as_view(), name='registration_finaly'),
  path('successe_registration', TemplateView.as_view(template_name="django_registration/registration_success.html"), name='successe_registration'),
  path('edit-company', views.EditCompany.as_view(), name='edit_company'),
  path('accounts/login/', auth_view.LoginView.as_view(template_name='django_registration/auth_form.html'), name='login'),
  path('logout', auth_view.LogoutView.as_view(next_page="base"), name='logout'),
- path('regist-employee', views.registration_view, name='regist_employee'),
+ path('registration-employee', views.RegistrationUser.as_view(form_class=forms.RegistrationEmployeeForm, success_url = reverse_lazy('django_registration_complete')), name='registration_user'),
  path('employee-list', views.employee_list, name='employee_list'),
  path('employee-list/<int:user_id>', views.employee_info, name='employee_info'),
  path('comment-list', views.comment_list, name='comment_list'),
@@ -25,6 +27,7 @@ urlpatterns = [
  path('delete-<int:comment_id>', views.delete_comment, name='delete_comment'),
  path('check-company', views.CheckCompanyBeforeComment.as_view(), name='check_company'),
  path('invitation-company', views.InvitationCompany.as_view(), name='invitation_company'),
+ path('invitation-employee', views.InvitationEmployee.as_view(), name='invitation_employee'),
  path('success-send-invitation', TemplateView.as_view(template_name="success_send_invitation.html"), name='success_send_invitation'),
  path('add-comment', views.add_comment, name='add_comment'),
  path('accept', views.accept_list, name='accept_list'),

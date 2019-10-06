@@ -1,13 +1,42 @@
 {% extends "base.html" %}
 {% block content %}
-    {{ company.id }}
-    {{ company.name }}
-    {{ company.legal_address }}
-    {{ company.TIN }}
-    {{ company.PSRN }}
-    {{ company.KPP }}
-    {{ company.CEO }}
-    {% block actions %}
-    {% endblock %}
-    
+<div class="card p-4 mt-5">
+    <header>
+        <h5 class="text-gray">
+        {{ company.name }}
+        </h5>
+        <br>
+    </header>
+    <div class="mt-3">
+        <div class="mb-2">
+            <span>Юридический адресс:</span>
+            <p>{{ company.legal_address }}</p>
+        </div>
+        <div class="mb-2">
+            <span>ИНН:</span>
+            <p>{{ company.TIN }}</p>
+        </div>
+        <div class="mb-2">
+            <span>ОБРН:</span>
+            <p>{{ company.PSRN }}</p>
+        </div>
+        <div class="mb-2">
+            <span>КПП:</span>
+            <p>{{ company.KPP }}</p>
+        </div>
+        <div class="mb-2">
+            <span>Генеральный директор:</span>
+            <p>{{ company.CEO }}</p>
+        </div>
+        <div class="mb-2">
+            <span>Дата основания:</span>
+            <p>{{ company.date_of_establishment }}</p>
+        </div>
+        <div class="mb-2">
+            <span>Действия:</span>
+            <p>{% block actions %}{% endblock %}</p>
+        </div>
+    </div>
+</div>
+        
 {% endblock %}

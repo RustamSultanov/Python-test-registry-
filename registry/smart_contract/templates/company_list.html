@@ -2,11 +2,32 @@
 
 {% block content %}
     <h2>Список зарегистрированных компаний</h2>
-    <ul>
+    <table>
         {% for company in object_list %}
-            <li>{{ company.id }}</li>
-            
-            <li><a href="{% url 'company_info' company.id %}">{{ company.name }}</a></li>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Название компании</th>
+                    <th>Юридический адресс</th>
+                    <th>ИНН</th>
+                    <th>ОГРН</th>          
+                    <th>КПП</th>
+                    <th>Генеральный директор</th>
+                    <th class="column6 style1 s">Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th><a href="{% url 'company_info' company.id %}">{{ company.id }}</a></th>
+                    <th><a href="{% url 'company_info' company.id %}">{{ company.name }}</a></th>
+                    <th><a href="{% url 'company_info' company.id %}">{{ company.legal_address }}</a></th>
+                    <th><a href="{% url 'company_info' company.id %}">{{ company.TIN }}</a></th>
+                    <th><a href="{% url 'company_info' company.id %}">{{ company.PSRN }}</a></th>
+                    <th><a href="{% url 'company_info' company.id %}">{{ company.KPP }}</a></th>
+                    <th><a href="{% url 'company_info' company.id %}">{{ company.CEO }}</a></th>
+                    <th>{% block actions %}{% endblock %}</th>
+                </tr>               
+            </tbody>
         {% endfor %}
-    </ul>
+    </table>  
 {% endblock %}

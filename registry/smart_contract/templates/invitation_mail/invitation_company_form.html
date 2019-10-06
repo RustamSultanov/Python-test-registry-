@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+<header>
+    <h4>Отправка приглашения</h4>
+    <h5>К сожалению Компания отзыв на услуги которой Вы жеали отправить не зарегистрирована в системе</h5>
+    <h5>Но Вы можете пригласить её! Пожалуйста введите e-mail адресс представителя компании и ему будет отправлено пригласительное письмо</h5>
+</header>
+<form action="{% url 'invitation_company' %}" method="POST">
+    {% csrf_token %}
+    {{form|crispy}}
+    <input class="btn" type="submit" value="Отправить"><br><br>
+</form>
+{% endblock %}

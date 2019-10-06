@@ -2,7 +2,7 @@
 {% block content %}
 				                          
 
-				                             <div class="s-review">
+  <div class="s-review">
   <div class="s-review__inner">
     <header>
   <h5 class="m-0 text-gray">Отзыв
@@ -10,7 +10,7 @@
   </h5>
 </header>
 
-    <div class="card p-4 mt-5">
+  <div class="card p-4 mt-5">
   <header>
     <h5 class="text-gray">
       Отзыв
@@ -51,9 +51,10 @@
     </div>
     <div class="mb-2">
       <span>Компетенция:</span>
-      <a href="#">{% for competence in comment.competence.all %}
-													{{ competence }} <br> 
-													{% endfor %}</a>
+      <a href="#">
+        {% for competence in comment.competence.all %}
+          {{ competence }} <br> 
+	      {% endfor %}</a>
     </div>
     <div>
       <span>Компания:</span>

@@ -2,8 +2,6 @@
 {% extends "base_company_info.html" %}
 {% load crispy_forms_tags %}
 {% block actions %}
-    <h5>Описание</h5>
-    <h5>Компетенции компании:</h5>
     {{form|crispy}}
     <a class='btn' href="{% url 'registration_finaly' %}">Далее</a>
 {% endblock %}
