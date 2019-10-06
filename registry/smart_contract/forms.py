@@ -60,23 +60,27 @@ class RegistrationEmployeeForm(forms.ModelForm):
     
     class Meta:
         model = User
-        fields = ['username', 'password', 'first_name', 'last_name']
+        fields = ['email', 'password', 'first_name', 'last_name']
         widgets = {
-        'username' : forms.EmailInput(attrs={'placeholder' : 'Ваша почта'}),
+        'email' : forms.EmailInput(attrs={'placeholder' : 'Ваша почта'}),
         'first_name' : forms.TextInput(attrs={'placeholder' : 'Имя', 'name' : 'Name'}),
         'last_name' : forms.TextInput(attrs={'placeholder' : 'Фамилия', 'name' : 'Surname'}),
         'password' : forms.PasswordInput(attrs={'placeholder' : 'Пароль', 'name' : 'pass'}),
         }
 
         error_messages = {
-            'username': {
+            'email': {
                 'max_length': ("Превышена длинна"),
             },
         }
 
+        labels = {
+            "email": "Ваша почта"
+        }
+
     def clean(self):
-        username = self.cleaned_data['username']
-        if User.objects.filter(username=username).exists():
+        email = self.cleaned_data['email']
+        if User.objects.filter(email=email).exists():
             raise forms.ValidationError('Пользователь с такой почтой уже зарегистрирован')
         password_check = self.cleaned_data['password_check']
         password = self.cleaned_data['password']
@@ -105,9 +109,9 @@ class EditCompanyForm(forms.ModelForm):
         model = Company
         fields = ['logo']
 
-'''
+
 class RegistrationAceptUserForm(forms.ModelForm):
 
     class Meta:
         model = UserAccept
-'''
+        fields = ['city', 'userpic', 'biography', 'contacts']

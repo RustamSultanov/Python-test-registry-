@@ -18,7 +18,7 @@ from django_registration.views import RegistrationView as BaseRegistrationView
 from registry import settings
 from .models import *
 from .forms import CommentEditForm, AcceptForm, CompetenceForm, RegistrationEmployeeForm, DisputForm, CheckCompanyForm, \
-    InvitationCompanyForm, EditCompanyForm
+    InvitationCompanyForm, EditCompanyForm, RegistrationAceptUserForm
 
 
 def save_comment_form(new_comment):
@@ -44,10 +44,10 @@ REGISTRATION_SALT = getattr(django_settings, 'REGISTRATION_SALT', 'registration'
 class RegistrationUser(BaseRegistrationView):
     email_body_template = 'django_registration/activation_email_body.txt'
     email_subject_template = 'django_registration/activation_email_subject.txt'
-    success_url = reverse_lazy('django_registration_complete')
-
+    success_url = reverse_lazy('django_registration_complete')   
+    
     def register(self, form):
-        new_user = self.create_inactive_user(form)
+        new_user = self._create_inactive_user(form)
         signals.user_registered.send(
             sender=self.__class__,
             user=new_user,
@@ -55,22 +55,23 @@ class RegistrationUser(BaseRegistrationView):
         )
         return new_user
 
-    def create_inactive_user(self, form):
+    def _create_inactive_user(self, form):
         """
         Create the inactive user account and send an email containing
         activation instructions.
 
         """
         new_user = form.save(commit=False)
+        new_user.username = form.cleaned_data['email'] #Email служит логином при входе, но само поле username в форме не заполняется
         new_user.is_active = False
         new_user.save()
 
-        self.send_activation_email(new_user)
+        self._send_activation_email(new_user)
 
         return new_user
 
     @staticmethod
-    def get_activation_key(user):
+    def _get_activation_key(user):
         """
         Generate the activation key which will be emailed to the user.
 
@@ -80,7 +81,7 @@ class RegistrationUser(BaseRegistrationView):
             salt=REGISTRATION_SALT
         )
 
-    def get_email_context(self, activation_key):
+    def _get_email_context(self, activation_key):
         """
         Build the template context used for the activation email.
 
@@ -93,14 +94,14 @@ class RegistrationUser(BaseRegistrationView):
             'site': get_current_site(self.request)
         }
 
-    def send_activation_email(self, user):
+    def _send_activation_email(self, user):
         """
         Send the activation email. The activation key is the username,
         signed using TimestampSigner.
 
         """
-        activation_key = self.get_activation_key(user)
-        context = self.get_email_context(activation_key)
+        activation_key = self._get_activation_key(user)
+        context = self._get_email_context(activation_key)
         context['user'] = user
         subject = render_to_string(
             template_name=self.email_subject_template,
@@ -124,9 +125,9 @@ class RegistrationCompany(FormView):
     template_name = 'check_company_form.html'
 
     def form_valid(self, form):
-        json_response = self.request_to_API(self.request.POST['TIN_or_PSRN'])
+        json_response = self._request_to_API(self.request.POST['TIN_or_PSRN'])
         if json_response['suggestions']:  # Если ответ не пустой
-            company, created = self.get_or_create_from_json(json_file=json_response)
+            company, created = self._get_or_create_from_json(json_file=json_response)
             # чтобы позже прикрепить к зарегистрированному пользователю
             self.request.session['company_id'] = company.id
             return render(self.request, 'company_registration_info.html', {'company': company})
@@ -135,7 +136,7 @@ class RegistrationCompany(FormView):
                           {'form': form, 'error': 'Такая компания не зарегистрирована, пожалуйста проверьте ИНН/ОГРН'})
 
     @staticmethod
-    def request_to_API(TIN_or_PSRN):
+    def _request_to_API(TIN_or_PSRN):
         '''More info about used API https://dadata.ru/api/find-party'''
         url = 'https://suggestions.dadata.ru/suggestions/api/4_1/rs/findById/party'
         headers = {'Content-Type': 'application/json',
@@ -146,7 +147,7 @@ class RegistrationCompany(FormView):
         return response.json()
 
     @staticmethod
-    def get_or_create_from_json(json_file):
+    def _get_or_create_from_json(json_file):
         new_company, created = Company.objects.get_or_create(
             name=json_file['suggestions'][0]['value'],
             legal_address=json_file['suggestions'][0]['data']['address']["unrestricted_value"],
@@ -161,10 +162,21 @@ class RegistrationCompany(FormView):
 class RegistrationAcceptUser(FormView):
     template_name = 'django_registration/registration_acceptuser_form.html'
 
-    # form_class = Form
-    # success_url = reverse_lazy('successe_registration')
+    form_class = RegistrationAceptUserForm
+    success_url = reverse_lazy('successe_registration')
+
     def form_valid(self, form):
-        return super(InvitationCompany, self).form_valid(form)
+        user = self.request.user
+        company = Company.objects.get(id=self.request.session['company_id'])
+        useraccept = user.useraccept
+        useraccept.city = form.cleaned_data['city']
+        useraccept.userpic = form.cleaned_data['userpic']
+        useraccept.biography = form.cleaned_data['biography']
+        useraccept.contacts = form.cleaned_data['contacts']
+        useraccept.company = company.name
+        useraccept.company_test = company
+        useraccept.save()
+        return super(RegistrationAcceptUser, self).form_valid(form)
 
 
 class EditCompany(FormView):

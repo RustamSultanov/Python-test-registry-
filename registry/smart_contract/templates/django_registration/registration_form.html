@@ -9,10 +9,11 @@
 <!-- Form section -->
 <form name="registerForm" action="" method="post">
 {% csrf_token %}
-{{ form.username|as_crispy_field }}<br>
 {{ form.email|as_crispy_field }}<br>
-{{ form.password1|as_crispy_field }}<br>
-{{ form.password2|as_crispy_field }}<br>
+{{ form.first_name|as_crispy_field }}<br>
+{{ form.last_name|as_crispy_field }}<br>
+{{ form.password|as_crispy_field }}<br>
+{{ form.password_check|as_crispy_field }}<br>
 
 {{ form.errors }}<br>
 

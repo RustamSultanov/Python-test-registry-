@@ -7,10 +7,7 @@
 <!-- Form section -->
 <form name="registerForm" action="" method="post">
 	{% csrf_token %}
-	<h3>Дополнительные поля написать:</h3>
-
-	{{ form.errors }}<br>
-
+	{{form|crispy}}
 	<br>
 	<input class="btn" type="submit" value="Зарегистрировать"><br><br>   
 </form>

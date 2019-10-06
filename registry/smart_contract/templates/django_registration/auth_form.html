@@ -18,23 +18,17 @@
         {% block content %}<h1>Вход в личный кабинет</h1>
         <form name="loginform" id="loginform" method="post">
             {% csrf_token %}
-           <p><label for="user_login">Login<br />{{ form.username }}</label>
+           <p><label for="user_login">Ваша почта<br />{{ form.username }}</label>
             </p>
 
             <p><label for="user_pass">Пароль <br />
                 {{ form.password }} {{ form.non_field_errors }}</label>
             </p>
-     <br />
+            <br />
         <p class="submit">
                 <button type="submit" class="button button-primary button-large">Войти</button>
             </p>
         </form>
-        
-            
-               
-        
-
-
         <p id="backtoblog"><a href="base">&larr; Назад к сайту </a></p>
         {% endblock %}
 
