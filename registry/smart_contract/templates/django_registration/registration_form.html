@@ -4,18 +4,13 @@
 
 {% block content %}
 <header class="major">
-	<h1>Регистрация сотрудника</h1>
+	<h1>Регистрация</h1>
 </header>
 <!-- Form section -->
 <form name="registerForm" action="" method="post">
 {% csrf_token %}
-{{ form.email|as_crispy_field }}<br>
-{{ form.first_name|as_crispy_field }}<br>
-{{ form.last_name|as_crispy_field }}<br>
-{{ form.password|as_crispy_field }}<br>
-{{ form.password_check|as_crispy_field }}<br>
+{{ form|crispy }}<br>
 
-{{ form.errors }}<br>
 
 <br>
 <input class="btn" type="submit" value="Зарегистрировать"><br><br>   

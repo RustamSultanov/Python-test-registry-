@@ -1,7 +1,8 @@
 from django import forms
 from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
 from django.db import models
-
+from django_registration.forms import RegistrationForm
 from .models import Comment,Competence,UserAccept,Disputs,Company
 
 class CommentEditForm(forms.ModelForm):
@@ -55,17 +56,17 @@ class DisputForm(forms.ModelForm):
                 }
 
 
-class RegistrationEmployeeForm(forms.ModelForm):
-    password_check = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder' : 'Повторите пароль', 'name' : 'password_check'}))
+class RegistrationEmployeeForm(UserCreationForm):
+    #password_check = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder' : 'Повторите пароль', 'name' : 'password_check'}))
     
     class Meta:
         model = User
-        fields = ['email', 'password', 'first_name', 'last_name']
+        fields = ['email', 'first_name', 'last_name']
         widgets = {
         'email' : forms.EmailInput(attrs={'placeholder' : 'Ваша почта'}),
         'first_name' : forms.TextInput(attrs={'placeholder' : 'Имя', 'name' : 'Name'}),
         'last_name' : forms.TextInput(attrs={'placeholder' : 'Фамилия', 'name' : 'Surname'}),
-        'password' : forms.PasswordInput(attrs={'placeholder' : 'Пароль', 'name' : 'pass'}),
+        #'password' : forms.PasswordInput(attrs={'placeholder' : 'Пароль', 'name' : 'pass'}),
         }
 
         error_messages = {
@@ -77,7 +78,9 @@ class RegistrationEmployeeForm(forms.ModelForm):
         labels = {
             "email": "Ваша почта"
         }
-
+        def __init__(self, *args, **kwargs):
+            super(RegistrationForm, self).__init__(*args, **kwargs)
+'''
     def clean(self):
         email = self.cleaned_data['email']
         if User.objects.filter(email=email).exists():
@@ -86,7 +89,7 @@ class RegistrationEmployeeForm(forms.ModelForm):
         password = self.cleaned_data['password']
         if password_check!=password:
             raise forms.ValidationError('Пароль не совпадает!')
-        
+ '''       
 class CheckCompanyForm(forms.Form):
     
     TIN_or_PSRN = forms.IntegerField(label='ИНН/ОГРН', help_text='ИНН содержит 10 чисел, ОГРН - 13 чисел')

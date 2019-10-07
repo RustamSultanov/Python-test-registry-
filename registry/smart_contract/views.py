@@ -1,7 +1,9 @@
 import os
 
 from django.shortcuts import render
+from django.contrib.auth import (views as auth_view, login as auth_login)
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
 from django.core.mail import send_mail
@@ -13,7 +15,7 @@ from django.http import HttpResponseRedirect
 from django.forms.models import model_to_dict
 from django.conf import settings as django_settings
 import requests
-from django_registration import signals
+from django_registration import signals, forms as django_regist_forms
 from django_registration.views import RegistrationView as BaseRegistrationView
 from registry import settings
 from .models import *
@@ -42,6 +44,7 @@ REGISTRATION_SALT = getattr(django_settings, 'REGISTRATION_SALT', 'registration'
 
 
 class RegistrationUser(BaseRegistrationView):
+    form_class = django_regist_forms.RegistrationFormUniqueEmail
     email_body_template = 'django_registration/activation_email_body.txt'
     email_subject_template = 'django_registration/activation_email_subject.txt'
     success_url = reverse_lazy('django_registration_complete')   
@@ -257,6 +260,16 @@ class AdditionalRegistrationCompany(FormView):
     def form_valid(self, form):
         #competence
         return super(AdditionalRegistrationCompany, self).form_valid(form)
+
+
+class LoginAfterRegistration(auth_view.LoginView):
+
+    def form_valid(self, form):
+        """Security check complete. Log the user in."""
+        company_id = self.request.session['company_id']
+        auth_login(self.request, form.get_user())
+        self.request.session['company_id'] = company_id
+        return HttpResponseRedirect(reverse_lazy('django_registration_activation_complete'))
 
 
 class RegistrationAcceptUser(FormView):

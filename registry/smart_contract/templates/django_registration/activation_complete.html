@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load static %}
+{% load crispy_forms_tags %}
 {% block content %}
 <main class="auth-page">
 <div class="dialog">
@@ -10,18 +10,34 @@
     <p class="form__description">
         Ваша учетная запись активирована.
       </p>
-    <div class="form__button-wrapper mt-double">
-      {% if request.user.is_staff %}
-      <a href="{% url 'registration_company' %}" class="waves-effect waves-light btn btn--primary">
-          Продолжить регистрацию компании
-      </a>
+      {% if request.user.is_anonymous %}
+      <form name="loginform" id="loginform" method="post">
+          {% csrf_token %}
+         <p><label for="user_login">Ваша почта<br />{{ form.username }}</label>
+          </p>
+
+          <p><label for="user_pass">Пароль <br />
+              {{ form.password }} {{ form.non_field_errors }}</label>
+          </p>
+          <br />
+      <p class="submit">
+              <button type="submit" class="button button-primary button-large">Войти</button>
+          </p>
+      </form>
       {% else %}
-      <a href="{% url 'registration_finaly' %}" class="waves-effect waves-light btn btn--primary">
-          Продолжить регистрацию сотрудника
-      </a>
-      
+      <div class="form__button-wrapper mt-double">
+          {% if request.user.is_staff %}
+          <a href="{% url 'registration_company' %}" class="waves-effect waves-light btn btn--primary">
+              Продолжить регистрацию компании
+          </a>
+          {% else %}
+          <a href="{% url 'registration_finaly' %}" class="waves-effect waves-light btn btn--primary">
+              Продолжить регистрацию сотрудника
+          </a>     
+          {% endif %}
+        </div>
       {% endif %}
-    </div>
+    
     <p class="form__description form__description--small">
         Написать в <a href="/">Службу технической поддержки</a>
       </p>
