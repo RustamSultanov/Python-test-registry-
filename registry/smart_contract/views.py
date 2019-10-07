@@ -69,7 +69,7 @@ class RegistrationUser(BaseRegistrationView):
         new_user.is_active = False
         new_user.is_staff = True
         new_user.save()
-
+        new_user_accept = UserAccept.objects.create(user_id=new_user.id)
         self._send_activation_email(new_user)
 
         return new_user
@@ -150,8 +150,8 @@ class RegistrationEmployee(BaseRegistrationView):
         new_user = form.save(commit=False)
         new_user.username = form.cleaned_data['email'] #Email служит логином при входе, но само поле username в форме не заполняется
         new_user.is_active = False
-        new_user.save()
-
+        new_user.save()       
+        new_user_accept = UserAccept.objects.create(user_id=new_user.id)
         self._send_activation_email(new_user)
 
         return new_user

@@ -66,9 +66,9 @@ class UserAccept(models.Model):
     contacts = models.TextField(verbose_name='Контакты', blank=True)                    
     accept = models.BooleanField(blank=True, default=False)
     failure = models.BooleanField(blank=True, default=False)
-    company = models.CharField(max_length=100)
+    company = models.CharField(max_length=100, default='АО Карапулечка')
     company_test = models.ForeignKey(Company, models.SET_NULL, blank=True, null=True)
-    position = models.CharField(max_length=100)
+    position = models.CharField(max_length=100, default='employee')
 
     def __str__(self):
         return f"Компания: {self.company}, сотрудник: {self.user.first_name} {self.user.last_name}"
