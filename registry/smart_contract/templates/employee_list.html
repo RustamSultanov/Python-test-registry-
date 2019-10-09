@@ -29,6 +29,7 @@
     </tbody>
     
 </table>
-<a class='btn' href="{% url 'invitation_employee' %}">Добавить сотрудника</a>
-
+{% if request.user.is_staff %}
+    <a class='btn' href="{% url 'invitation_employee' %}">Добавить сотрудника</a>
+{% else %}
 {% endblock %}
