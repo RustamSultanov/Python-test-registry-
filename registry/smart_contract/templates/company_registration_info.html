@@ -3,5 +3,6 @@
 {% load crispy_forms_tags %}
 {% block actions %}
     {{form|crispy}}
+    <br>
     <a class='btn' href="{% url 'registration_finaly' %}">Далее</a>
 {% endblock %}

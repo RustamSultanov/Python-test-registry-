@@ -15,7 +15,7 @@ class Competence(MPTTModel):
         order_insertion_by = ['name']
 
     def __str__(self):
-        return f"#{self.id} {self.competence_name}; Создал: {self.owner.useraccept.company}"
+        return f"#{self.id} {self.competence_name}; Создал: {self.owner.useraccept.company.name}"
 
     class Meta:
         verbose_name = 'Компетенция'
@@ -55,7 +55,7 @@ class Company(models.Model):
 
 # User.add_to_class("__str__", get_custom_username)
 def get_custom_username(self):
-    return f"Компания: {self.useraccept.company}, сотрудник: {self.first_name} {self.last_name}"
+    return f"Компания: {self.useraccept.company.name}, сотрудник: {self.first_name} {self.last_name}"
 
 class UserAccept(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -66,12 +66,17 @@ class UserAccept(models.Model):
     contacts = models.TextField(verbose_name='Контакты', blank=True)                    
     accept = models.BooleanField(blank=True, default=False)
     failure = models.BooleanField(blank=True, default=False)
-    company = models.CharField(max_length=100, default='АО Карапулечка')
-    company_test = models.ForeignKey(Company, models.SET_NULL, blank=True, null=True)
+    #company = models.CharField(max_length=100, default='АО Карапулечка')
+    company = models.ForeignKey(Company, models.SET_NULL, blank=True, null=True)
     position = models.CharField(max_length=100, default='employee')
+    CHOICE_ROLE = (
+    ('INVESTOR', 'Инвестор'),
+    ('BUSINESSMAN', 'Предприниматель'),
+    )
+    role = models.CharField(max_length=20, choices=CHOICE_ROLE, default='INVESTOR', verbose_name='Роль')
 
     def __str__(self):
-        return f"Компания: {self.company}, сотрудник: {self.user.first_name} {self.user.last_name}"
+        return f"Компания: {self.company.name}, сотрудник: {self.user.first_name} {self.user.last_name}"
 
 
 class Comment(models.Model):

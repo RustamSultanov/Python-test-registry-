@@ -1,15 +1,13 @@
-from django.urls import path
+from django.urls import path, reverse, reverse_lazy
 from django.contrib.auth import views as auth_view
 from django.views.generic import TemplateView
-from django.urls import reverse, reverse_lazy
-import django.urls
 
 from . import views
 from . import forms
 
 
 urlpatterns = [
- path('registration-user', views.RegistrationUser.as_view(form_class=forms.RegistrationEmployeeForm), name='registration_user'),
+ path('registration-admin', views.RegistrationUser.as_view(form_class=forms.RegistrationEmployeeForm), name='registration_admin'),
  path('', TemplateView.as_view(template_name="index.html"), name='base'),
  path('registration-company', views.RegistrationCompany.as_view(), name='registration_company'),
  path('additional-registration-company', views.AdditionalRegistrationCompany.as_view(), name='additional_registration_company'),
@@ -19,7 +17,7 @@ urlpatterns = [
  path('accounts/login/', auth_view.LoginView.as_view(template_name='django_registration/auth_form.html'), name='login'),
  path('logout', auth_view.LogoutView.as_view(next_page="base"), name='logout'),
  path('registration-employee/<int:company_id>', views.RegistrationEmployee.as_view(form_class=forms.RegistrationEmployeeForm), name='registration_user'),
- path('accounts/activate/complete', views.LoginAfterRegistration.as_view(template_name='django_registration/activation_complete.html'), name='django_registration_activation_complete'),
+ path('login-after-registation', views.LoginAfterRegistration.as_view(template_name='django_registration/login_after_registration.html'), name='login_after_registation'),
  path('employee-list', views.employee_list, name='employee_list'),
  path('employee-list/<int:user_id>', views.employee_info, name='employee_info'),
  path('comment-list', views.comment_list, name='comment_list'),

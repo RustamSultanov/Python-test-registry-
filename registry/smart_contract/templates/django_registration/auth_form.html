@@ -15,7 +15,8 @@
 <body class="login login-action-login wp-core-ui  locale-ru-ru">
     <div id="login">
         
-        {% block content %}<h1>Вход в личный кабинет</h1>
+        {% block content %}
+        <h1>Вход в личный кабинет</h1>
         <form name="loginform" id="loginform" method="post">
             {% csrf_token %}
            <p><label for="user_login">Ваша почта<br />{{ form.username }}</label>
@@ -25,11 +26,13 @@
                 {{ form.password }} {{ form.non_field_errors }}</label>
             </p>
             <br />
-        <p class="submit">
+            <p class="submit">
                 <button type="submit" class="button button-primary button-large">Войти</button>
             </p>
+            <p>Вы представитель компании, которая отсутствует в системе? Тогда пожалуйста <a href="{% url 'registration_admin' %}">зарегистрируйтесь</a></p>
         </form>
         <p id="backtoblog"><a href="base">&larr; Назад к сайту </a></p>
+        
         {% endblock %}
 
     </div>

@@ -12,9 +12,12 @@
        
     </p>
     <div class="form__button-wrapper mt-double">
-      <a href="/" class="waves-effect waves-light btn btn--primary">
-        Перейти на главную
-      </a>
+      {% if request.session.user_role == 'INVESTOR' %}
+      <a class='btn' href="#">Посмотреть проекты</a>
+      {% endif %}
+      {% if request.session.user_role == 'BUSINESSMAN' %}
+      <a class='btn' href="#">Разместить проект</a>
+      {% endif %}
     </div>
   </div>
 </div>

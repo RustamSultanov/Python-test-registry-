@@ -117,4 +117,4 @@ class RegistrationAceptUserForm(forms.ModelForm):
 
     class Meta:
         model = UserAccept
-        fields = ['city', 'userpic', 'biography', 'contacts']
+        fields = ['city', 'role', 'userpic', 'biography', 'contacts']

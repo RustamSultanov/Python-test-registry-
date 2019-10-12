@@ -217,7 +217,6 @@ class RegistrationCompany(FormView):
             # чтобы позже прикрепить к зарегистрированному пользователю
             self.request.session['company_id'] = company.id
             return super(RegistrationCompany, self).form_valid(form)
-            #return render(self.request, 'company_registration_info.html', {'company': company})
         else:
             return render(self.request, self.template_name,
                           {'form': form, 'error': 'Такая компания не зарегистрирована, пожалуйста проверьте ИНН/ОГРН'})
@@ -247,7 +246,7 @@ class RegistrationCompany(FormView):
 
 
 class AdditionalRegistrationCompany(FormView):
-    '''Ввод дополнительнх данных при регистрации компании'''
+    '''Ввод дополнительных данных при регистрации компании'''
     form_class = EditCompanyForm
     template_name = 'company_registration_info.html'
     success_url = reverse_lazy('registration_finaly')
@@ -265,11 +264,17 @@ class AdditionalRegistrationCompany(FormView):
 class LoginAfterRegistration(auth_view.LoginView):
 
     def form_valid(self, form):
-        """Security check complete. Log the user in."""
-        company_id = self.request.session['company_id']
-        auth_login(self.request, form.get_user())
-        self.request.session['company_id'] = company_id
-        return HttpResponseRedirect(reverse_lazy('django_registration_activation_complete'))
+        #Если регистрируется админ, то id нет и выскакивает исключение
+        try:
+            company_id = self.request.session['company_id']
+            auth_login(self.request, form.get_user())
+            self.request.session['company_id'] = company_id
+        except KeyError:
+            auth_login(self.request, form.get_user())
+        user = self.request.user
+        if user.is_staff:
+            return HttpResponseRedirect(reverse_lazy('registration_company'))
+        return HttpResponseRedirect(reverse_lazy('registration_finaly'))
 
 
 class RegistrationAcceptUser(FormView):
@@ -286,10 +291,17 @@ class RegistrationAcceptUser(FormView):
         useraccept.userpic = form.cleaned_data['userpic']
         useraccept.biography = form.cleaned_data['biography']
         useraccept.contacts = form.cleaned_data['contacts']
-        useraccept.company = company.name
-        useraccept.company_test = company
+        useraccept.role = form.cleaned_data['role']
+        useraccept.company = company
         useraccept.save()
+        self.request.session['user_role'] = form.cleaned_data['role']
         return super(RegistrationAcceptUser, self).form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super(RegistrationAcceptUser, self).get_context_data(**kwargs)
+        user_id = self.request.user.id
+        context['role'] = UserAccept.objects.get(user_id=user_id)
+        return context
 
 
 class EditCompany(FormView):
@@ -381,7 +393,7 @@ class InvitationEmployee(FormView):
         context = {
             'protocol': protocol,
             'site': get_current_site(self.request),
-            'company_id': user.useraccept.company_test.id,
+            'company_id': user.useraccept.company.id,
             'user': user
         }
         subject = render_to_string(
@@ -399,11 +411,6 @@ class InvitationEmployee(FormView):
                   settings.EMAIL_HOST_USER, [send_to], fail_silently=False)
         return super(InvitationEmployee, self).form_valid(form)
 
-'''
-class RegistrationEmployee(FormView):
-
-    form_class = InvitationForm
-'''
 
 @login_required
 def registration_view(request):
