@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+<main class="auth-page">
+<div class="dialog">
+  <div class="dialog__inner">
+    <header>
+      <h2 class="form__title">Активация</h2>
+    </header>
+    <p class="form__description">
+        Ваша учетная запись активирована.
+      </p>
+      <a href="{% url 'login_after_registation' %}">Продолжить регистрацию</a>
+    
+    <p class="form__description form__description--small">
+        Написать в <a href="/">Службу технической поддержки</a>
+      </p>
+  </div>
+</div>
+
+  </main>
+  {% endblock %} 

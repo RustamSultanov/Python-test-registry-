@@ -1,0 +1,256 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+    <div class="s-add">
+  <div class="s-add__inner">
+      <header>
+  <h5 class="m-0">
+    Добавить отзыв
+  
+  </h5>
+</header>
+
+      <div class="form-wrapper">
+        <form class="form form-add-reviews" enctype="multipart/form-data" action="" method="post">
+          {% csrf_token %}
+  <div class="row">
+    <div class="w-50">
+      <div class="io-block mt-5">
+  <header class="io-block__header">
+    <h5>Выбор роли *</h5>
+    <small class="text-gray">
+      <!-- Далеко-далеко за, словесными горами в стране гласных и согласных живут рыбные тексты. -->
+    </small>
+  </header>
+  <div class="io-block__controls d-flex mt-3">
+    <div class="io-block__control">
+      <label>
+        {{ form.implementer_flag }}
+        <span>Исполнитель</span>
+      </label>
+    </div>
+    <div class="io-block__control ml-5">
+      <label>
+        {{ form.customer_flag }}
+        <span>Заказчик</span>
+      </label>
+    </div>
+  </div>
+</div>
+
+     <!--  <div class="io-block mt-5">
+  <header class="io-block__header">
+    <h5>1. Инициатор</h5>
+    <small class="text-gray">
+      Выберите сотрудника вашей компании который является иницатором
+    </small>
+  </header>
+  <div class="io-block__controls d-flex mt-3">
+    <div class="io-block__control w-100">
+      {{ form.init_user }}
+      
+    </div>
+  </div>
+</div> -->
+
+      <div class="io-block mt-5">
+  <header class="io-block__header">
+    <h5>2. Компетенция/область</h5>
+    <small class="text-gray">
+      <!-- Далеко-далеко за, словесными горами в стране гласных и согласных живут рыбные тексты. -->
+    </small>
+  </header>
+  <div class="io-block__controls d-flex mt-3">
+    <div class="io-block__control w-100">
+      {{ form.competence }}
+    </div>
+  </div>
+</div>
+
+
+    </div>
+    <div class="w-100">
+      <!-- <div class="card p-4 mt-5">
+
+  <header>
+  <h5 class="text-gray">Область ответственность вашей компании <a href="/">{{ request.user.useraccept.company }}</a></h5>
+  <small class="text-gray">
+    Далеко-далеко за словесными горами в стране гласных и согласных живут рыбные тексты. По всей залетают запятых диких ее собрал?
+  </small>
+</header>
+
+  <div class="io-block mt-5">
+  <header class="io-block__header">
+    <h5>3. Сотрудник и компетенция</h5>
+    <small class="text-gray">
+      Далеко-далеко за, словесными горами в стране гласных и согласных живут рыбные тексты.
+    </small>
+  </header>
+  <div class="io-block__controls d-flex mt-3">
+    <div class="io-block__control w-50 mr-5">
+      {{ form.employee }}
+      
+    </div>
+    <div class="io-block__control w-50">
+      <select>
+        <option value="" disabled="disabled" selected="selected">Choose your option</option>
+        <option value="1">Option 1</option>
+        <option value="2">Option 2</option>
+        <option value="3">Option 3</option>
+      </select>
+    </div>
+  </div>
+  <p>
+    <button class="button button_add p-0 mt-3 js-add-worker">+Добавить ещё одного сотрудника</button>
+  </p>
+</div>
+
+</div> -->
+
+      <div class="card p-4 mt-5">
+  <header>
+  <!-- <h5 class="text-gray">Область ответственность вашей компании</h5> -->
+  <small class="text-gray">
+    <!-- Далеко-далеко за словесными горами в стране гласных и согласных живут рыбные тексты. По всей залетают запятых диких ее собрал? -->
+  </small>
+</header>
+
+  <div class="io-block mt-5">
+  <header class="io-block__header">
+    <h5>4. Поставик, подрядчик или контрагент *</h5>
+    <small class="text-gray">
+      <!-- Далеко-далеко за, словесными горами в стране гласных и согласных живут рыбные тексты. -->
+      <a href="#">пригласить ее</a>
+    </small>
+  </header>
+  <div class="io-block__controls mt-3">
+    <div class="io-block__control w-50 pr-4">
+     {{ form.implementer }}
+      
+    </div>
+  </div>
+</div>
+
+
+
+  <div class="io-block mt-5">
+  <header class="io-block__header">
+    <h5>5. Сотрудник и компетенция</h5>
+    <small class="text-gray">
+      <!-- Далеко-далеко за, словесными горами в стране гласных и согласных живут рыбные тексты. -->
+    </small>
+  </header>
+  <div class="io-block__controls d-flex mt-3">
+    <div class="io-block__control w-50 mr-5">
+      {{ form.another_employee }}
+    </div>
+    <!-- <div class="io-block__control w-50">
+      <select>
+        <option value="" disabled="disabled" selected="selected">Choose your option</option>
+        <option value="1">Option 1</option>
+        <option value="2">Option 2</option>
+        <option value="3">Option 3</option>
+      </select>
+    </div> -->
+  </div>
+ <!--  <p>
+    <button class="button button_add p-0 mt-3 js-add-worker">+Добавить ещё одного сотрудника</button>
+  </p> -->
+</div>
+
+</div>
+
+      <div class="verificator mt-5">
+  <header>
+    <h5>6. Верификатор.</h5>
+    <small class="text-gray">
+      <!-- Далеко-далеко за, словесными горами в стране гласных и согласных живут рыбные тексты. -->
+    </small>
+  </header>
+  <p class="mt-3">
+    {{ form.verifier }}<!-- <button class="button button_outline">
+      + Добавить ещё одного верификатора
+    </button> -->
+  </p>
+</div>
+
+      <div class="card p-4 mt-5">
+  <header>
+  <h5 class="m-0 text-gray">Отзыв
+    <!-- <span>53454</span> -->
+  </h5>
+  <div class="mt-3">
+    <section>
+      <span>от</span>
+      <a href="{% url 'employee_info' request.user.id %}">{{ request.user.useraccept.company }}</a>
+    </section>
+    <!-- <section>
+      <span>на</span>
+      <a href="/">Магнит Столичный</a>
+    </section> -->
+  </div>
+</header>
+
+  <div class="io-block">
+  <header class="io-block__header">
+    <h5>7. Общая оценка сотрудничества</h5>
+    <small class="text-gray">
+      <!-- Далеко-далеко за, словесными горами в стране гласных и согласных живут рыбные тексты. -->
+    </small>
+  </header>
+  <div class="io-block__controls d-flex mt-3">
+    <div class="io-block__control w-50 mr-5">
+      <div class="rating">
+        <h6>Общая оценка {{ form.rating }}</h6><br> 
+        <h6>Пояснение к оценке {{ form.comment_for_rating }}</h6><br> 
+        <h6>Оценка компетенции {{ form.rating_competence }}</h6><br> 
+        <h6>Пояснение к оценке {{ form.comment_for_rating_competence }}</h6><br>
+        <h6>Оценка сотрудника {{ form.rating_employee }}</h6><br> 
+        <h6>Пояснение к оценке {{ form.comment_for_rating_employee }}</h6><br>
+        <h6>Загрузка файлов {{ form.files }}</h6><br>
+        
+        <svg class="star" width="32" height="32" data-id="1">
+          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{% static "./images/nofill.svg#star" %}">
+          </use>
+        </svg>
+        
+        <svg class="star" width="32" height="32" data-id="2">
+          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{% static "./images/nofill.svg#star" %}">
+          </use>
+        </svg>
+        
+        <svg class="star" width="32" height="32" data-id="3">
+          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{% static "./images/nofill.svg#star" %}">
+          </use>
+        </svg>
+        
+        <svg class="star" width="32" height="32" data-id="4">
+          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{% static "./images/nofill.svg#star" %}">
+          </use>
+        </svg>
+        
+        <svg class="star" width="32" height="32" data-id="5">
+          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{% static "./images/nofill.svg#star" %}">
+          </use>
+        </svg>
+        
+      </div>
+    </div>
+  </div>
+
+</div>
+
+    </div>
+  </div>
+</div>
+
+      </div>
+      <p>
+        <input class="button button_primary" type="submit" value="Добавить">
+      </p></form>
+  </div>
+</div>
+
+  </main>
+{% endblock %}
+    

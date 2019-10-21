@@ -4,12 +4,20 @@ verify_ssl = true
 name = "pypi"
 
 [dev-packages]
-
-[requires]
-python_version = "3.6"
+v = {editable = true,version = "*"}
+pylint = "*"
 
 [packages]
-
-flask = "==0.12.2"
-requests = "==2.18.4"
-
+django = "*"
+django-debug-toolbar = "*"
+"psycopg2-binary" = "*"
+sanic = "*"
+pycryptodome = "*"
+django-mptt = "*"
+gunicorn = "*"
+django-registration = "*"
+django-environ = "*"
+django-crispy-forms = "*"
+pillow = "*"
+requests = "*"
+pylint-django = "*"

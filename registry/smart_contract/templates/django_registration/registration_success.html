@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<main class="auth-page">
+<div class="dialog">
+  <div class="dialog__inner">
+    <header>
+      <h2 class="form__title">Благодарим за регистрацию! Теперь Вы можете приступить к работе</h2>
+    </header>
+    <p class="form__description">
+       
+    </p>
+    <div class="form__button-wrapper mt-double">
+      {% if request.session.user_role == 'INVESTOR' %}
+      <a class='btn' href="#">Посмотреть проекты</a>
+      {% endif %}
+      {% if request.session.user_role == 'BUSINESSMAN' %}
+      <a class='btn' href="#">Разместить проект</a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+  </main>
+  {% endblock %} 

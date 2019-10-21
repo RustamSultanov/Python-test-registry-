@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block content %}
+			<div class="card p-4 mt-5">
+  <header>
+    <h5 class="text-gray">
+      Отзыв
+      <a href="#">{{ comment.id }}</a>
+      {% if comment.user == request.user %}от вашей компании
+      <a href="{% url 'employee_info' request.user.id %}">{{ request.user.useraccept.company }}</a>{% elif comment.customer_flag == True %}
+      от компании
+      <a href="{% url 'employee_info' comment.customer.id %}">{{ comment.customer.useraccept.company }}</a>{% else %}
+      от компании
+      <a href="{% url 'employee_info' comment.implementer.id %}">{{ comment.implementer.useraccept.company }}</a>{% endif %}
+    </h5>
+    <small class="text-gray">Создан:
+      <time>{{ comment.date_create }}</time>
+    </small>
+    <br>
+    <small class="text-gray">Роль:
+      <span>{% if comment.customer_flag == True %}Заказчик{% else %} Исполнитель {% endif %}</span>
+    </small>
+    <br>
+    <small class="text-gray">Статус:
+      <span> {% if comment.accept == True %}
+Отзыв верифицирован участниками и записан в блок
+{% elif comment.failure == True %}
+Отказ верифицирован участниками и записан в блок
+{% else %}
+{% if comment.failure_text %}
+Отзыв ожидает верификации отказа участниками
+{% else %}
+Отзыв ожидает верификации участниками
+{% endif %}
+{% endif %}</span>
+    </small>
+  </header>
+  <div class="mt-3">
+    <div class="mb-2">
+      <span>Инициатор:</span>
+      <a href="{% url 'employee_info' comment.init_user.id %}">{{ comment.init_user.first_name }} {{ comment.init_user.last_name }}</a>
+    </div>
+    <div class="mb-2">
+      <span>Компетенция:</span>
+       {% for competence in comment.competence.all %}
+													<a href="#">  {{ competence }}  </a> 
+													{% endfor %} 
+    </div>
+    <div>
+      <span>Компания:</span>
+      {% if comment.customer_flag == True %}
+     
+      <a href="{% url 'employee_info' comment.implementer.id %}">{{ comment.implementer.useraccept.company }}</a>{% else %}
+      
+      <a href="{% url 'employee_info' comment.customer.id %}">{{ comment.customer.useraccept.company }}</a>{% endif %}
+    </div>
+
+<div class="mb-2">
+      <span>Текст отзыва:</span>
+      {{ comment.comment_text }} 
+    </div>
+
+
+
+
+  </div>
+ 
+ <form class="form form-add-reviews" action="" method="post">  {% csrf_token %}
+                                 <div class="io-block__controls d-flex mt-3">
+    <div class="io-block__control">
+      <label> Причина отказа {{ form.failure_text }}</label>
+    </div>
+     
+                                                       
+                           <p class="mt-5">
+
+
+                                                   
+                                                    <input class="button status_waiting" type="submit" value="Отправить">
+  </p></form>
+</div>
+				
+{% endblock %}

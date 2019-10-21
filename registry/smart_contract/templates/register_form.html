@@ -1,0 +1,24 @@
+{% extends "accept_form.html" %}
+
+
+
+{% block info %}
+<header class="major">
+	<h1>Регистрация сотрудника</h1>
+</header>
+<!-- Form section -->
+<form name="registerForm" action="" method="post">
+	{% csrf_token %}
+	{{ form.username }}<br>
+	{{ form.first_name }}<br>
+	{{ form.last_name }}<br>
+	{{ form.password }}<br>
+	{{ form.password_check }}<br>
+
+
+	{{ form.errors }}<br>
+
+	<br>
+	<input class="btn" type="submit" value="Зарегистрировать"><br><br>   
+</form>
+{% endblock %} 

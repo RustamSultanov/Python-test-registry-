@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+<header class="major">
+	<h1>Последний этап</h1>
+</header>
+<!-- Form section -->
+<form name="registerForm" action="" method="post">
+	{% csrf_token %}
+	{{form|crispy}}
+	<br>
+	<input class="btn" type="submit" value="Зарегистрировать"><br><br>   
+</form>
+{% endblock %} 

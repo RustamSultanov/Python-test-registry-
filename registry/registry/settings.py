@@ -11,6 +11,11 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
+import environ
+
+env = environ.Env(DEBUG=(bool, False),)
+# reading .env file
+environ.Env.read_env()
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -20,12 +25,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '@1(y=xpg_9%)28yf%z-6_bg7qq!s-l0l4_n!_6s^0&aq--n*lh'
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -37,8 +42,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
+    'django_registration',
+    'mptt',
+    'crispy_forms',
+    #custom apps
     'registry',
-    'smart_contract'
+    'smart_contract',
 ]
 
 MIDDLEWARE = [
@@ -64,10 +74,22 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                #custom context processors
+                'smart_contract.context_processors.count_comments_and_accepts',
             ],
         },
     },
 ]
+
+EMAIL_HOST = 'smtp.yandex.ru'
+EMAIL_HOST_USER = 'sultanovelutingol@yandex.ru'
+EMAIL_HOST_PASSWORD = 'EluTingol'
+EMAIL_PORT = 465
+EMAIL_USE_SSL = True
+
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+ACCOUNT_ACTIVATION_DAYS = 7 # One-week activation window
 
 WSGI_APPLICATION = 'registry.wsgi.application'
 
@@ -76,16 +98,8 @@ WSGI_APPLICATION = 'registry.wsgi.application'
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-'NAME': 'blockchain',
-'USER' : 'rustam',
-'PASSWORD' : 'EluTingol',
-'HOST' : '127.0.0.1',
-'PORT' : '5432',
-    }
+    'default': env.db(),
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
@@ -109,9 +123,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru-RU'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Moscow'
 
 USE_I18N = True
 
@@ -120,7 +134,7 @@ USE_L10N = True
 USE_TZ = True
 
 
-LOGIN_REDIRECT_URL = 'lichniy-kabinet'
+LOGIN_REDIRECT_URL = 'comment_list'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
@@ -129,7 +143,10 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
-STATIC_ROOT = 'Python-test-registry-/registry/static/'
+STATIC_ROOT = 'blockchain/registry/static/'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 if DEBUG:
     INTERNAL_IPS = ('127.0.0.1',)
