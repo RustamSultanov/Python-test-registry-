@@ -7,22 +7,31 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
        
     <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
-    
+        
+    <!-- Main font -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,500,500i,700,700i,900" rel="stylesheet">    
+        
+    <!-- Icon fonts -->
+    <link rel="stylesheet" href="{% static 'dist/fonts/fontawesome.css' %}">
+    <link rel="stylesheet" href="{% static 'dist/fonts/ionicons.css' %}">
+        
+    <!-- Core stylesheets -->
 
-    <link rel="stylesheet" href="{% static "./css/styles.css" %}">
+    <link rel="stylesheet" href="{% static 'dist/css/app.css' %}">
 
-    <link rel="apple-touch-icon" sizes="180x180" href="{% static "/apple-touch-icon.png" %}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{% static "/favicon-32x32.png" %}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{% static "/favicon-16x16.png" %}">
-    <link rel="manifest" href="{% static "/site.webmanifest" %}">
-    <link rel="mask-icon" href="{% static "/safari-pinned-tab.svg" %}" color="#da532c">
-    <meta name="msapplication-TileColor" content="#ffffff">
-    <meta name="theme-color" content="#ffffff">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/css/materialize.min.css">
+    Core scripts
+    <script src="{% static 'dist/js/pace.js' %}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        
+    <!-- Libs -->
+    <link rel="stylesheet" href="{% static 'dist/libs/perfect-scrollbar/perfect-scrollbar.css' %}">
+        
+    <!-- `perfect-scrollbar` library required by SideNav plugin -->
+    <link rel="stylesheet" href="{% static 'dist/libs/perfect-scrollbar/perfect-scrollbar.css' %}">
+
+
         {% block script %}
         {% endblock %}
-        <script src="https://code.jquery.com/jquery-1.8.3.js"></script>
         <!-- <link rel="stylesheet" href="{% static "assets/css/main.css" %}"/> -->
         <!--[if lte IE 8]><link rel="stylesheet" href="{% static "assets/css/ie8.css" %}" /><![endif]-->
         <!--[if lte IE 9]><link rel="stylesheet" href="{% static "assets/css/ie9.css" %}" /><![endif]-->
@@ -37,4 +46,19 @@
         {% include "footer.html" %}
         </body>
     {% endblock %}
+    <!-- Core scripts -->
+
+
+<script src="{% static 'dist/libs/popper/popper.js' %}"></script>
+<script src="{% static 'dist/js/bootstrap.js' %}"></script>
+<script src="{% static 'dist/js/sidenav.js' %}"></script>
+
+<!-- Libs -->
+<script src="{% static 'dist/libs/swiper/swiper.js' %}"></script>
+<script src="{% static 'dist/libs/chartjs/chartjs.js' %}"></script>
+
+<!-- `perfect-scrollbar` library required by SideNav plugin -->
+<script src="{% static 'dist/libs/perfect-scrollbar/perfect-scrollbar.js' %}"></script>
+
+
 </html>
