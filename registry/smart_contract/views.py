@@ -1,4 +1,5 @@
 import os
+import pywaves as pw
 
 from django.shortcuts import render
 from django.contrib.auth import (views as auth_view, login as auth_login)
@@ -47,10 +48,10 @@ class RegistrationUser(BaseRegistrationView):
     form_class = django_regist_forms.RegistrationFormUniqueEmail
     email_body_template = 'django_registration/activation_email_body.txt'
     email_subject_template = 'django_registration/activation_email_subject.txt'
-    success_url = reverse_lazy('django_registration_complete')   
-    
+    success_url = reverse_lazy('django_registration_complete')
+
     def register(self, form):
-        new_user = self._create_inactive_user(form)        
+        new_user = self._create_inactive_user(form)
         signals.user_registered.send(
             sender=self.__class__,
             user=new_user,
@@ -65,7 +66,8 @@ class RegistrationUser(BaseRegistrationView):
 
         """
         new_user = form.save(commit=False)
-        new_user.username = form.cleaned_data['email'] #Email служит логином при входе, но само поле username в форме не заполняется
+        new_user.username = form.cleaned_data[
+            'email']  # Email служит логином при входе, но само поле username в форме не заполняется
         new_user.is_active = False
         new_user.is_staff = True
         new_user.save()
@@ -127,7 +129,7 @@ class RegistrationEmployee(BaseRegistrationView):
     email_body_template = 'django_registration/activation_email_body.txt'
     email_subject_template = 'django_registration/activation_email_subject.txt'
     success_url = reverse_lazy('django_registration_complete')
-    
+
     def post(self, request, *args, **kwargs):
         request.session['company_id'] = kwargs['company_id']
         return super(RegistrationEmployee, self).post(self, request, *args, **kwargs)
@@ -148,9 +150,10 @@ class RegistrationEmployee(BaseRegistrationView):
 
         """
         new_user = form.save(commit=False)
-        new_user.username = form.cleaned_data['email'] #Email служит логином при входе, но само поле username в форме не заполняется
+        new_user.username = form.cleaned_data[
+            'email']  # Email служит логином при входе, но само поле username в форме не заполняется
         new_user.is_active = False
-        new_user.save()       
+        new_user.save()
         new_user_accept = UserAccept.objects.create(user_id=new_user.id)
         self._send_activation_email(new_user)
 
@@ -203,6 +206,7 @@ class RegistrationEmployee(BaseRegistrationView):
             request=self.request
         )
         user.email_user(subject, message, settings.DEFAULT_FROM_EMAIL)
+
 
 class RegistrationCompany(FormView):
     '''Делает запрос в API DaData.ru, если данные из формы верные, создаёт Компанию и отправляет её данные в шаблон'''
@@ -257,14 +261,14 @@ class AdditionalRegistrationCompany(FormView):
         return context
 
     def form_valid(self, form):
-        #competence
+        # competence
         return super(AdditionalRegistrationCompany, self).form_valid(form)
 
 
 class LoginAfterRegistration(auth_view.LoginView):
 
     def form_valid(self, form):
-        #Если регистрируется админ, то id нет и выскакивает исключение
+        # Если регистрируется админ, то id нет и выскакивает исключение
         try:
             company_id = self.request.session['company_id']
             auth_login(self.request, form.get_user())
@@ -278,7 +282,6 @@ class LoginAfterRegistration(auth_view.LoginView):
 
 
 class RegistrationAcceptUser(FormView):
-    
     template_name = 'django_registration/registration_acceptuser_form.html'
     form_class = RegistrationAceptUserForm
     success_url = reverse_lazy('successe_registration')
@@ -541,7 +544,7 @@ def accept_list(request):
 def construct_message(comment):
     recipient_users = ''
     for user in comment.recipient_user.all():
-        recipient_users += (user.last_name + user.first_name + user.useraccept.company + ',')
+        recipient_users += (user.last_name + user.first_name + str(user.useraccept.company) + ',')
         user = User.objects.get(id=user.id)
         user.useraccept.accept = False
         user.useraccept.save()
@@ -577,12 +580,28 @@ def accept_comment(request, comment_id):
                     break
             else:
                 recipient_users = construct_message(comment)
-                data_comment = f'''"
+
+                # Подключение ноды
+                pw.setChain(chain='testnet')
+                pw.setNode('https://nodes-testnet.wavesnodes.com')
+
+                # Добавление моего адреса
+                my_address = pw.Address(privateKey='9gHmGvxMRQ3TgpCrmnySxZ11GHo9oy6z55W3c7WngkLM')
+
+                byte_array = [i for i in f'''"
                     Status - accepted, user - {comment.user}, recipient_users - {recipient_users}, 
-                    comment - {comment.comment_for_rating}"'''
-                command = r'''curl -H "Content-type:application/json" --data '{"data":''' + data_comment + r'''}' http://localhost:3001/mineBlock'''
-                print(data_comment, command)
-                os.system(command)
+                    comment - {comment.comment_for_rating}"'''.encode()]
+
+                # Отправка даты с выводом в
+                data = [{
+                    'type': 'string',
+                    'key': f'{comment.id}',
+                    'value': str(byte_array)[1:-1],
+                    'arg': 'little',
+                }]
+
+                my_address.dataTransaction(data)
+
                 new_accept.save()
                 return HttpResponseRedirect(reverse_lazy('comment_list'))
             return HttpResponseRedirect(reverse_lazy('comment_list'))
@@ -609,11 +628,24 @@ def failure_comment(request, comment_id):
         else:
             new_failure.failure = True
             recipient_users = construct_message(comment)
-            data_comment = f'''"
+            # Подключение ноды
+            pw.setChain(chain='testnet')
+            pw.setNode('https://nodes-testnet.wavesnodes.com')
+
+            # Добавление моего адреса
+            my_address = pw.Address(privateKey='9gHmGvxMRQ3TgpCrmnySxZ11GHo9oy6z55W3c7WngkLM')
+            byte_array = [i for i in f'''"
                 Status - failure, user - {comment.user}, recipient_users - {recipient_users}, comment - {comment.comment_for_rating}, 
-                reason - {new_failure.failure_text}"'''
-            command = r'''curl -H "Content-type:application/json" --data '{"data":''' + data_comment + r'''}' http://localhost:3001/mineBlock'''
-            os.system(command)
+                reason - {new_failure.failure_text}"''']
+            # Отправка даты с выводом в
+            data = [{
+                'type': 'string',
+                'key': f'{comment.user.company.id}',
+                'value': str(byte_array)[1:-1],
+                'arg': 'little',
+            }]
+            my_address.dataTransaction(data)
+
             new_failure.save()
             return HttpResponseRedirect(reverse_lazy('comment_list'))
         return HttpResponseRedirect(reverse_lazy('comment_list'))
