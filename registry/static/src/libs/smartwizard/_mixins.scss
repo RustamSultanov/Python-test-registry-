@@ -1,7 +1,0 @@
-@mixin smartwizard-theme($color) {
-  .sw-theme-default .step-anchor > li.active > a .sw-icon,
-  .sw-theme-default .step-anchor > li.active > a .sw-number {
-    color: $color;
-    border-color: $color;
-  }
-}

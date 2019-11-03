@@ -1,1 +1,0 @@
-require('../../../../node_modules/bootstrap-table/src/extensions/click-edit-row/bootstrap-table-click-edit-row.js');
