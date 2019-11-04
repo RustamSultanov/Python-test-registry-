@@ -22,3 +22,5 @@ pillow = "*"
 requests = "*"
 pylint-django = "*"
 django-widget-tweaks = "*"
+pywaves = "*"
+
