@@ -20,7 +20,7 @@
 
     <link rel="stylesheet" href="{% static 'dist/css/app.css' %}">
 
-    Core scripts
+
     <script src="{% static 'dist/js/pace.js' %}"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
@@ -29,7 +29,7 @@
 
     <!-- `perfect-scrollbar` library required by SideNav plugin -->
     <link rel="stylesheet" href="{% static 'dist/libs/perfect-scrollbar/perfect-scrollbar.css' %}">
-        <link rel="stylesheet" href="{% static 'dist/pages/authentication.css' %}" >
+    <link rel="stylesheet" href="{% static 'dist/pages/authentication.css' %}" >
     </head>
 
 
@@ -54,25 +54,22 @@
                     <!-- / Logo -->
               
                     <!-- Form -->
-                    <form class="my-5">
+                    <form method="POST" class="my-5" action="{% url 'login' %}">
+                      {% for field in form %}
                       <div class="form-group">
-                        <label class="form-label">Email</label>
-                        <input type="text" class="form-control">
+                        <label class="form-label">{{ field.label }}</label>
+                        <input type="text" class="form-control" placeholder="{{ field.widget.attrs.placeholder }}" name="{{ field.name }}" id="{{ field.id_for_label }}">
                       </div>
-                      <div class="form-group">
-                        <label class="form-label d-flex justify-content-between align-items-end">
-                          <div>Password</div>
-                          <a href="javascript:void(0)" class="d-block small">Forgot password?</a>
-                        </label>
-                        <input type="password" class="form-control">
-                      </div>
+                      {% endfor %}
                       <div class="d-flex justify-content-between align-items-center m-0">
                         <label class="custom-control custom-checkbox m-0">
                           <input type="checkbox" class="custom-control-input">
                           <span class="custom-control-label">Remember me</span>
                         </label>
+                        {{ form.errors }}
                         <button type="button" class="btn btn-primary">Sign In</button>
                       </div>
+                      
                     </form>
                     <!-- / Form -->
               

@@ -1,64 +1,272 @@
 {% load static %}
-<html lang="ru">
-    <head>
-    	{% block title %}<title>Chain Of Trust</title>{% endblock %}
-    	<meta charset="utf-8">
-		
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-       
-    <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
-        
+<!DOCTYPE html>
+
+<html lang="en" class="material-style layout-navbar-fixed">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="IE=edge,chrome=1">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+
+    {% block title %}<title>Chain Of Trust</title>{% endblock %}
+
     <!-- Main font -->
-    <link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,500,500i,700,700i,900" rel="stylesheet">    
-        
-    <!-- Icon fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,500,500i,700,700i,900" rel="stylesheet">
+
+    <!-- Icons. Uncomment required icon fonts -->
     <link rel="stylesheet" href="{% static 'dist/fonts/fontawesome.css' %}">
     <link rel="stylesheet" href="{% static 'dist/fonts/ionicons.css' %}">
-        
-    <!-- Core stylesheets -->
 
     <link rel="stylesheet" href="{% static 'dist/css/app.css' %}">
 
-    Core scripts
-    <script src="{% static 'dist/js/pace.js' %}"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-        
+    <!-- Layout helpers -->
+    <script src="{% static 'dist/js/layout-helpers.js' %}"></script>
+    {% block script %}
+    {% endblock %}
     <!-- Libs -->
-    <link rel="stylesheet" href="{% static 'dist/libs/perfect-scrollbar/perfect-scrollbar.css' %}">
-        
+
     <!-- `perfect-scrollbar` library required by SideNav plugin -->
     <link rel="stylesheet" href="{% static 'dist/libs/perfect-scrollbar/perfect-scrollbar.css' %}">
 
+</head>
+{% block body %}
+<body>
 
-        {% block script %}
-        {% endblock %}
-        <!-- <link rel="stylesheet" href="{% static "assets/css/main.css" %}"/> -->
-        <!--[if lte IE 8]><link rel="stylesheet" href="{% static "assets/css/ie8.css" %}" /><![endif]-->
-        <!--[if lte IE 9]><link rel="stylesheet" href="{% static "assets/css/ie9.css" %}" /><![endif]-->
-    </head>
-   {% block body %} 
-        <body>
-        {% block header %}
-            {% include "header.html" %}
-        {% endblock %}
-        {% block content %}
-        {% endblock %}
-        {% include "footer.html" %}
-        </body>
-    {% endblock %}
-    <!-- Core scripts -->
+<!-- Layout wrapper -->
+<div class="layout-wrapper layout-2">
+    <!-- Layout inner -->
+    <div class="layout-inner">
+        <div id="layout-sidenav" class="layout-sidenav sidenav sidenav-vertical bg-white">
+            <div class="app-brand demo">
+              <a href="#" class="app-brand-logo">
+                <img src="img/logo.png" alt="">
+              </a>
+                <a href="javascript:void(0)" class="layout-sidenav-toggle sidenav-link text-large ml-auto">
+                    <i class="ion ion-md-menu align-middle"></i>
+                </a>
+            </div>
+            <div class="sidenav-divider mt-0"></div>
+            <ul class="sidenav-inner py-1 ps">
+                <li class="sidenav-item">
+                    <a href="#" class="sidenav-link"><i class="sidenav-icon ion ion-md-quote"></i>
+                        <div>Typography</div>
+                    </a>
+                </li>
+            </ul>
+        </div>
 
 
+        <div class="layout-container">
+            <!-- Layout navbar -->
+            <nav class="layout-navbar navbar navbar-expand-lg align-items-lg-center container-p-x bg-navbar-theme" id="layout-navbar">
+
+                <!-- Brand demo (see assets/css/demo/demo.css) -->
+                <a href="#" class="navbar-brand app-brand demo d-lg-none py-0 mr-4">
+                  <span class="app-brand-logo">
+                      <img src="img/logo.png" alt="">
+                  </span>
+                </a>
+                <div class="layout-sidenav-toggle navbar-nav d-lg-none align-items-lg-center mr-auto">
+                    <a class="nav-item nav-link px-0 mr-lg-4" href="javascript:void(0)">
+                        <i class="ion ion-md-menu text-large align-middle"></i>
+                    </a>
+                </div>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#layout-navbar-collapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="navbar-collapse collapse" id="layout-navbar-collapse">
+                    <!-- Divider -->
+                    <hr class="d-lg-none w-100 my-2">
+
+                    <div class="navbar-nav align-items-lg-center">
+                        <!-- Search -->
+                        <label class="nav-item navbar-text navbar-search-box p-0 active">
+                            <i class="ion ion-ios-search navbar-icon align-middle"></i>
+                            <span class="navbar-search-input pl-2">
+                <input type="text" class="form-control navbar-text mx-2" placeholder="Search..." style="width:200px">
+              </span>
+                        </label>
+                    </div>
+
+                    <div class="navbar-nav align-items-lg-center ml-auto">
+                        <div class="demo-navbar-notifications nav-item dropdown mr-lg-3">
+                            <a class="nav-link dropdown-toggle hide-arrow" href="#" data-toggle="dropdown">
+                                <i class="ion ion-md-notifications-outline navbar-icon align-middle"></i>
+                                <span class="badge badge-primary badge-dot indicator"></span>
+                                <span class="d-lg-none align-middle">&nbsp; Notifications</span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <div class="bg-primary text-center text-white font-weight-bold p-3">
+                                    4 New Notifications
+                                </div>
+                                <div class="list-group list-group-flush">
+                                    <a href="javascript:void(0)" class="list-group-item list-group-item-action media d-flex align-items-center">
+                                        <div class="ui-icon ui-icon-sm ion ion-md-home bg-secondary border-0 text-white"></div>
+                                        <div class="media-body line-height-condenced ml-3">
+                                            <div class="text-dark">Login from 192.168.1.1</div>
+                                            <div class="text-light small mt-1">
+                                                Aliquam ex eros, imperdiet vulputate hendrerit et.
+                                            </div>
+                                            <div class="text-light small mt-1">12h ago</div>
+                                        </div>
+                                    </a>
+
+                                    <a href="javascript:void(0)" class="list-group-item list-group-item-action media d-flex align-items-center">
+                                        <div class="ui-icon ui-icon-sm ion ion-md-person-add bg-info border-0 text-white"></div>
+                                        <div class="media-body line-height-condenced ml-3">
+                                            <div class="text-dark">You have
+                                                <strong>4</strong> new followers</div>
+                                            <div class="text-light small mt-1">
+                                                Phasellus nunc nisl, posuere cursus pretium nec, dictum vehicula tellus.
+                                            </div>
+                                        </div>
+                                    </a>
+
+                                    <a href="javascript:void(0)" class="list-group-item list-group-item-action media d-flex align-items-center">
+                                        <div class="ui-icon ui-icon-sm ion ion-md-power bg-danger border-0 text-white"></div>
+                                        <div class="media-body line-height-condenced ml-3">
+                                            <div class="text-dark">Server restarted</div>
+                                            <div class="text-light small mt-1">
+                                                19h ago
+                                            </div>
+                                        </div>
+                                    </a>
+
+                                    <a href="javascript:void(0)" class="list-group-item list-group-item-action media d-flex align-items-center">
+                                        <div class="ui-icon ui-icon-sm ion ion-md-warning bg-warning border-0 text-dark"></div>
+                                        <div class="media-body line-height-condenced ml-3">
+                                            <div class="text-dark">99% server load</div>
+                                            <div class="text-light small mt-1">
+                                                Etiam nec fringilla magna. Donec mi metus.
+                                            </div>
+                                            <div class="text-light small mt-1">
+                                                20h ago
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+
+                                <a href="javascript:void(0)" class="d-block text-center text-light small p-2 my-1">Show all notifications</a>
+                            </div>
+                        </div>
+
+                        <div class="demo-navbar-messages nav-item dropdown mr-lg-3">
+                            <a class="nav-link dropdown-toggle hide-arrow" href="#" data-toggle="dropdown">
+                                <i class="ion ion-ios-mail navbar-icon align-middle"></i>
+                                <span class="badge badge-primary badge-dot indicator"></span>
+                                <span class="d-lg-none align-middle">&nbsp; Messages</span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <div class="bg-primary text-center text-white font-weight-bold p-3">
+                                    4 New Messages
+                                </div>
+                                <div class="list-group list-group-flush">
+                                    <a href="javascript:void(0)" class="list-group-item list-group-item-action media d-flex align-items-center">
+                                        <img src="assets/img/avatars/6-small.png" class="d-block ui-w-40 rounded-circle" alt>
+                                        <div class="media-body ml-3">
+                                            <div class="text-dark line-height-condenced">Sit meis deleniti eu, pri vidit meliore docendi ut.</div>
+                                            <div class="text-light small mt-1">
+                                                Mae Gibson &nbsp;·&nbsp; 58m ago
+                                            </div>
+                                        </div>
+                                    </a>
+
+                                    <a href="javascript:void(0)" class="list-group-item list-group-item-action media d-flex align-items-center">
+                                        <img src="assets/img/avatars/4-small.png" class="d-block ui-w-40 rounded-circle" alt>
+                                        <div class="media-body ml-3">
+                                            <div class="text-dark line-height-condenced">Mea et legere fuisset, ius amet purto luptatum te.</div>
+                                            <div class="text-light small mt-1">
+                                                Kenneth Frazier &nbsp;·&nbsp; 1h ago
+                                            </div>
+                                        </div>
+                                    </a>
+
+                                    <a href="javascript:void(0)" class="list-group-item list-group-item-action media d-flex align-items-center">
+                                        <img src="assets/img/avatars/5-small.png" class="d-block ui-w-40 rounded-circle" alt>
+                                        <div class="media-body ml-3">
+                                            <div class="text-dark line-height-condenced">Sit meis deleniti eu, pri vidit meliore docendi ut.</div>
+                                            <div class="text-light small mt-1">
+                                                Nelle Maxwell &nbsp;·&nbsp; 2h ago
+                                            </div>
+                                        </div>
+                                    </a>
+
+                                    <a href="javascript:void(0)" class="list-group-item list-group-item-action media d-flex align-items-center">
+                                        <img src="assets/img/avatars/11-small.png" class="d-block ui-w-40 rounded-circle" alt>
+                                        <div class="media-body ml-3">
+                                            <div class="text-dark line-height-condenced">Lorem ipsum dolor sit amet, vis erat denique in, dicunt prodesset te vix.</div>
+                                            <div class="text-light small mt-1">
+                                                Belle Ross &nbsp;·&nbsp; 5h ago
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+
+                                <a href="javascript:void(0)" class="d-block text-center text-light small p-2 my-1">Show all messages</a>
+                            </div>
+                        </div>
+
+                        <!-- Divider -->
+                        <div class="nav-item d-none d-lg-block text-big font-weight-light line-height-1 opacity-25 mr-3 ml-1">|</div>
+
+                        <div class="demo-navbar-user nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+                <span class="d-inline-flex flex-lg-row-reverse align-items-center align-middle">
+                  <img src="img/avatars/1.png" alt class="d-block ui-w-30 rounded-circle">
+                  <span class="px-1 mr-lg-2 ml-2 ml-lg-0">Mike Greene</span>
+                </span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <a href="javascript:void(0)" class="dropdown-item">Проверки</a>
+                                <a href="javascript:void(0)" class="dropdown-item">Оповещения</a>
+                                <a href="javascript:void(0)" class="dropdown-item">Сообщения</a>
+                                <a href="javascript:void(0)" class="dropdown-item">Настройки</a>
+                                <div class="dropdown-divider"></div>
+                                <a href="javascript:void(0)" class="dropdown-item">
+                                    <i class="ion ion-ios-log-out text-danger"></i> &nbsp; Выйти</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+            <!-- / Layout navbar -->
+
+            <div class="layout-content">
+
+                <!-- Page content -->
+                {% block content %}
+                {% endblock %}
+                <!-- / Page content -->
+
+                <!-- Layout footer -->
+                <nav class="layout-footer footer bg-footer-theme">
+                    {% include "footer.html" %}
+                </nav>
+                <!-- / Layout footer -->
+
+            </div>
+        </div>
+
+    </div>
+    <!-- Layout inner -->
+    <div class="layout-overlay layout-sidenav-toggle"></div>
+</div>
+<!-- / Layout wrapper -->
+
+<!-- Core scripts -->
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="{% static 'dist/libs/popper/popper.js' %}"></script>
 <script src="{% static 'dist/js/bootstrap.js' %}"></script>
 <script src="{% static 'dist/js/sidenav.js' %}"></script>
+<script src="{% static 'dist/js/demo.js' %}"></script>
 
 <!-- Libs -->
-<script src="{% static 'dist/libs/swiper/swiper.js' %}"></script>
-<script src="{% static 'dist/libs/chartjs/chartjs.js' %}"></script>
 
 <!-- `perfect-scrollbar` library required by SideNav plugin -->
 <script src="{% static 'dist/libs/perfect-scrollbar/perfect-scrollbar.js' %}"></script>
 
-
+</body>
+{% endblock %}
 </html>

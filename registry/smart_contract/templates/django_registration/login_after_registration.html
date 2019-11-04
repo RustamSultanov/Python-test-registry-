@@ -1,45 +1,106 @@
-{% extends "base.html" %}
-{% load crispy_forms_tags %}
-{% block content %}
-<main class="auth-page">
-<div class="dialog">
-  <div class="dialog__inner">
-    <header>
-      <h3>Пожалуйста залогиньтесь</h3>
-    </header>
-      {% if request.user.is_anonymous %}
-      <form name="loginform" id="loginform" method="post">
-          {% csrf_token %}
-         <p><label for="user_login">Ваша почта<br />{{ form.username }}</label>
-          </p>
+{% load static %}
 
-          <p><label for="user_pass">Пароль <br />
-              {{ form.password }} {{ form.non_field_errors }}</label>
-          </p>
-          <br />
-      <p class="submit">
-              <button type="submit" class="button button-primary button-large">Войти</button>
-          </p>
-      </form>
-      {% else %}
-      <div class="form__button-wrapper mt-double">
-          {% if request.user.is_staff %}
-          <a href="{% url 'registration_company' %}" class="waves-effect waves-light btn btn--primary">
-              Продолжить регистрацию компании
-          </a>
-          {% else %}
-          <a href="{% url 'registration_finaly' %}" class="waves-effect waves-light btn btn--primary">
-              Продолжить регистрацию сотрудника
-          </a>     
-          {% endif %}
-        </div>
-      {% endif %}
-    
-    <p class="form__description form__description--small">
-        Написать в <a href="/">Службу технической поддержки</a>
-      </p>
-  </div>
-</div>
+<!DOCTYPE HTML>
+<html lang="ru">
+    <head>
+      {% block title %}  <title>Вход</title>{% endblock %}
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="IE=edge,chrome=1">
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <!-- Main font -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,500,500i,700,700i,900" rel="stylesheet">
 
-  </main>
-  {% endblock %} 
+    <!-- Icon fonts -->
+    <link rel="stylesheet" href="{% static 'dist/fonts/fontawesome.css' %}">
+    <link rel="stylesheet" href="{% static 'dist/fonts/ionicons.css' %}">
+
+    <!-- Core stylesheets -->
+
+    <link rel="stylesheet" href="{% static 'dist/css/app.css' %}">
+
+
+    <script src="{% static 'dist/js/pace.js' %}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <!-- Libs -->
+    <link rel="stylesheet" href="{% static 'dist/libs/perfect-scrollbar/perfect-scrollbar.css' %}">
+
+    <!-- `perfect-scrollbar` library required by SideNav plugin -->
+    <link rel="stylesheet" href="{% static 'dist/libs/perfect-scrollbar/perfect-scrollbar.css' %}">
+    <link rel="stylesheet" href="{% static 'dist/pages/authentication.css' %}" >
+    </head>
+
+
+        <body>
+                <div class="page-loader">
+                  <div class="bg-primary"></div>
+                </div>
+              
+                <!-- Content -->
+              
+                <div class="authentication-wrapper authentication-1 px-4">
+                  <div class="authentication-inner py-5">
+              
+                    <!-- Logo -->
+                    <div class="d-flex justify-content-center align-items-center">
+                      <div class="ui-w-60">
+                        <div class="w-100 position-relative" style="padding-bottom: 54%">
+                          <img src="{% static 'dist/img/logo.png' %}" alt="">
+                        </div>
+                      </div>
+                    </div>
+                    <!-- / Logo -->
+              
+                    <!-- Form -->
+                    {% if request.user.is_anonymous %}
+                    <form method="POST" class="my-5" action="{% url 'login' %}">
+                      {% for field in form %}
+                      <div class="form-group">
+                        <label class="form-label">{{ field.label }}</label>
+                        <input type="text" class="form-control" placeholder="{{ field.widget.attrs.placeholder }}" name="{{ field.name }}" id="{{ field.id_for_label }}">
+                      </div>
+                      {% endfor %}
+                      <div class="d-flex justify-content-between align-items-center m-0">
+                        <label class="custom-control custom-checkbox m-0">
+                          <input type="checkbox" class="custom-control-input">
+                          <span class="custom-control-label">Remember me</span>
+                        </label>
+                        {{ form.errors }}
+                        <button type="button" class="btn btn-primary">Sign In</button>
+                      </div>                     
+                    </form>
+                    <!-- / Form -->
+                    {% else %}
+                    <div class="form__button-wrapper mt-double">
+                        {% if request.user.is_staff %}
+                        <a href="{% url 'registration_company' %}" class="waves-effect waves-light btn btn--primary">
+                            Продолжить регистрацию компании
+                        </a>
+                        {% else %}
+                        <a href="{% url 'registration_finaly' %}" class="waves-effect waves-light btn btn--primary">
+                            Продолжить регистрацию сотрудника
+                        </a>     
+                        {% endif %}
+                      </div>
+                    {% endif %}
+              
+                  </div>
+                </div>
+        
+
+<script src="{% static 'dist/libs/popper/popper.js' %}"></script>
+<script src="{% static 'dist/js/bootstrap.js' %}"></script>
+<script src="{% static 'dist/js/sidenav.js' %}"></script>
+
+<!-- Libs -->
+<script src="{% static 'dist/libs/swiper/swiper.js' %}"></script>
+<script src="{% static 'dist/libs/chartjs/chartjs.js' %}"></script>
+
+<!-- `perfect-scrollbar` library required by SideNav plugin -->
+<script src="{% static 'dist/libs/perfect-scrollbar/perfect-scrollbar.js' %}"></script>
+
+</body>
+
+</html>
