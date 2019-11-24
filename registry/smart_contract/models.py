@@ -24,12 +24,12 @@ class Competence(MPTTModel):
 
 '''Автоматическое создание имени файла изображения'''
 def image_folder(instance, filename):
-	
-	filename = instance.slug + '.' + filename.split('.')[1]
-	return f"{instance.slug}/{filename}"
+
+    filename = instance.slug + '.' + filename.split('.')[1]
+    return f"{instance.slug}/{filename}"
 
 class Company(models.Model):   
-    name = models.CharField(max_length=50, verbose_name='Название компании',
+    name = models.CharField(max_length=75, verbose_name='Название компании',
                             blank=True, null=True)
     legal_address = models.CharField(max_length=100, verbose_name='Юридический адресс',
                             blank=True, null=True)
@@ -39,11 +39,14 @@ class Company(models.Model):
                             help_text='13 целых чисел')
     KPP = models.BigIntegerField(unique=True, verbose_name='КПП', 
                             help_text='9 целых чисел')
-    CEO = models.CharField(max_length=50, blank=True, null=True)
-    logo = models.ImageField(upload_to=image_folder, 
+    CEO = models.CharField(max_length=100, blank=True, null=True)
+    logo = models.ImageField(upload_to="prod_doc",
                             verbose_name='Логотип', blank=True, null=True)
     competence = models.ManyToManyField(Competence, verbose_name='Компетенции компании', blank=True)
     description = models.TextField(verbose_name='О компании', blank=True)
+    bank = models.CharField(max_length=100, blank=True, null=True)
+    corr_account = models.CharField(max_length=100, blank=True, null=True)
+    date_of_establishment = models.DateField(blank=True, null=True)
 
     def __str__(self):
         return f"Компания: {self.name}"
@@ -60,7 +63,7 @@ def get_custom_username(self):
 class UserAccept(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     city = models.CharField(max_length=30, verbose_name='Город проживания', default='Москва')
-    userpic = models.ImageField(upload_to=image_folder, 
+    userpic = models.ImageField(upload_to="prod_doc",
                             verbose_name='Юзерпик', blank=True, null=True)
     biography = models.TextField(verbose_name='Краткая биография', blank=True)
     contacts = models.TextField(verbose_name='Контакты', blank=True)                    

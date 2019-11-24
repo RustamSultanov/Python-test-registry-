@@ -15,7 +15,7 @@ urlpatterns = [
  path('successe_registration', TemplateView.as_view(template_name="django_registration/registration_success.html"), name='successe_registration'),
  path('edit-company', views.EditCompany.as_view(), name='edit_company'),
  path('accounts/login/', auth_view.LoginView.as_view(template_name='django_registration/auth_form.html'), name='login'),
- path('logout', auth_view.LogoutView.as_view(next_page="base"), name='logout'),
+ path('logout', auth_view.LogoutView.as_view(next_page="base"), name='logout_custom'),
  path('registration-employee/<int:company_id>', views.RegistrationEmployee.as_view(form_class=forms.RegistrationEmployeeForm), name='registration_user'),
  path('login-after-registation', views.LoginAfterRegistration.as_view(template_name='django_registration/login_after_registration.html'), name='login_after_registation'),
  path('employee-list', views.employee_list, name='employee_list'),

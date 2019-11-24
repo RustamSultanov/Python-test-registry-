@@ -1,23 +1,59 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h2>Список зарегистрированных компаний</h2>
-    <table>
-        {% for company in object_list %}
-            <thead>
+{#    <h2>Список зарегистрированных компаний</h2>#}
+{#    <table>#}
+{#        {% for company in object_list %}#}
+{#            <thead>#}
+{#                <tr>#}
+{#                    <th>ID</th>#}
+{#                    <th>Название компании</th>#}
+{#                    <th>Юридический адресс</th>#}
+{#                    <th>ИНН</th>#}
+{#                    <th>ОГРН</th>          #}
+{#                    <th>КПП</th>#}
+{#                    <th>Генеральный директор</th>#}
+{#                    <th class="column6 style1 s">Действия</th>#}
+{#                </tr>#}
+{#            </thead>#}
+{#            <tbody>#}
+{#                <tr>#}
+{#                    <th><a href="{% url 'company_info' company.id %}">{{ company.id }}</a></th>#}
+{#                    <th><a href="{% url 'company_info' company.id %}">{{ company.name }}</a></th>#}
+{#                    <th><a href="{% url 'company_info' company.id %}">{{ company.legal_address }}</a></th>#}
+{#                    <th><a href="{% url 'company_info' company.id %}">{{ company.TIN }}</a></th>#}
+{#                    <th><a href="{% url 'company_info' company.id %}">{{ company.PSRN }}</a></th>#}
+{#                    <th><a href="{% url 'company_info' company.id %}">{{ company.KPP }}</a></th>#}
+{#                    <th><a href="{% url 'company_info' company.id %}">{{ company.CEO }}</a></th>#}
+{#                    <th>{% block actions %}{% endblock %}</th>#}
+{#                </tr>               #}
+{#            </tbody>#}
+{#        {% endfor %}#}
+{#    </table>  #}
+                <div class="container-fluid flex-grow-1 container-p-y">
+
+          <h4 class="font-weight-bold py-3 mb-4">
+            Список зарегистрированных компаний
+          </h4>
+    <div class="card">
+            <div class="card-datatable table-responsive">
+              <table id="user-list" class="table table-striped table-bordered table-hover">
+                <thead>
                 <tr>
-                    <th>ID</th>
+                <th>ID</th>
                     <th>Название компании</th>
                     <th>Юридический адресс</th>
                     <th>ИНН</th>
-                    <th>ОГРН</th>          
+                    <th>ОГРН</th>
                     <th>КПП</th>
                     <th>Генеральный директор</th>
-                    <th class="column6 style1 s">Действия</th>
+{#                    <th class="column6 style1 s">Действия</th>#}
                 </tr>
-            </thead>
-            <tbody>
-                <tr>
+                </thead>
+
+                     {% csrf_token %}
+        {% for company in object_list %}
+            <tr>
                     <th><a href="{% url 'company_info' company.id %}">{{ company.id }}</a></th>
                     <th><a href="{% url 'company_info' company.id %}">{{ company.name }}</a></th>
                     <th><a href="{% url 'company_info' company.id %}">{{ company.legal_address }}</a></th>
@@ -25,9 +61,27 @@
                     <th><a href="{% url 'company_info' company.id %}">{{ company.PSRN }}</a></th>
                     <th><a href="{% url 'company_info' company.id %}">{{ company.KPP }}</a></th>
                     <th><a href="{% url 'company_info' company.id %}">{{ company.CEO }}</a></th>
-                    <th>{% block actions %}{% endblock %}</th>
-                </tr>               
-            </tbody>
-        {% endfor %}
-    </table>  
+{#                  <td class="text-center text-nowrap">#}
+{#                    <button type="button" class="btn btn-default btn-xs icon-btn md-btn-flat user-tooltip" title=""#}
+{#                            data-original-title="Edit"><i class="ion ion-md-create"></i></button>&nbsp;&nbsp;#}
+{#                    <button type="button" class="btn btn-default btn-xs icon-btn md-btn-flat user-tooltip" title=""#}
+{#                            data-original-title="Edit"><i class="ion ion-md-close"></i></button>&nbsp;&nbsp;#}
+{#                  </td>#}
+                </tr>
+                {% endfor %}
+              </table>
+            </div>
+{#            <div class="mt-1 pr-4">#}
+{#              <ul class="pagination pagination-sm justify-content-end">#}
+{#                <li class="paginate_button page-item previous disabled" id="user-list_previous"><a href="#"class="page-link">Предыдущая</a>#}
+{#                </li>#}
+{#                <li class="paginate_button page-item active"><a href="#"class="page-link">1</a></li>#}
+{#                <li class="paginate_button page-item "><a href="#" class="page-link">2</a></li>#}
+{#                <li class="paginate_button page-item "><a href="#" class="page-link">3</a></li>#}
+{#                <li class="paginate_button page-item "><a href="#" class="page-link">4</a></li>#}
+{#                <li class="paginate_button page-item "><a href="#" class="page-link">5</a></li>#}
+{#                <li class="paginate_button page-item next" id="user-list_next"><a href="#" class="page-link">Следующая</a></li>#}
+{#              </ul>#}
+{#            </div>#}
+          </div>
 {% endblock %}

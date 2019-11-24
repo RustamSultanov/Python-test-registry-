@@ -1,5 +1,5 @@
 {% load static %}
-
+{% load widget_tweaks %}
 <!DOCTYPE html>
 
 <html lang="en" class="default-style">
@@ -55,7 +55,7 @@
       <div class="d-flex justify-content-center align-items-center">
         <div class="ui-w-60">
           <div class="w-100 position-relative" style="padding-bottom: 54%">
-            <img src="img/logo.png" alt="">
+            <img src="{% static 'dist/img/logo.png' %}" alt="">
           </div>
         </div>
       </div>
@@ -63,13 +63,33 @@
 
       <!-- Form -->
       <form method="POST" class="my-5">
-		{% for field in form %}
+ {% csrf_token %}
 		<div class="form-group">
-			<label class="form-label">{{ field.label }}</label>
-			<input type="text" class="form-control" placeholder="{{ field.widget.attrs.placeholder }}" name="{{ field.name }}" id="{{ field.id_for_label }}">
+
+			<label class="form-label">Ваша почта</label>
+			{% render_field form.email class+="form-control" %}
 		</div>
-		{% endfor %}
-        <button type="button" class="btn btn-primary btn-block mt-4">Sign Up</button>
+          <div class="form-group">
+              {% for message in form.errors.values %}
+                                    {{ form.errors }}
+                                  {% endfor %}
+              <label class="form-label">Имя</label>
+			{% render_field form.first_name class+="form-control" %}
+              </div>
+              <div class="form-group">
+                  <label class="form-label">Фамилия</label>
+			{% render_field form.last_name class+="form-control" %}
+                  </div>
+          <div class="form-group">
+              <label class="form-label">Пароль</label>
+			{% render_field form.password1 class+="form-control" %}
+              </div>
+           <div class="form-group">
+               <label class="form-label">Подтверждение пароля</label>
+			{% render_field form.password2 class+="form-control" %}
+                      </div>
+
+        <button type="submit" class="btn btn-primary btn-block mt-4">Зарегистрироваться</button>
         <div class="bg-lightest text-muted small p-2 mt-4">
           By clicking "Sign Up", you agree to our
           <a href="javascript:void(0)">terms of service and privacy policy</a>. We’ll occasionally send you account related emails.
@@ -78,8 +98,8 @@
       <!-- / Form -->
 
       <div class="text-center text-muted">
-        Already have an account?
-        <a href="javascript:void(0)">Sign In</a>
+        Уже есть аккаунт?
+        <a href="{% url 'login' %}">Войти</a>
       </div>
 
     </div>

@@ -1,35 +1,104 @@
 {% extends "base.html" %}
 {% block content %}
-<table border="0" cellpadding="0" cellspacing="0" id="sheet0" class="bordered" style="margin-top: 90px">
-    <col class="col0">
-    <col class="col1">
-    <col class="col2">
-    <col class="col3">
-    <col class="col4">
-    <col class="col5">
-    <thead>
-        <tr class="row1">
-            <th class="column0 style1 s ">ID</th>
-            <th class="column1 style1 s d-none d-md-table-cell">ФИО сотрудника</th>
-            <th class="column1 style1 s d-none d-md-table-cell">Почта</th>
-            <th class="column2 style1 s">Дата добавления</th>                 
-        </tr>
-    </thead>
-    <tbody>
-    {% csrf_token %}
-        {% for employee in employee_list %}
-        <tr class="row0">
-           <td>{{ employee.user.id }}</td>
-           <td><a href="{% url 'employee_info' employee.user.id %}">{{ employee.user.last_name }} {{ employee.user.first_name }}</a></td>
-           <td><a href="{% url 'employee_info' employee.user.id %}">{{ employee.user.email }}</a></td>
-           <td><a href="{% url 'employee_info' employee.user.id %}">{{ employee.user.date_joined }}</a></td>
-            
-      </tr>
-        {% endfor %}
-    </tbody>
-    
-</table>
-{% if request.user.is_staff %}
-    <a class='btn' href="{% url 'invitation_employee' %}">Добавить сотрудника</a>
+{#<table border="0" cellpadding="0" cellspacing="0" id="sheet0" class="bordered" style="margin-top: 90px">#}
+{#    <col class="col0">#}
+{#    <col class="col1">#}
+{#    <col class="col2">#}
+{#    <col class="col3">#}
+{#    <col class="col4">#}
+{#    <col class="col5">#}
+{#    <thead>#}
+{#        <tr class="row1">#}
+{#            <th class="column0 style1 s ">ID</th>#}
+{#            <th class="column1 style1 s d-none d-md-table-cell">ФИО сотрудника</th>#}
+{#            <th class="column1 style1 s d-none d-md-table-cell">Почта</th>#}
+{#            <th class="column2 style1 s">Дата добавления</th>                 #}
+{#        </tr>#}
+{#    </thead>#}
+{#    <tbody>#}
+{#    {% csrf_token %}#}
+{#        {% for employee in employee_list %}#}
+{#        <tr class="row0">#}
+{#           <td>{{ employee.user.id }}</td>#}
+{#           <td><a href="{% url 'employee_info' employee.user.id %}">{{ employee.user.last_name }} {{ employee.user.first_name }}</a></td>#}
+{#           <td><a href="{% url 'employee_info' employee.user.id %}">{{ employee.user.email }}</a></td>#}
+{#           <td><a href="{% url 'employee_info' employee.user.id %}">{{ employee.user.date_joined }}</a></td>#}
+{#            #}
+{#      </tr>#}
+{#        {% endfor %}#}
+{#    </tbody>#}
+{#    #}
+{#</table>#}
+{#{% if request.user.is_staff %}#}
+{#    <a class='btn' href="{% url 'invitation_employee' %}">Добавить сотрудника</a>#}
+{#{% endif %}#}
+{#{% endblock %}#}
+
+            <div class="container-fluid flex-grow-1 container-p-y">
+
+          <h4 class="font-weight-bold py-3 mb-4">
+            Пользователи
+          </h4>
+
+          <!-- Filters -->
+          <div class="ui-bordered px-4 pt-4 mb-4">
+            <div class="form-row align-items-center">
+
+              <div class="col-md col-xl-2 mb-4">
+                <label class="form-label d-none d-md-block">&nbsp;</label>
+                  {% if request.user.is_staff %}
+    <a href="{% url 'invitation_employee' %}"><button type="button" class="btn btn-secondary btn-block">Добавить сотрудника</button></a>
 {% endif %}
+{#                <button type="button" class="btn btn-secondary btn-block">Показать</button>#}
+              </div>
+            </div>
+          </div>
+<div class="card">
+            <div class="card-datatable table-responsive">
+              <table id="user-list" class="table table-striped table-bordered table-hover">
+                <thead>
+                <tr>
+                <th>ID</th>
+                  <th></th>
+                  <th>ФИО</th>
+                  <th>E-mail</th>
+                  <th>Должность</th>
+                  <th>Дата добавления</th>
+{#                  <th></th>#}
+                </tr>
+                </thead>
+
+                     {% csrf_token %}
+        {% for employee in employee_list %}
+            <tr>
+                    <td>{{ employee.user.id }}</td>
+                  <td>{%  if employee.userpic %}<img src="{{ employee.userpic.url }}" alt="" class="ui-w-20 rounded-circle">{% else %}
+                    {% endif %}</td>
+                  <td><a href="{% url 'employee_info' employee.user.id %}">{{ employee.user.last_name }} {{ employee.user.first_name }}</a></td>
+                  <td>{{ employee.user.email }}</td>
+                  <td>{{ employee.position }}</td>
+                  <td>{{ employee.user.date_joined }}</td>
+{#                  <td class="text-center text-nowrap">#}
+{#                    <button type="button" class="btn btn-default btn-xs icon-btn md-btn-flat user-tooltip" title=""#}
+{#                            data-original-title="Edit"><i class="ion ion-md-create"></i></button>&nbsp;&nbsp;#}
+{#                    <button type="button" class="btn btn-default btn-xs icon-btn md-btn-flat user-tooltip" title=""#}
+{#                            data-original-title="Edit"><i class="ion ion-md-close"></i></button>&nbsp;&nbsp;#}
+{#                  </td>#}
+                </tr>
+                {% endfor %}
+              </table>
+            </div>
+{#            <div class="mt-1 pr-4">#}
+{#              <ul class="pagination pagination-sm justify-content-end">#}
+{#                <li class="paginate_button page-item previous disabled" id="user-list_previous"><a href="#"class="page-link">Предыдущая</a>#}
+{#                </li>#}
+{#                <li class="paginate_button page-item active"><a href="#"class="page-link">1</a></li>#}
+{#                <li class="paginate_button page-item "><a href="#" class="page-link">2</a></li>#}
+{#                <li class="paginate_button page-item "><a href="#" class="page-link">3</a></li>#}
+{#                <li class="paginate_button page-item "><a href="#" class="page-link">4</a></li>#}
+{#                <li class="paginate_button page-item "><a href="#" class="page-link">5</a></li>#}
+{#                <li class="paginate_button page-item next" id="user-list_next"><a href="#" class="page-link">Следующая</a></li>#}
+{#              </ul>#}
+{#            </div>#}
+          </div>
 {% endblock %}

@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="s-reviews">
-  <div class="s-reviews__inner">
-    <header class="mb-5">
-      <h5 class="m-0">Отзывы</h5>
-    </header>
+{#<div class="s-reviews">#}
+{#  <div class="s-reviews__inner">#}
+{#    <header class="mb-5">#}
+{#      <h5 class="m-0">Отзывы</h5>#}
+{#    </header>#}
   <!--   <div class="row justify-content-end">
   
     <div class="col-3">
@@ -41,49 +41,332 @@
     </div>
   
 </div> -->
+{##}
+{#    <table>#}
+{#      <thead>#}
+{#        <tr>#}
+{#          <th>ID</th>#}
+{#          <th>Инициатор</th>#}
+{#          <th>Тип участника</th>#}
+{#          <th>Компания</th>#}
+{#          <th>Должность</th>          #}
+{#          <th>Компетенция/область</th>#}
+{#          <th>Оценка</th>#}
+{#          <th>Дата создания</th>#}
+{#          <th>Статус</th>#}
+{#          <th class="column6 style1 s">Действия</th>#}
+{#        </tr>#}
+{#      </thead>#}
+{#      <tbody>#}
+{#        {% csrf_token %}#}
+{#        {% for comment in comment_list_in %}#}
+{#          <tr {% if comment.accept == True %} data-status="record" {% else %} {% endif %}>#}
+{#            {% if comment.hide == True %}#}
+{#            {% else %}#}
+{#              {% if comment.accept == True or comment.failure == True %} #}
+{#                <td class="column5 style4 s" onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false">#}
+{#                  {{ comment.id }}#}
+{#                </td>#}
+{#                <td class="column2 style4 s" onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false">#}
+{#                    <a href="{% url 'comment_info' comment.id {%if comment.user.useraccept.userpic%}">#}
+{#                      <img class="ui-w-20 rounded-circle" src="{{ comment.user.useraccept.userpic.url }}" alt="Фотография пользователя">#}
+{#                      {{comment.user.first_name }} {{ comment.user.last_name }}#}
+{#                    </a>#}
+{#                </td>#}
+{#                <td class="column2 style4 s" onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false">#}
+{#                  {% if comment.customer_flag == True %}#}
+{#                    Заказчик#}
+{#                  {% else %} #}
+{#                    Исполнитель #}
+{#                  {% endif %} #}
+{#                </td>#}
+{#                <td class="column2 style4 s" onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false">#}
+{#                  <a href="{% url 'comment_info' comment.id %}">#}
+{#                    {% if comment.user.useraccept.company.logo %}#}
+{#                      <img class="ui-w-20 rounded-circle" src="{{ comment.user.useraccept.company.logo.url }}" alt="Логотип">#}
+{#                    {% endif %}#}
+{#                    {{ comment.user.useraccept.company }}#}
+{#                  </a>#}
+{#                </td>#}
+{#                <td class="column2 style4 s" onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false">#}
+{#                  <a href="{% url 'comment_info' comment.id %}">#}
+{#                      {{ comment.user.useraccept.position }}#}
+{#                  </a>#}
+{#                </td>                #}
+{#                <td class="column2 style4 s" onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false">#}
+{#                  <a href="{% url 'comment_info' comment.id %}">#}
+{#                    {% for competence in comment.competence.all %}#}
+{#                      #{{ competence.id }} {{ competence.competence_name }}<br> #}
+{#                    {% endfor %}#}
+{#                  </a>#}
+{#                </td>#}
+{#                <td class="column2 style4 s" onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false">#}
+{#                  {{ comment.rating }}#}
+{#                </td>#}
+{#                <td class="column1 style1 s" onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false">#}
+{#                  <a href="{% url 'comment_info' comment.id %}">#}
+{#                    Создан: {{ comment.date_create }} #}
+{#                    {% if comment.date_update > comment.date_create %}#}
+{#                      {% if comment.accept == True  or comment.failure == True %}<br> #}
+{#                        Записан в блок: {{ comment.date_update }} #}
+{#                      {% else %}<br>#}
+{#                        Обновлено: {{ comment.date_update }}#}
+{#                      {% endif %}#}
+{#                    {% endif %}#}
+{#                  </a>#}
+{#                </td>#}
+{#                <td class="column3 style4 null" onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false">#}
+{#                  <a href="{% url 'edit_comment' comment.id %}">#}
+{#                    {% if comment.accept == True %}#}
+{#                      <span class="badge badge-outline-success">Записан в блокчейн</span>#}
+{#                    {% elif comment.failure == True %}#}
+{#                      <span class="badge badge-outline-danger">Отказ записан в блокчейн</span>#}
+{#                    {% else %}#}
+{#                      <span class="badge badge-outline-warning">Ожидает верификации от других участников</span>#}
+{#                    {% endif %}#}
+{#                  </a>#}
+{#                </td>#}
+{#                <td onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false">#}
+{#                </td>#}
+{#              {% else %} #}
+{#                <td class="column5 style4 s" onclick="window.location.href='{% url 'edit_comment' comment.id %}'; return false">#}
+{#                  {{ comment.id }}#}
+{#                </td>#}
+{#                <td class="column2 style4 s" onclick="window.location.href='{% url 'edit_comment' comment.id %}'; return false">#}
+{#                    <a href="{% url 'edit_comment' comment.id {%if comment.user.useraccept.userpic%}">#}
+{#                      <img class="ui-w-20 rounded-circle" src="{{ comment.user.useraccept.userpic.url }}" alt="Фотография пользователя">#}
+{#                      {{comment.user.first_name }} {{ comment.user.last_name }}#}
+{#                    </a>#}
+{#                </td>#}
+{#                <td onclick="window.location.href='{% url 'edit_comment' comment.id %}'; return false">#}
+{#                  {% if comment.customer_flag == True %}#}
+{#                    Заказчик#}
+{#                  {% else %} #}
+{#                    Исполнитель #}
+{#                  {% endif %}#}
+{#                </td>#}
+{#                <td class="column2 style4 s" onclick="window.location.href='{% url 'edit_comment' comment.id %}'; return false">#}
+{#                  <a href="{% url 'edit_comment' comment.id %}">#}
+{#                    {% if comment.user.useraccept.company.logo %}#}
+{#                      <img class="ui-w-20 rounded-circle" src="{{ comment.user.useraccept.company.logo.url }}" alt="Логотип">#}
+{#                    {% endif %}#}
+{#                    {{ comment.user.useraccept.company }}#}
+{#                  </a>#}
+{#                </td>#}
+{#                <td class="column2 style4 s" onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false">#}
+{#                  <a href="{% url 'comment_info' comment.id %}">#}
+{#                      {{ comment.user.useraccept.position }}#}
+{#                  </a>#}
+{#                </td>                #}
+{#                <td class="column2 style4 s" onclick="window.location.href='{% url 'edit_comment' comment.id %}'; return false">#}
+{#                  <a href="{% url 'edit_comment' comment.id %}">#}
+{#                    {% for competence in comment.competence.all %}#}
+{#                      #{{ competence.id }} {{ competence.competence_name }}<br> #}
+{#                    {% endfor %}#}
+{#                  </a>#}
+{#                </td>#}
+{#                <td class="column2 style4 s" onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false">#}
+{#                    {{ comment.rating }}#}
+{#                </td>#}
+{#                <td class="column1 style1 s" onclick="window.location.href='{% url 'edit_comment' comment.id %}'; return false">#}
+{#                  <a href="{% url 'edit_comment' comment.id %}">#}
+{#                    Создан: {{ comment.date_create }} #}
+{#                    {% if comment.date_update > comment.date_create %}#}
+{#                      {% if comment.accept == True or comment.failure == True %}<br> #}
+{#                        Записан в блок: {{ comment.date_update }} {% else %}<br>#}
+{#                        Обновлено: {{ comment.date_update }}#}
+{#                      {% endif %}#}
+{#                    {% endif %}#}
+{#                  </a>#}
+{#                </td>#}
+{#                <td class="column3 style4 null" onclick="window.location.href='{% url 'edit_comment' comment.id %}'; return false">#}
+{#                  <a href="{% url 'edit_comment' comment.id %}">#}
+{#                    {% if comment.accept == True %}#}
+{#                      <span class="badge badge-outline-success">Записан в блокчейн</span>#}
+{#                    {% elif comment.failure == True %}#}
+{#                      <span class="badge badge-outline-danger">Отказ записан в блокчейн</span>#}
+{#                    {% else %}#}
+{#                      <span class="badge badge-outline-warning">Ожидает верификации от других участников</span>#}
+{#                    {% endif %}#}
+{#                  </a>#}
+{#                </td>#}
+{#                <td>#}
+{#                  {% if comment.accept == True %}#}
+{#                  {% elif comment.failure == True %}#}
+{#                  {% else %} #}
+{#                    <a href="{% url 'edit_comment' comment.id %}">#}
+{#                      <i class="fa fa-pencil"></i>#}
+{#                    </a>&nbsp;#}
+{#                    <a class="delete" href="{% url 'delete_comment' comment.id %}">#}
+{#                      <i class="fa fa-times"></i>#}
+{#                    </a> #}
+{#                  {% endif %}#}
+{#                </td>#}
+{#              {% endif %}#}
+{#              {% endif %} #}
+{#          </tr>#}
+{#        {% endfor %}#}
+{#        {% for comment in comment_list_out %}#}
+{#          <tr {% if comment.accept == True %} data-status="record" {% else %} {% endif %}>#}
+{#            {% if comment.hide == True %}#}
+{#            {% else %} #}
+{#              <td class="column5 style4 s" onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false">#}
+{#                {{ comment.id }}#}
+{#              </td>#}
+{#              <td class="column2 style4 s" onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false">               #}
+{#                  <a href="{% url 'comment_info' comment.id {%if comment.user.useraccept.userpic%}">#}
+{#                    <img class="ui-w-20 rounded-circle" src="{{ comment.user.useraccept.userpic.url }}" alt="Фотография пользователя">#}
+{#                    {{comment.user.first_name }} {{ comment.user.last_name }}#}
+{#                  </a>#}
+{#              </td>#}
+{#              <td>#}
+{#                {% if comment.customer_flag == True %}#}
+{#                  Заказчик#}
+{#                {% else %} #}
+{#                  Исполнитель #}
+{#                {% endif %}#}
+{#              </td>#}
+{#              <td class="column2 style4 s" onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false">#}
+{#                <a href="{% url 'comment_info' comment.id %}">#}
+{#                  {% if comment.user.useraccept.company.logo %}#}
+{#                    <img class="ui-w-20 rounded-circle" src="{{ comment.user.useraccept.company.logo.url }}" alt="Логотип">#}
+{#                  {% endif %}#}
+{#                  {{ comment.user.useraccept.company }}#}
+{#                </a>#}
+{#              </td>#}
+{#              <td class="column2 style4 s" onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false">#}
+{#                <a href="{% url 'comment_info' comment.id %}">#}
+{#                    {{ comment.user.useraccept.position }}#}
+{#                </a>#}
+{#              </td>               #}
+{#              <td class="column2 style4 s" onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false">#}
+{#                <a href="{% url 'comment_info' comment.id %}">#}
+{#                  {% for competence in comment.competence.all %}#}
+{#                    #{{ competence.id }} {{ competence.competence_name }}<br> #}
+{#                  {% endfor %}#}
+{#                </a>#}
+{#              </td>#}
+{#              <td class="column2 style4 s" onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false">#}
+{#                  {{ comment.rating }}#}
+{#              </td>#}
+{#              <td class="column1 style1 s" onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false">#}
+{#                <a href="{% url 'comment_info' comment.id %}">#}
+{#                  Создан: {{ comment.date_create }} #}
+{#                  {% if comment.date_update > comment.date_create %}#}
+{#                    {% if comment.accept == True  or comment.failure == True %}#}
+{#                      <br> #}
+{#                      Записан в блок: {{ comment.date_update }} #}
+{#                    {% else %}#}
+{#                      <br>#}
+{#                      Обновлено: {{ comment.date_update }}#}
+{#                    {% endif %}#}
+{#                  {% endif %}#}
+{#                </a>#}
+{#              </td>#}
+{#              <td class="column3 style4 null" onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false">#}
+{#                <a href="{% url 'edit_comment' comment.id %}">#}
+{#                  {% if comment.accept == True %}#}
+{#                    <span class="badge badge-outline-success">Записан в блокчейн </span>#}
+{#                  {% elif comment.failure == True %}#}
+{#                    <span class="badge badge-outline-danger">Отказ записан в блокчейн </span> #}
+{#                  {% else %}#}
+{#                    <span class="badge badge-outline-warning">Ожидает верификации от других участников{% endif %}</span> #}
+{#                </a>#}
+{#              </td>#}
+{#              <td onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false">#}
+{#              </td>#}
+{#            {% endif %} #}
+{#          </tr>#}
+{#        {% endfor %}#}
+{#      </tbody>#}
+{#    </table>#}
+{#<script>#}
+{#$( document ).ready(function() {#}
+{#    $( ".delete" ).click(function() {#}
+{#       if ((confirm("Вы действительно хотите удалить неопубликованный отзыв?")) == false) {#}
+{#          event.preventDefault();#}
+{#       };#}
+{#    });#}
 
-    <table>
-      <thead>
-        <tr>
-          <th>ID</th>
+{#</script>#}
+{#          #}
+{#        #}
+{#      #}
+{#    <p class="mt-4">#}
+{#      <a href="{% url 'add_comment' %}"><button class="button button_primary">Добавить отзыв</button></a>#}
+{#    </p>#}
+{#  </div>#}
+{#</div>#}
+{##}
+{#  </main>#}
+{##}
+{#    </div>#}
+{#    #}
+    <div class="container-fluid flex-grow-1 container-p-y">
+
+          <h4 class="font-weight-bold py-3 mb-4">
+            Отзывы
+          </h4>
+
+          <!-- Filters -->
+          <div class="ui-bordered px-4 pt-4 mb-4">
+            <div class="form-row align-items-center">
+
+              <div class="col-md col-xl-2 mb-4">
+                <label class="form-label d-none d-md-block">&nbsp;</label>
+                  <a href="{% url 'add_comment' %}"><button type="button" class="btn btn-secondary btn-block">Добавить отзыв</button></a>
+{#                <button type="button" class="btn btn-secondary btn-block">Показать</button>#}
+              </div>
+            </div>
+          </div>
+          <!-- / Filters -->
+
+          <div class="card">
+            <div class="card-datatable table-responsive">
+              <table id="user-list" class="table table-bordered">
+                <thead>
+                <tr>
+                  <th>ID</th>
           <th>Инициатор</th>
           <th>Тип участника</th>
           <th>Компания</th>
-          <th>Должность</th>          
+          <th>Должность</th>
           <th>Компетенция/область</th>
           <th>Оценка</th>
           <th>Дата создания</th>
           <th>Статус</th>
           <th class="column6 style1 s">Действия</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% csrf_token %}
+                </tr>
+                </thead>
+                  {% csrf_token %}
         {% for comment in comment_list_in %}
-          <tr {% if comment.accept == True %} data-status="record" {% else %} {% endif %}>
+
+   <tr {% if comment.accept == True %} data-status="record" {% else %} {% endif %}>
             {% if comment.hide == True %}
             {% else %}
-              {% if comment.accept == True or comment.failure == True %} 
+              {% if comment.accept == True or comment.failure == True %}
                 <td class="column5 style4 s" onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false">
                   {{ comment.id }}
                 </td>
                 <td class="column2 style4 s" onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false">
                     <a href="{% url 'comment_info' comment.id %}">
-                      <img width="20" height="20" src="https://images.duckduckgo.com/iu/?u=http%3A%2F%2Fclassroomclipart.com%2Fimages%2Fgallery%2FClipart%2FFaces%2FTN_face-of-bald-headed-man-with-mustache.jpg&amp;f=1" alt="Фотография пользователя">
+                      {% if comment.user.useraccept.userpic %}<img class="ui-w-20 rounded-circle" src="{{ comment.user.useraccept.userpic.url }}" alt="Фотография пользователя">
+                          {% else %}
+                          {% endif %}
                       {{ comment.user.first_name }} {{ comment.user.last_name }}
                     </a>
                 </td>
                 <td class="column2 style4 s" onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false">
                   {% if comment.customer_flag == True %}
                     Заказчик
-                  {% else %} 
-                    Исполнитель 
-                  {% endif %} 
+                  {% else %}
+                    Исполнитель
+                  {% endif %}
                 </td>
                 <td class="column2 style4 s" onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false">
                   <a href="{% url 'comment_info' comment.id %}">
                     {% if comment.user.useraccept.company.logo %}
-                      <img width="20" height="20" src="{{ comment.user.useraccept.company.logo.url }}" alt="Логотип">
+                      <img class="ui-w-20 rounded-circle" src="{{ comment.user.useraccept.company.logo.url }}" alt="Логотип">
                     {% endif %}
                     {{ comment.user.useraccept.company }}
                   </a>
@@ -92,23 +375,112 @@
                   <a href="{% url 'comment_info' comment.id %}">
                       {{ comment.user.useraccept.position }}
                   </a>
-                </td>                
+                </td>
                 <td class="column2 style4 s" onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false">
                   <a href="{% url 'comment_info' comment.id %}">
                     {% for competence in comment.competence.all %}
-                      #{{ competence.id }} {{ competence.competence_name }}<br> 
+                      #{{ competence.id }} {{ competence.competence_name }}<br>
                     {% endfor %}
                   </a>
                 </td>
                 <td class="column2 style4 s" onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false">
-                  {{ comment.rating }}
+                                  						{% if comment.rating == 5 %}
+								<div class="ui-star filled">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div>
+                                            <div class="ui-star filled">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div>
+								<div class="ui-star filled">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div>
+								<div class="ui-star filled">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div>
+								<div class="ui-star filled">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div>
+								{% elif comment.rating == 4 %}
+								<div class="ui-star filled">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div><div class="ui-star filled">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div><div class="ui-star filled">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div><div class="ui-star filled">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div><div class="ui-star">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div>
+								{% elif comment.rating == 3 %}
+								<div class="ui-star filled">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div><div class="ui-star filled">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div><div class="ui-star filled">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div><div class="ui-star">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div><div class="ui-star">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div>
+								{% elif comment.rating == 2 %}
+								<div class="ui-star filled">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div><div class="ui-star filled">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div><div class="ui-star">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div><div class="ui-star">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div><div class="ui-star">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div>
+								{% else %}
+								<div class="ui-star filled">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div><div class="ui-star">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div><div class="ui-star">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div><div class="ui-star">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div><div class="ui-star">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div>
+{% endif %}
                 </td>
                 <td class="column1 style1 s" onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false">
                   <a href="{% url 'comment_info' comment.id %}">
-                    Создан: {{ comment.date_create }} 
+                    Создан: {{ comment.date_create }}
                     {% if comment.date_update > comment.date_create %}
-                      {% if comment.accept == True  or comment.failure == True %}<br> 
-                        Записан в блок: {{ comment.date_update }} 
+                      {% if comment.accept == True  or comment.failure == True %}<br>
+                        Записан в блок: {{ comment.date_update }}
                       {% else %}<br>
                         Обновлено: {{ comment.date_update }}
                       {% endif %}
@@ -118,37 +490,39 @@
                 <td class="column3 style4 null" onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false">
                   <a href="{% url 'edit_comment' comment.id %}">
                     {% if comment.accept == True %}
-                      <span class="status status_record">Записан в блокчейн</span>
+                      <span class="badge badge-outline-success">Записан в блокчейн</span>
                     {% elif comment.failure == True %}
-                      <span class="status status_changed">Отказ записан в блокчейн</span>
+                      <span class="badge badge-outline-danger">Отказ записан в блокчейн</span>
                     {% else %}
-                      <span class="status status_waiting">Ожидает верификации от других участников</span>
+                      <span class="badge badge-outline-warning">Ожидает верификации от других участников</span>
                     {% endif %}
                   </a>
                 </td>
                 <td onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false">
                 </td>
-              {% else %} 
+              {% else %}
                 <td class="column5 style4 s" onclick="window.location.href='{% url 'edit_comment' comment.id %}'; return false">
                   {{ comment.id }}
                 </td>
                 <td class="column2 style4 s" onclick="window.location.href='{% url 'edit_comment' comment.id %}'; return false">
                     <a href="{% url 'edit_comment' comment.id %}">
-                      <img width="20" height="20" src="https://images.duckduckgo.com/iu/?u=http%3A%2F%2Fclassroomclipart.com%2Fimages%2Fgallery%2FClipart%2FFaces%2FTN_face-of-bald-headed-man-with-mustache.jpg&amp;f=1" alt="Фотография пользователя">
+                      {% if comment.user.useraccept.userpic %}<img class="ui-w-20 rounded-circle" src="{{ comment.user.useraccept.userpic.url }}" alt="Фотография пользователя">
+                          {% else %}
+                          {% endif %}
                       {{ comment.user.first_name }} {{ comment.user.last_name }}
                     </a>
                 </td>
                 <td onclick="window.location.href='{% url 'edit_comment' comment.id %}'; return false">
                   {% if comment.customer_flag == True %}
                     Заказчик
-                  {% else %} 
-                    Исполнитель 
+                  {% else %}
+                    Исполнитель
                   {% endif %}
                 </td>
                 <td class="column2 style4 s" onclick="window.location.href='{% url 'edit_comment' comment.id %}'; return false">
                   <a href="{% url 'edit_comment' comment.id %}">
                     {% if comment.user.useraccept.company.logo %}
-                      <img width="20" height="20" src="{{ comment.user.useraccept.company.logo.url }}" alt="Логотип">
+                      <img class="ui-w-20 rounded-circle" src="{{ comment.user.useraccept.company.logo.url }}" alt="Логотип">
                     {% endif %}
                     {{ comment.user.useraccept.company }}
                   </a>
@@ -157,22 +531,111 @@
                   <a href="{% url 'comment_info' comment.id %}">
                       {{ comment.user.useraccept.position }}
                   </a>
-                </td>                
+                </td>
                 <td class="column2 style4 s" onclick="window.location.href='{% url 'edit_comment' comment.id %}'; return false">
                   <a href="{% url 'edit_comment' comment.id %}">
                     {% for competence in comment.competence.all %}
-                      #{{ competence.id }} {{ competence.competence_name }}<br> 
+                      #{{ competence.id }} {{ competence.competence_name }}<br>
                     {% endfor %}
                   </a>
                 </td>
                 <td class="column2 style4 s" onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false">
-                    {{ comment.rating }}
+                                    						{% if comment.rating == 5 %}
+								<div class="ui-star filled">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div>
+                                            <div class="ui-star filled">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div>
+								<div class="ui-star filled">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div>
+								<div class="ui-star filled">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div>
+								<div class="ui-star filled">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div>
+								{% elif comment.rating == 4 %}
+								<div class="ui-star filled">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div><div class="ui-star filled">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div><div class="ui-star filled">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div><div class="ui-star filled">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div><div class="ui-star">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div>
+								{% elif comment.rating == 3 %}
+								<div class="ui-star filled">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div><div class="ui-star filled">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div><div class="ui-star filled">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div><div class="ui-star">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div><div class="ui-star">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div>
+								{% elif comment.rating == 2 %}
+								<div class="ui-star filled">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div><div class="ui-star filled">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div><div class="ui-star">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div><div class="ui-star">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div><div class="ui-star">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div>
+								{% else %}
+								<div class="ui-star filled">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div><div class="ui-star">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div><div class="ui-star">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div><div class="ui-star">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div><div class="ui-star">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div>
+{% endif %}
                 </td>
                 <td class="column1 style1 s" onclick="window.location.href='{% url 'edit_comment' comment.id %}'; return false">
                   <a href="{% url 'edit_comment' comment.id %}">
-                    Создан: {{ comment.date_create }} 
+                    Создан: {{ comment.date_create }}
                     {% if comment.date_update > comment.date_create %}
-                      {% if comment.accept == True or comment.failure == True %}<br> 
+                      {% if comment.accept == True or comment.failure == True %}<br>
                         Записан в блок: {{ comment.date_update }} {% else %}<br>
                         Обновлено: {{ comment.date_update }}
                       {% endif %}
@@ -182,54 +645,60 @@
                 <td class="column3 style4 null" onclick="window.location.href='{% url 'edit_comment' comment.id %}'; return false">
                   <a href="{% url 'edit_comment' comment.id %}">
                     {% if comment.accept == True %}
-                      <span class="status status_record">Записан в блокчейн</span>
+                      <span class="badge badge-outline-success">Записан в блокчейн</span>
                     {% elif comment.failure == True %}
-                      <span class="status status_changed">Отказ записан в блокчейн</span>
+                      <span class="badge badge-outline-danger">Отказ записан в блокчейн</span>
                     {% else %}
-                      <span class="status status_waiting">Ожидает верификации от других участников</span>
+                      <span class="badge badge-outline-warning">Ожидает верификации от других участников</span>
                     {% endif %}
                   </a>
                 </td>
                 <td>
                   {% if comment.accept == True %}
                   {% elif comment.failure == True %}
-                  {% else %} 
+                  {% else %}
                     <a href="{% url 'edit_comment' comment.id %}">
-                      <i class="fa fa-pencil"></i>
+                      <button type="button" class="btn btn-default btn-xs icon-btn md-btn-flat user-tooltip" title=""
+                            data-original-title="Edit"><i class="ion ion-md-checkmark"></i></button>&nbsp;&nbsp;
                     </a>&nbsp;
                     <a class="delete" href="{% url 'delete_comment' comment.id %}">
-                      <i class="fa fa-times"></i>
-                    </a> 
+                      <button type="button" class="btn btn-default btn-xs icon-btn md-btn-flat user-tooltip" title=""
+                            data-original-title="Edit"  data-toggle="modal" data-target="#modal-review-1"><i class="ion ion-md-close"></i></button>&nbsp;&nbsp;
+                    </a>
+
+
                   {% endif %}
                 </td>
               {% endif %}
-              {% endif %} 
+              {% endif %}
           </tr>
         {% endfor %}
         {% for comment in comment_list_out %}
           <tr {% if comment.accept == True %} data-status="record" {% else %} {% endif %}>
             {% if comment.hide == True %}
-            {% else %} 
+            {% else %}
               <td class="column5 style4 s" onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false">
                 {{ comment.id }}
               </td>
-              <td class="column2 style4 s" onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false">               
+              <td class="column2 style4 s" onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false">
                   <a href="{% url 'comment_info' comment.id %}">
-                    <img width="20" height="20" src="https://images.duckduckgo.com/iu/?u=http%3A%2F%2Fclassroomclipart.com%2Fimages%2Fgallery%2FClipart%2FFaces%2FTN_face-of-bald-headed-man-with-mustache.jpg&amp;f=1" alt="Фотография пользователя">
+                    {% if comment.user.useraccept.userpic %}<img class="ui-w-20 rounded-circle" src="{{ comment.user.useraccept.userpic.url }}" alt="Фотография пользователя">
+                        {% else %}
+                        {% endif %}
                     {{ comment.user.first_name }} {{ comment.user.last_name }}
                   </a>
               </td>
               <td>
                 {% if comment.customer_flag == True %}
                   Заказчик
-                {% else %} 
-                  Исполнитель 
+                {% else %}
+                  Исполнитель
                 {% endif %}
               </td>
               <td class="column2 style4 s" onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false">
                 <a href="{% url 'comment_info' comment.id %}">
                   {% if comment.user.useraccept.company.logo %}
-                    <img width="20" height="20" src="{{ comment.user.useraccept.company.logo.url }}" alt="Логотип">
+                    <img class="ui-w-20 rounded-circle" src="{{ comment.user.useraccept.company.logo.url }}" alt="Логотип">
                   {% endif %}
                   {{ comment.user.useraccept.company }}
                 </a>
@@ -238,24 +707,113 @@
                 <a href="{% url 'comment_info' comment.id %}">
                     {{ comment.user.useraccept.position }}
                 </a>
-              </td>               
+              </td>
               <td class="column2 style4 s" onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false">
                 <a href="{% url 'comment_info' comment.id %}">
                   {% for competence in comment.competence.all %}
-                    #{{ competence.id }} {{ competence.competence_name }}<br> 
+                    #{{ competence.id }} {{ competence.competence_name }}<br>
                   {% endfor %}
                 </a>
               </td>
               <td class="column2 style4 s" onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false">
-                  {{ comment.rating }}
+                  						{% if comment.rating == 5 %}
+								<div class="ui-star filled">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div>
+                                            <div class="ui-star filled">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div>
+								<div class="ui-star filled">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div>
+								<div class="ui-star filled">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div>
+								<div class="ui-star filled">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div>
+								{% elif comment.rating == 4 %}
+								<div class="ui-star filled">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div><div class="ui-star filled">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div><div class="ui-star filled">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div><div class="ui-star filled">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div><div class="ui-star">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div>
+								{% elif comment.rating == 3 %}
+								<div class="ui-star filled">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div><div class="ui-star filled">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div><div class="ui-star filled">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div><div class="ui-star">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div><div class="ui-star">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div>
+								{% elif comment.rating == 2 %}
+								<div class="ui-star filled">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div><div class="ui-star filled">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div><div class="ui-star">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div><div class="ui-star">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div><div class="ui-star">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div>
+								{% else %}
+								<div class="ui-star filled">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div><div class="ui-star">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div><div class="ui-star">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div><div class="ui-star">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div><div class="ui-star">
+                        <i class="ion ion-md-star"></i>
+                        <i class="ion ion-md-star"></i>
+                      </div>
+{% endif %}
               </td>
               <td class="column1 style1 s" onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false">
                 <a href="{% url 'comment_info' comment.id %}">
-                  Создан: {{ comment.date_create }} 
+                  Создан: {{ comment.date_create }}
                   {% if comment.date_update > comment.date_create %}
                     {% if comment.accept == True  or comment.failure == True %}
-                      <br> 
-                      Записан в блок: {{ comment.date_update }} 
+                      <br>
+                      Записан в блок: {{ comment.date_update }}
                     {% else %}
                       <br>
                       Обновлено: {{ comment.date_update }}
@@ -266,39 +824,30 @@
               <td class="column3 style4 null" onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false">
                 <a href="{% url 'edit_comment' comment.id %}">
                   {% if comment.accept == True %}
-                    <span class="status status_record">Записан в блокчейн </span>
+                    <span class="badge badge-outline-success">Записан в блокчейн </span>
                   {% elif comment.failure == True %}
-                    <span class="status status_changed">Отказ записан в блокчейн </span> 
+                    <span class="badge badge-outline-danger">Отказ записан в блокчейн </span>
                   {% else %}
-                    <span class="status status_waiting">Ожидает верификации от других участников{% endif %}</span> 
+                    <span class="badge badge-outline-warning">Ожидает верификации от других участников{% endif %}</span>
                 </a>
               </td>
               <td onclick="window.location.href='{% url 'comment_info' comment.id %}'; return false">
               </td>
-            {% endif %} 
+            {% endif %}
           </tr>
         {% endfor %}
-      </tbody>
-    </table>
+
+                      </table>
+                </div>
 <script>
 $( document ).ready(function() {
     $( ".delete" ).click(function() {
-       if ((confirm("Вы действительно хотите удалить неопубликованный отзыв?")) == false) {
+       if ((confirm("Вы действительно хотите удалить неопубликованный отзыв?")) === false) {
           event.preventDefault();
-       };
+       }
     });
 });
 </script>
-          
-        
-      
-    <p class="mt-4">
-      <a href="{% url 'add_comment' %}"><button class="button button_primary">Добавить отзыв</button></a>
-    </p>
-  </div>
 </div>
-
-  </main>
-
     </div>
   {% endblock %}

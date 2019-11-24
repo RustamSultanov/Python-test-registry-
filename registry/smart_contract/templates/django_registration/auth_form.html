@@ -1,5 +1,5 @@
 {% load static %}
-
+{% load widget_tweaks %}
 <!DOCTYPE HTML>
 <html lang="ru">
     <head>
@@ -30,6 +30,7 @@
     <!-- `perfect-scrollbar` library required by SideNav plugin -->
     <link rel="stylesheet" href="{% static 'dist/libs/perfect-scrollbar/perfect-scrollbar.css' %}">
     <link rel="stylesheet" href="{% static 'dist/pages/authentication.css' %}" >
+
     </head>
 
 
@@ -55,27 +56,40 @@
               
                     <!-- Form -->
                     <form method="POST" class="my-5" action="{% url 'login' %}">
-                      {% for field in form %}
+                    {% csrf_token %}
                       <div class="form-group">
-                        <label class="form-label">{{ field.label }}</label>
-                        <input type="text" class="form-control" placeholder="{{ field.widget.attrs.placeholder }}" name="{{ field.name }}" id="{{ field.id_for_label }}">
-                      </div>
-                      {% endfor %}
+              <label class="form-label">Логин</label>
+           {% render_field form.username class+="form-control" %}
+
+            </div>
+                      <div class="form-group">
+                          {% for message in form.errors.values %}
+                                    {{ message }}
+                                  {% endfor %}{# for message in form.errors.values #}
+                         <label class="form-label d-flex justify-content-between align-items-end">
+                <div>Пароль</div>
+
+              </label>
+                      {% render_field form.password class+="form-control" %}
+
+            </div>
+
+
                       <div class="d-flex justify-content-between align-items-center m-0">
                         <label class="custom-control custom-checkbox m-0">
                           <input type="checkbox" class="custom-control-input">
-                          <span class="custom-control-label">Remember me</span>
+                          <span class="custom-control-label">Запомнить меня</span>
                         </label>
-                        {{ form.errors }}
-                        <button type="button" class="btn btn-primary">Sign In</button>
+
+                        <button type="submit" class="btn btn-primary">Войти</button>
                       </div>
                       
                     </form>
                     <!-- / Form -->
               
                     <div class="text-center text-muted">
-                      Don't have an account yet?
-                      <a href="javascript:void(0)">Sign Up</a>
+                      Нет аккаунта? Пройдите
+                      <a href="{% url 'registration_admin' %}">регистрацию</a>
                     </div>
               
                   </div>

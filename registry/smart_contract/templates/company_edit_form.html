@@ -2,6 +2,7 @@
 {% load crispy_forms_tags %}
 {% block content %}
     <form action="{% url 'edit_company' %}" method="POST">
+    {% csrf_token %}
         {{form|crispy}}
         <br>
         <input class="btn" type="submit" value="Зарегистрировать"><br><br>

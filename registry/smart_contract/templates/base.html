@@ -27,6 +27,8 @@
 
     <!-- `perfect-scrollbar` library required by SideNav plugin -->
     <link rel="stylesheet" href="{% static 'dist/libs/perfect-scrollbar/perfect-scrollbar.css' %}">
+{% block CSS %}
+    {% endblock %}
 
 </head>
 {% block body %}
@@ -48,10 +50,21 @@
             <div class="sidenav-divider mt-0"></div>
             <ul class="sidenav-inner py-1 ps">
                 <li class="sidenav-item">
-                    <a href="#" class="sidenav-link"><i class="sidenav-icon ion ion-md-quote"></i>
-                        <div>Typography</div>
+                    <a href="{% url 'comment_list' %}" class="sidenav-link">
+                        <div>Все отзывы - {{ comment_count }}</div>
                     </a>
                 </li>
+                <li class="sidenav-item">
+                    <a href="{% url 'accept_list' %}" class="sidenav-link">
+                        <div>Верифицировать отзыв - {{ accept_count }}</div>
+                    </a>
+                </li>
+                <li class="sidenav-item">
+                    <a href="{% url 'add_comment' %}" class="sidenav-link">
+                        <div>Добавить отзыв</div>
+                    </a>
+                </li>
+
             </ul>
         </div>
 
@@ -79,15 +92,15 @@
                     <!-- Divider -->
                     <hr class="d-lg-none w-100 my-2">
 
-                    <div class="navbar-nav align-items-lg-center">
-                        <!-- Search -->
-                        <label class="nav-item navbar-text navbar-search-box p-0 active">
-                            <i class="ion ion-ios-search navbar-icon align-middle"></i>
-                            <span class="navbar-search-input pl-2">
-                <input type="text" class="form-control navbar-text mx-2" placeholder="Search..." style="width:200px">
-              </span>
-                        </label>
-                    </div>
+{#                    <div class="navbar-nav align-items-lg-center">#}
+{#                        <!-- Search -->#}
+{#                        <label class="nav-item navbar-text navbar-search-box p-0 active">#}
+{#                            <i class="ion ion-ios-search navbar-icon align-middle"></i>#}
+{#                            <span class="navbar-search-input pl-2">#}
+{#                <input type="text" class="form-control navbar-text mx-2" placeholder="Search..." style="width:200px">#}
+{#              </span>#}
+{#                        </label>#}
+{#                    </div>#}
 
                     <div class="navbar-nav align-items-lg-center ml-auto">
                         <div class="demo-navbar-notifications nav-item dropdown mr-lg-3">
@@ -213,17 +226,21 @@
                         <div class="demo-navbar-user nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
                 <span class="d-inline-flex flex-lg-row-reverse align-items-center align-middle">
-                  <img src="{% static 'assets/img/avatars/1.png' %}" alt class="d-block ui-w-30 rounded-circle">
-                  <span class="px-1 mr-lg-2 ml-2 ml-lg-0">Mike Greene</span>
+                    {%  if user.useraccept.userpic %}
+                  <img src="{{ user.useraccept.userpic.url }}" alt class="d-block ui-w-30 rounded-circle">
+                    {% else %}
+                    {% endif %}
+                  <span class="px-1 mr-lg-2 ml-2 ml-lg-0">{{ user.get_full_name }}</span>
                 </span>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right">
-                                <a href="javascript:void(0)" class="dropdown-item">Проверки</a>
-                                <a href="javascript:void(0)" class="dropdown-item">Оповещения</a>
-                                <a href="javascript:void(0)" class="dropdown-item">Сообщения</a>
+
+                                <a href="{% url 'competence_list' %}" class="dropdown-item">Справочник компетенций</a>
+                                <a href="{% url 'employee_list' %}" class="dropdown-item">Сотрудники</a>
+                                <a href="{% url 'company_list' %}" class="dropdown-item">Компании</a>
                                 <a href="javascript:void(0)" class="dropdown-item">Настройки</a>
                                 <div class="dropdown-divider"></div>
-                                <a href="javascript:void(0)" class="dropdown-item">
+                                <a href="{% url 'logout_custom' %}" class="dropdown-item">
                                     <i class="ion ion-ios-log-out text-danger"></i> &nbsp; Выйти</a>
                             </div>
                         </div>
@@ -241,7 +258,7 @@
 
                 <!-- Layout footer -->
                 <nav class="layout-footer footer bg-footer-theme">
-                    {% include "footer.html" %}
+{#                    {% include "footer.html" %}#}
                 </nav>
                 <!-- / Layout footer -->
 
@@ -266,7 +283,22 @@
 
 <!-- `perfect-scrollbar` library required by SideNav plugin -->
 <script src="{% static 'dist/libs/perfect-scrollbar/perfect-scrollbar.js' %}"></script>
-
+<script src="{% static 'dist/libs/smartwizard/smartwizard.js' %}"></script>
+<script src="{% static 'dist/libs/validate/validate.js' %}"></script>
+<script src="{% static 'dist/libs/select2/select2.js' %}"></script>
+<script>
+    $(function() {
+        $('.select2').each(function() {
+            $(this)
+                .wrap('<div class="position-relative"></div>')
+                .select2({
+                    placeholder: 'Выберите значения',
+                    dropdownParent: $(this).parent(),
+                    language: 'ru'
+                });
+        })
+    });
+</script>
 </body>
 {% endblock %}
 </html>

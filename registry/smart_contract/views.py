@@ -26,17 +26,17 @@ from .forms import CommentEditForm, AcceptForm, CompetenceForm, RegistrationEmpl
 
 def save_comment_form(new_comment):
     new_comment.save()
-    for user in new_comment.verifier:
+    for user in new_comment.verifier.all():
         new_comment.recipient_user.add(user)
-    for user in new_comment.employee:
+    for user in new_comment.employee.all():
         new_comment.employee.add(user)
-    for user in new_comment.competence:
+    for user in new_comment.competence.all():
         new_comment.competence.add(user)
-    for user in new_comment.another_employee:
+    for user in new_comment.another_employee.all():
         new_comment.another_employee.add(user)
-    for user in new_comment.another_employee:
+    for user in new_comment.another_employee.all():
         new_comment.recipient_user.add(user)
-    for user in new_comment.employee:
+    for user in new_comment.employee.all():
         new_comment.recipient_user.add(user)
 
 
@@ -313,7 +313,7 @@ class EditCompany(FormView):
     success_url = reverse_lazy('edit_company')
 
     def form_valid(self, form):
-        return super(InvitationCompany, self).form_valid(form)
+        return super(EditCompany, self).form_valid(form)
 
 
 class CheckCompanyBeforeComment(FormView):
@@ -514,6 +514,7 @@ def add_comment(request):
     if form.is_valid():
         new_comment = form.save(commit=False)
         new_comment.user = request.user
+        new_comment.init_user=request.user
         if new_comment.implementer_flag:
             new_comment.implementer = request.user
             new_comment.customer = form.cleaned_data['implementer']
@@ -636,11 +637,11 @@ def failure_comment(request, comment_id):
             my_address = pw.Address(privateKey='9gHmGvxMRQ3TgpCrmnySxZ11GHo9oy6z55W3c7WngkLM')
             byte_array = [i for i in f'''"
                 Status - failure, user - {comment.user}, recipient_users - {recipient_users}, comment - {comment.comment_for_rating}, 
-                reason - {new_failure.failure_text}"''']
+                reason - {new_failure.failure_text}"'''.encode()]
             # Отправка даты с выводом в
             data = [{
                 'type': 'string',
-                'key': f'{comment.user.company.id}',
+                'key': f'{comment.id}',
                 'value': str(byte_array)[1:-1],
                 'arg': 'little',
             }]
@@ -672,8 +673,8 @@ def comment_info(request, comment_id):
 
 @login_required
 def employee_info(request, user_id):
-    user = User.objects.get(id=user_id)
-    verify_count = Comment.objects.filter(recipient_user=user.id, accept=True).count() + Comment.objects.filter(
-        user=user.id, accept=True).count()
-    return render(request, 'employee_info.html', {'user': user,
+    employee = User.objects.get(id=user_id)
+    verify_count = Comment.objects.filter(recipient_user=employee.id, accept=True).count() + Comment.objects.filter(
+        user=employee.id, accept=True).count()
+    return render(request, 'employee_info.html', {'employee': employee,
                                                   'verify_count': verify_count})

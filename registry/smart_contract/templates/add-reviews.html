@@ -1,5 +1,12 @@
 {% extends "base.html" %}
 {% load static %}
+
+        {% block script %}
+            <link rel="stylesheet" href="{% static "./css/styles.css" %}">
+
+{#            <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">#}
+{#    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/css/materialize.min.css">#}
+        {% endblock %}
 {% block content %}
     <div class="s-add">
   <div class="s-add__inner">

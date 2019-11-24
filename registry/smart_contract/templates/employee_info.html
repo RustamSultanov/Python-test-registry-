@@ -1,146 +1,244 @@
 {% extends "base.html" %}
 {% block content %}
-    <div class="s-user p-4">
-  <header>
-    <h5>
-      Пользователь
-    </h5>
-  </header>
-  <div class="s-user__card card p-4 mt-5">
-  <header>
-  <h6 class="m-0 mb-2">{{ user.last_name }} {{ user.first_name }}</h6>
-  <small class="s-user__added-to-system text-gray">Добавление в систему: {{ user.date_joined }}</small>
-  <br>
-  <small class="text-gray">
-    Статус пользователя:
-    <span class="s-user__is-verify">Верифицирован</span>
-  </small>
-</header>
+{#    <div class="s-user p-4">#}
+{#  <header>#}
+{#    <h5>#}
+{#      Пользователь#}
+{#    </h5>#}
+{#  </header>#}
+{#  <div class="s-user__card card p-4 mt-5">#}
+{#  <header>#}
+{#  <h6 class="m-0 mb-2">{{ employee.last_name }} {{ employee.first_name }}</h6>#}
+{#  <small class="s-user__added-to-system text-gray">Добавление в систему: {{ employee.date_joined }}</small>#}
+{#  <br>#}
+{#  <small class="text-gray">#}
+{#    Статус пользователя:#}
+{#    <span class="s-user__is-verify">Верифицирован</span>#}
+{#  </small>#}
+{#</header>#}
+{##}
+{#  <div class="s-user__aside-block">#}
+{#  <div class="s-user__radial-rating">#}
+{#    <div id="indicatorContainer" data-rating="70"></div>#}
+{#  </div>#}
+{#  <div class="s-user__photo">#}
+{#    <img width="80" height="80" src="https://images.duckduckgo.com/iu/?u=http%3A%2F%2Fclassroomclipart.com%2Fimages%2Fgallery%2FClipart%2FFaces%2FTN_face-of-bald-headed-man-with-mustache.jpg&amp;f=1" alt="Фотография пользователя">#}
+{#  </div>#}
+{#</div>#}
+{##}
+{#<div class="s-user__info mt-3">#}
+{#  #}
+{#    <div class="s-user__info-line mb-2">#}
+{#      <span class="s-user__info-name">Компания:</span>#}
+{#      <a href="#">{{ employee.useraccept.company }}</a>#}
+{#    </div>#}
+{#  #}
+{#    <div class="s-user__info-line mb-2">#}
+{#      <span class="s-user__info-name">Должность:</span>#}
+{#      <a href="#">{{ employee.useraccept.position }}</a>#}
+{#    </div>#}
+{#  #}
+{#    <div class="s-user__info-line mb-2">#}
+{#      <span class="s-user__info-name">Опыт:</span>#}
+{#      <a href="#">Более 666 лет</a>#}
+{#    </div>#}
+{#  #}
+{#</div>#}
+{##}
+{#  #}
+{##}
+{#<div class="s-user__links mt-4">#}
+{#  <ul class="s-user__links-list">#}
+{#    #}
+{#      <li class="d-flex w-50 mb-2 pr-5">#}
+{#        #}
+{#          <span class="s-user__link-name">E-mail:</span>#}
+{#          <span class="text-gray">{{ employee.email }}</span>#}
+{#        #}
+{#      </li>#}
+{#    #}
+{#      <li class="d-flex w-50 mb-2 pr-5">#}
+{#        #}
+{#          <span class="s-user__link-name">Телефон:</span>#}
+{#          <span class="text-gray">Пользователь решил скрыть данные</span>#}
+{#        #}
+{#      </li>#}
+{#    #}
+{#      <li class="d-flex w-50 mb-2 pr-5">#}
+{#        #}
+{#          <span class="s-user__link-name">Сайт:</span>#}
+{#          <span class="text-gray">Пользователь решил скрыть данные</span>#}
+{#        #}
+{#      </li>#}
+{#    #}
+{#      <li class="d-flex w-50 mb-2 pr-5">#}
+{#        #}
+{#          <span class="s-user__link-name">Facebook:</span>#}
+{#          <span class="text-gray">Пользователь решил скрыть данные</span>#}
+{#        #}
+{#      </li>#}
+{#    #}
+{#      <li class="d-flex w-50 mb-2 pr-5">#}
+{#        #}
+{#          <span class="s-user__link-name">Linkedin:</span>#}
+{#          <span class="text-gray">Пользователь решил скрыть данные</span>#}
+{#        #}
+{#      </li>#}
+{#    #}
+{#      <li class="d-flex w-50 mb-2 pr-5">#}
+{#        #}
+{#          <span class="s-user__link-name">МойКруг:</span>#}
+{#          <span class="text-gray">Пользователь решил скрыть данные</span>#}
+{#        #}
+{#      </li>#}
+{#    #}
+{#      <li class="d-flex w-50 mb-2 pr-5">#}
+{#        #}
+{#          <span class="s-user__link-name">Skype:</span>#}
+{#          <span class="text-gray">Пользователь решил скрыть данные</span>#}
+{#        #}
+{#      </li>#}
+{#    #}
+{#  </ul>#}
+{#</div>#}
+{##}
+{#</div>#}
+{##}
+{##}
+{#  <div class=".s-user__tabs row mt-5">#}
+{#  <div class="col-12">#}
+{#    <ul class="tabs">#}
+{#      <li class="tab col s3">#}
+{#        <a href="#experience">Опыт и компетенции</a>#}
+{#      </li>#}
+{#      <li class="tab col s3">#}
+{#        <a href="#work-location">Места работы</a>#}
+{#      </li>#}
+{#    </ul>#}
+{#  </div>#}
+{#  <div id="experience" class="w-50 mt-5">#}
+{#    <div class="s-user__rating">#}
+{#      <span>Общий рейтинг сотрудника по компетенциям</span>#}
+{#      <div class="custom-progress custom-progress_primary mt-2" data-progress="70%">#}
+{#        <div class="custom-progress-line"></div>#}
+{#      </div>#}
+{#      <small>Всего верификаций: <span>{{ verify_count }}</span></small>#}
+{#    </div>#}
+{#    <div class="s-user__specific mt-4">#}
+{#      <span>#12312 Автоматизация бизнес-процессов в розничной торговле</span>#}
+{#      <div class="custom-progress custom-progress_secondary mt-2" data-progress="40%">#}
+{#        <div class="custom-progress-line"></div>#}
+{#      </div>#}
+{#      <small>Рубрикатор компании {{ employee.useraccept.company }}</small>#}
+{#      <br>#}
+{#      <small>Всего верификаций: <span>4</span></small>#}
+{#    </div>#}
+{#  </div>#}
+{#  <div id="work-location" class="col s12">#}
+{#      work-location#}
+{#  </div>#}
+{#</div>#}
+{##}
+{#</div>#}
+{##}
+{#  </main>#}
+<div class="container-fluid flex-grow-1 container-p-y">
 
-  <div class="s-user__aside-block">
-  <div class="s-user__radial-rating">
-    <div id="indicatorContainer" data-rating="70"></div>
-  </div>
-  <div class="s-user__photo">
-    <img width="80" height="80" src="https://images.duckduckgo.com/iu/?u=http%3A%2F%2Fclassroomclipart.com%2Fimages%2Fgallery%2FClipart%2FFaces%2FTN_face-of-bald-headed-man-with-mustache.jpg&amp;f=1" alt="Фотография пользователя">
-  </div>
+          <div class="media align-items-center py-3 mb-3">
+  {% if employee.useraccept.userpic %}<img src="{{ employee.useraccept.userpic.url }}" alt="" class="d-block ui-w-100 rounded-circle">
+              {% else %}
+                    {% endif %}
+            <div class="media-body ml-4">
+              <h4 class="font-weight-bold mb-0">{{ employee.last_name }} {{ employee.first_name }}</h4>
+              <div class="text-muted mb-2">ID: {{ employee.id }}</div>
+{#              <a href="javascript:void(0)" class="btn btn-primary btn-sm">Редактировать</a>#}
+              <a href="mailto:{{ employee.email }}" class="btn btn-default btn-sm icon-btn">
+                <i class="ion ion-md-mail"></i>
+              </a>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="row no-gutters row-bordered">
+              <div class="d-flex col-md align-items-center">
+                <a href="javascript:void(0)" class="card-body d-block text-dark">
+                  <div class="text-muted small line-height-1">Всего верификаций</div>
+                  <div class="text-xlarge">{{ verify_count }}</div>
+                </a>
+              </div>
+{#              <div class="d-flex col-md align-items-center">#}
+{#                <a href="javascript:void(0)" class="card-body d-block text-dark">#}
+{#                  <div class="text-muted small line-height-1">Followers</div>#}
+{#                  <div class="text-xlarge">534</div>#}
+{#                </a>#}
+{#              </div>#}
+{#              <div class="d-flex col-md align-items-center">#}
+{#                <a href="javascript:void(0)" class="card-body d-block text-dark">#}
+{#                  <div class="text-muted small line-height-1">Following</div>#}
+{#                  <div class="text-xlarge">236</div>#}
+{#                </a>#}
+{#              </div>#}
+            </div>
+            <hr class="border-light m-0">
+            <div class="card-body">
+
+              <table class="table user-view-table m-0">
+                <tbody>
+                <tr>
+                  <td>Компания:</td>
+                  <td>{{ employee.useraccept.company.name }}</td>
+                </tr>
+                <tr>
+                  <td>E-mail:</td>
+                  <td>{{ employee.email }}</td>
+                </tr>
+                <tr>
+                  <td>Контакты:</td>
+                  <td>{{ employee.useraccept.contacts }}</td>
+                </tr>
+                </tbody>
+              </table>
+
+{#              <h6 class="mt-4 mb-3">Социальные сети</h6>#}
+{##}
+{#              <table class="table user-view-table m-0">#}
+{#                <tbody>#}
+{#                <tr>#}
+{#                  <td>Twitter:</td>#}
+{#                  <td>#}
+{#                    <a href="javascript:void(0)">https://twitter.com/user</a>#}
+{#                  </td>#}
+{#                </tr>#}
+{#                <tr>#}
+{#                  <td>Facebook:</td>#}
+{#                  <td>#}
+{#                    <a href="javascript:void(0)">https://www.facebook.com/user</a>#}
+{#                  </td>#}
+{#                </tr>#}
+{#                <tr>#}
+{#                  <td>Instagram:</td>#}
+{#                  <td>#}
+{#                    <a href="javascript:void(0)">https://www.instagram.com/user</a>#}
+{#                  </td>#}
+{#                </tr>#}
+{#                </tbody>#}
+{#              </table>#}
+
+              <h6 class="mt-4 mb-3">Биография</h6>
+
+              <table class="table user-view-table m-0">
+                <tbody>
+                <tr>
+                  <td>{{ employee.useraccept.biography }}</td>
+                </tr>
+                <tr>
+                  <td>Добавление в систему: {{ employee.date_joined }}</td>
+                </tr>
+                </tbody>
+              </table>
+
+
+            </div>
+          </div>
 </div>
-
-<div class="s-user__info mt-3">
-  
-    <div class="s-user__info-line mb-2">
-      <span class="s-user__info-name">Компания:</span>
-      <a href="#">{{ user.useraccept.company }}</a>
-    </div>
-  
-    <div class="s-user__info-line mb-2">
-      <span class="s-user__info-name">Должность:</span>
-      <a href="#">{{ user.useraccept.position }}</a>
-    </div>
-  
-    <div class="s-user__info-line mb-2">
-      <span class="s-user__info-name">Опыт:</span>
-      <a href="#">Более 666 лет</a>
-    </div>
-  
-</div>
-
-  
-
-<div class="s-user__links mt-4">
-  <ul class="s-user__links-list">
-    
-      <li class="d-flex w-50 mb-2 pr-5">
-        
-          <span class="s-user__link-name">E-mail:</span>
-          <span class="text-gray">{{ user.email }}</span>
-        
-      </li>
-    
-      <li class="d-flex w-50 mb-2 pr-5">
-        
-          <span class="s-user__link-name">Телефон:</span>
-          <span class="text-gray">Пользователь решил скрыть данные</span>
-        
-      </li>
-    
-      <li class="d-flex w-50 mb-2 pr-5">
-        
-          <span class="s-user__link-name">Сайт:</span>
-          <span class="text-gray">Пользователь решил скрыть данные</span>
-        
-      </li>
-    
-      <li class="d-flex w-50 mb-2 pr-5">
-        
-          <span class="s-user__link-name">Facebook:</span>
-          <span class="text-gray">Пользователь решил скрыть данные</span>
-        
-      </li>
-    
-      <li class="d-flex w-50 mb-2 pr-5">
-        
-          <span class="s-user__link-name">Linkedin:</span>
-          <span class="text-gray">Пользователь решил скрыть данные</span>
-        
-      </li>
-    
-      <li class="d-flex w-50 mb-2 pr-5">
-        
-          <span class="s-user__link-name">МойКруг:</span>
-          <span class="text-gray">Пользователь решил скрыть данные</span>
-        
-      </li>
-    
-      <li class="d-flex w-50 mb-2 pr-5">
-        
-          <span class="s-user__link-name">Skype:</span>
-          <span class="text-gray">Пользователь решил скрыть данные</span>
-        
-      </li>
-    
-  </ul>
-</div>
-
-</div>
-
-
-  <div class=".s-user__tabs row mt-5">
-  <div class="col-12">
-    <ul class="tabs">
-      <li class="tab col s3">
-        <a href="#experience">Опыт и компетенции</a>
-      </li>
-      <li class="tab col s3">
-        <a href="#work-location">Места работы</a>
-      </li>
-    </ul>
-  </div>
-  <div id="experience" class="w-50 mt-5">
-    <div class="s-user__rating">
-      <span>Общий рейтинг сотрудника по компетенциям</span>
-      <div class="custom-progress custom-progress_primary mt-2" data-progress="70%">
-        <div class="custom-progress-line"></div>
-      </div>
-      <small>Всего верификаций: <span>{{ verify_count }}</span></small>
-    </div>
-    <div class="s-user__specific mt-4">
-      <span>#12312 Автоматизация бизнес-процессов в розничной торговле</span>
-      <div class="custom-progress custom-progress_secondary mt-2" data-progress="40%">
-        <div class="custom-progress-line"></div>
-      </div>
-      <small>Рубрикатор компании {{ user.useraccept.company }}</small>
-      <br>
-      <small>Всего верификаций: <span>4</span></small>
-    </div>
-  </div>
-  <div id="work-location" class="col s12">
-      work-location
-  </div>
-</div>
-
-</div>
-
-  </main>
-
      {% endblock %}

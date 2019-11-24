@@ -1,7 +1,94 @@
 
-{% extends "base_company_info.html" %}
-{% load crispy_forms_tags %}
-{% block actions %}
-    <a class="btn" href="{% url 'edit_company' %}">Редактировать</a>
+{% extends "base.html" %}
+{% load static %}
+{#{% load crispy_forms_tags %}#}
+{#{% block actions %}#}
+{#    <a class="btn" href="{% url 'edit_company' %}">Редактировать</a>#}
+{#{% endblock %}#}
+{% block content %}
+            <div class="company-hero ui-bg-cover ui-bg-overlay-container text-white" style="background-image: url({% static "dist/img/company-bg.png" %})">
+          <div class="ui-bg-overlay bg-dark opacity-50"></div>
+          <div class="container-fluid">
+            <div class="d-block d-md-flex justify-content-between">
+              <div class="company-title">{{ company.name }}</div>
+              <div>
+                <a href="{% url 'edit_company' %}" class="btn btn-primary"><span class="fas fa-edit"></span>&nbsp;&nbsp;Редактировать</a>
+              </div>
+            </div>
+            <ol class="breadcrumb small font-weight-light">
+              <li class="breadcrumb-item">
+                <a href="{% url 'base' %}">Главная</a>
+              </li>
+              <li class="breadcrumb-item">
+                <a href="{% url 'company_list' %}">Компании</a>
+              </li>
+              <li class="breadcrumb-item active">
+                <a href="javascript:void(0)">{{ company.name }}</a>
+              </li>
+            </ol>
+            <div class="media align-items-center">
+                {% if company.logo %}
+              <img src="{{ company.logo.url }}" alt="" class="d-block ui-w-80 rounded-circle">
+                 {% else %}
+                    {% endif %}
+              <div class="media-body ml-4">
+                <div class="small">{{ company.name }}</div>
+                <div class="small">ОГРН: {{ company.PSRN }}</div>
+                <div class="small">{{ company.legal_address }}</div>
+                <div class="d-flex align-items-center">
+                  <div class="ui-stars">
+                    <div class="ui-star filled">
+                      <i class="ion ion-md-star"></i>
+                      <i class="ion ion-md-star"></i>
+                    </div>
+                    <div  class="ui-star filled">
+                      <i class="ion ion-md-star"></i>
+                      <i class="ion ion-md-star"></i>
+                    </div>
+                    <div class="ui-star filled">
+                      <i class="ion ion-md-star"></i>
+                      <i class="ion ion-md-star"></i>
+                    </div>
+                    <div class="ui-star half-filled">
+                      <i class="ion ion-md-star"></i>
+                      <i class="ion ion-md-star"></i>
+                    </div>
+                    <div class="ui-star">
+                      <i class="ion ion-md-star"></i>
+                      <i class="ion ion-md-star"></i>
+                    </div>
+                  </div>
+                  <span class="small">Отзывов: {{ comment_count }}</span>
+                </div>
+              </div>
+            </div>
+            <div class="row mt-5">
+              <div class="col-md-7 font-weight-light">
+                {{ company.description }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Page content -->
+        <div class="container-fluid flex-grow-1 container-p-y">
+          <h2>О компании</h2>
+          <dl class="row">
+            <dt class="col-sm-3">Юридический адрес</dt>
+            <dd class="col-sm-9">{{ company.legal_address }}</dd>
+            <dt class="col-sm-3">ИНН</dt>
+            <dd class="col-sm-9">{{ company.TIN }}</dd>
+            <dt class="col-sm-3">ОГРН</dt>
+            <dd class="col-sm-9">{{ company.PSRN }}</dd>
+            <dt class="col-sm-3">КПП</dt>
+            <dd class="col-sm-9">{{ company.KPP }}</dd>
+            <dt class="col-sm-3">Генеральный директор</dt>
+            <dd class="col-sm-9">{{ company.CEO }}</dd>
+            <dt class="col-sm-3">Дата основания</dt>
+            <dd class="col-sm-9">{{ company.date_of_establishment }}</dd>
+            <dt class="col-sm-3">Банк</dt>
+            <dd class="col-sm-9">{{ company.bank }}</dd>
+            <dt class="col-sm-3">Корреспондентский счет</dt>
+            <dd class="col-sm-9">{{ company.corr_account }}</dd>
+          </dl>
+        </div>
 {% endblock %}
-    

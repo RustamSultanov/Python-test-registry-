@@ -1,22 +1,21 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
 {% block content %}
-<main class="auth-page">
-<div class="dialog">
-  <div class="dialog__inner">
+<div class="container-fluid flex-grow-1 container-p-y">
+          <div class="card mb-3">
+            <div class="card-body">
     <header>
       <h2 class="form__title">Активация</h2>
     </header>
     <p class="form__description">
         Ваша учетная запись активирована.
       </p>
-      <a href="{% url 'login_after_registation' %}">Продолжить регистрацию</a>
+      <a href="{% url 'login_after_registation' %}" type="button"  class="btn-finish btn btn-primary">Продолжить регистрацию</a>
     
-    <p class="form__description form__description--small">
-        Написать в <a href="/">Службу технической поддержки</a>
-      </p>
+{#    <p class="form__description form__description--small">#}
+{#        Написать в <a href="/">Службу технической поддержки</a>#}
+{#      </p>#}
   </div>
 </div>
-
-  </main>
+</div>
   {% endblock %} 

@@ -1,26 +1,77 @@
 {% extends "base.html" %}
 {% load static %}
+{% block CSS %}
+    <link rel="stylesheet" href="{% static 'dist/libs/smartwizard/smartwizard.css' %}">
+  <link rel="stylesheet" href="{% static 'dist/libs/select2/select2.css' %}">
+    {% endblock %}
 {% block content %}
 
-<main class="auth-page">
-<div class="dialog">
-  <div class="dialog__inner">
-    <header>
-      <h2 class="form__title">Благодарим за регистрацию! Теперь Вы можете приступить к работе</h2>
-    </header>
-    <p class="form__description">
-       
-    </p>
-    <div class="form__button-wrapper mt-double">
-      {% if request.session.user_role == 'INVESTOR' %}
-      <a class='btn' href="#">Посмотреть проекты</a>
-      {% endif %}
-      {% if request.session.user_role == 'BUSINESSMAN' %}
-      <a class='btn' href="#">Разместить проект</a>
-      {% endif %}
-    </div>
-  </div>
-</div>
+{#<main class="auth-page">#}
+{#<div class="dialog">#}
+{#  <div class="dialog__inner">#}
+{#    <header>#}
+{#      <h2 class="form__title">Благодарим за регистрацию! Теперь Вы можете приступить к работе</h2>#}
+{#    </header>#}
+{#    <p class="form__description">#}
+{#       #}
+{#    </p>#}
+{#    <div class="form__button-wrapper mt-double">#}
+{#      {% if request.session.user_role == 'INVESTOR' %}#}
+{#      <a class='btn' href="#">Посмотреть проекты</a>#}
+{#      {% endif %}#}
+{#      {% if request.session.user_role == 'BUSINESSMAN' %}#}
+{#      <a class='btn' href="#">Разместить проект</a>#}
+{#      {% endif %}#}
+{#    </div>#}
+{#  </div>#}
+{#</div>#}
+{##}
+{#  </main>#}
+    <div class="container-fluid flex-grow-1 container-p-y">
+          <form id="smartwizard-form" class="smartwizard-vertical-left sw-main sw-theme-default" novalidate="novalidate">
+            <ul class="nav nav-tabs step-anchor">
+              <li class="nav-item done"><a href="#" class="text-nowrap mb-3 nav-link">
+                <span class="sw-done-icon ion ion-md-checkmark"></span>
+                <span class="sw-icon ion ion-ios-keypad"></span>
+                <div class="text-muted small">Первый шаг</div>
+                О компании
+              </a></li>
+              <li class="nav-item done"><a href="#" class="text-nowrap mb-3 nav-link">
+                <span class="sw-done-icon ion ion-md-checkmark"></span>
+                <span class="sw-icon ion ion-ios-color-wand"></span>
+                <div class="text-muted small">Второй шаг</div>
+                Администратор компании
+              </a></li>
+              <li class="nav-item done"><a href="#" class="text-nowrap mb-3 nav-link">
+                <span class="sw-done-icon ion ion-md-checkmark"></span>
+                <span class="sw-icon ion ion-md-copy"></span>
+                <div class="text-muted small">Третий шаг</div>
+                Контакты
+              </a></li>
+              <li class="nav-item active"><a href="javascript:void(0);" class="text-nowrap mb-3 nav-link">
+                <span class="sw-done-icon ion ion-md-checkmark"></span>
+                <span class="sw-icon ion ion-md-copy"></span>
+                <div class="text-muted small">Четвертый шаг</div>
+                Завершение
+              </a></li>
+            </ul>
 
-  </main>
+            <div class="mb-3 sw-container tab-content">
+              <div id="smartwizard-4-step-2" class="card animated fadeIn mb-3 tab-pane step-content" style="display: block;">
+                <div class="card-body">
+                  Благодарим вас за регистрацию!
+                  <br>
+                  Теперь Вы можете приступить к работе.
+                </div>
+              </div>
+              <div class="btn-toolbar sw-toolbar sw-toolbar-bottom justify-content-end">
+                <div class="btn-group sw-btn-group-extra" role="group">
+                  <a href="{% url 'add_comment' %}" class="btn-finish btn btn-primary mr-2" type="button">Разместить отзыв</a>
+                  <a href="{% url 'invitation_employee' %}" class="btn-finish btn btn-primary mr-2" type="button">Добавить сотрудника</a>
+                  <a href="{% url 'company_list' %}" class="btn-finish btn btn-primary" type="button">Посмотреть компании</a>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
   {% endblock %} 

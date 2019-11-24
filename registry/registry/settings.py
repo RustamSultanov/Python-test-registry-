@@ -16,7 +16,7 @@ import environ
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-env = environ.Env(DEBUG=(bool, False),)
+env = environ.Env(DEBUG=(bool, False), )
 # reading .env file
 environ.Env.read_env()
 
@@ -31,7 +31,6 @@ DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = ['*']
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -41,12 +40,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
+
     'django_registration',
     'mptt',
     'crispy_forms',
-#    'widget_tweaks',
-    #custom apps
+    'widget_tweaks',
+    # custom apps
     'registry',
     'smart_contract',
 ]
@@ -74,7 +73,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                #custom context processors
+                # custom context processors
                 'smart_contract.context_processors.count_comments_and_accepts',
             ],
         },
@@ -89,10 +88,9 @@ EMAIL_USE_SSL = True
 
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
-ACCOUNT_ACTIVATION_DAYS = 7 # One-week activation window
+ACCOUNT_ACTIVATION_DAYS = 7  # One-week activation window
 
 WSGI_APPLICATION = 'registry.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
@@ -119,7 +117,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
 
@@ -132,7 +129,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
 
 LOGIN_REDIRECT_URL = 'comment_list'
 

@@ -2,9 +2,10 @@
 {% load static %}
 {% block content %}
 
-<main class="auth-page">
-<div class="dialog">
-  <div class="dialog__inner">
+<div class="container-fluid flex-grow-1 container-p-y">
+          <div class="card mb-3">
+            <div class="card-body">
+
     <header>
       <h2 class="form__title">Благодарим за регистрацию</h2>
     </header>
@@ -17,16 +18,19 @@
         Для подтверждения адреса и продолжения регистрации вам необходимо перейти по ссылке,
         размещенной в теле письма.
       </p>
-    <div class="form__button-wrapper mt-double">
-      <a href="/" class="waves-effect waves-light btn btn--primary">
+    Благодарим вас за регистрацию!
+              <br>
+              Теперь Вы можете приступить к работе.
+            </div>
+          </div>
+    <div class="btn-toolbar sw-toolbar sw-toolbar-bottom justify-content-end">
+            <div class="btn-group sw-btn-group-extra" role="group">
+      <a href="/" type="button"  class="btn-finish btn btn-primary">
         Перейти на главную
       </a>
-    </div>
-    <p class="form__description form__description--small">
-        Написать в <a href="/">Службу технической поддержки</a>
-      </p>
-  </div>
-</div>
 
-  </main>
+{#    <p class="form__description form__description--small">#}
+{#        Написать в <a href="/">Службу технической поддержки</a>#}
+{#      </p>#}
+</div></div></div>
   {% endblock %} 
